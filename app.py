@@ -1,45 +1,39 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Freight Calculator 🚢", layout="wide")
+st.set_page_config(page_title="Kalkulator Freight Rupiah 🚢", layout="wide")
 
-st.title("🚢 Freight Calculator")
-st.write("Hitung estimasi biaya cargo dengan mudah.")
+st.title("🚢 Kalkulator Freight (Rupiah)")
+st.write("Hitung biaya operasional & profit otomatis, mirip format Excel.")
 
-# --- Input data dari user ---
+# --- Input (seperti kolom kuning di Excel) ---
 st.sidebar.header("Input Data")
 
-cargo_name = st.sidebar.text_input("Nama Cargo", "Coal")
-quantity = st.sidebar.number_input("Jumlah Muatan (MT)", min_value=0.0, step=100.0)
-freight_rate = st.sidebar.number_input("Freight Rate (USD/MT)", min_value=0.0, step=0.5)
-other_cost = st.sidebar.number_input("Biaya Lain (USD)", min_value=0.0, step=10.0)
+jarak = st.sidebar.number_input("Jarak (Mil Laut)", min_value=0.0, step=10.0)
+tarif_per_mil = st.sidebar.number_input("Tarif per Mil (Rp)", min_value=0.0, step=1000.0)
+biaya_lain = st.sidebar.number_input("Biaya Lain (Rp)", min_value=0.0, step=10000.0)
 
-# --- Perhitungan ---
-total_freight = quantity * freight_rate
-grand_total = total_freight + other_cost
+# --- Hitungan ---
+operasional_cost = jarak * tarif_per_mil + biaya_lain
 
-# --- Output ---
+# Profit margin list (0% - 50%)
+margin_list = list(range(0, 55, 5))
+data = []
+for m in margin_list:
+    harga_jual = operasional_cost * (1 + m/100)
+    profit = harga_jual - operasional_cost
+    data.append([f"{m}%", f"Rp {operasional_cost:,.0f}", f"Rp {profit:,.0f}", f"Rp {harga_jual:,.0f}"])
+
+# --- Tabel Hasil ---
+df = pd.DataFrame(data, columns=["Margin", "Operasional Cost", "Profit", "Harga Jual"])
+
 st.subheader("📊 Hasil Perhitungan")
-st.write(f"**Cargo**: {cargo_name}")
-st.write(f"**Jumlah Muatan**: {quantity:,.2f} MT")
-st.write(f"**Freight Rate**: {freight_rate:,.2f} USD/MT")
-st.write(f"**Total Freight**: {total_freight:,.2f} USD")
-st.write(f"**Biaya Lain**: {other_cost:,.2f} USD")
-st.success(f"💰 **Grand Total: {grand_total:,.2f} USD**")
+st.dataframe(df, use_container_width=True)
 
-# --- Export ke Excel ---
-df = pd.DataFrame({
-    "Cargo": [cargo_name],
-    "Quantity (MT)": [quantity],
-    "Freight Rate (USD/MT)": [freight_rate],
-    "Total Freight (USD)": [total_freight],
-    "Other Cost (USD)": [other_cost],
-    "Grand Total (USD)": [grand_total]
-})
-
+# --- Download ke Excel ---
 st.download_button(
     "📥 Download Hasil (Excel)",
     data=df.to_csv(index=False).encode("utf-8"),
-    file_name="freight_calculation.csv",
+    file_name="freight_calculation_rupiah.csv",
     mime="text/csv"
 )
