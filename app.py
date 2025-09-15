@@ -4,23 +4,24 @@ import pandas as pd
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 
 st.title("⚓ Freight Calculator Batubara / Tongkang")
-st.markdown("Masukkan **jarak (NM)** dan **cargo (MT)**, biaya akan dihitung otomatis.")
+st.markdown("Masukkan **Jarak (NM)** dan **Cargo (MT)**, biaya akan dihitung otomatis dalam Rupiah.")
 
 # ========================
-# Default Parameters
+# Parameter Default
 # ========================
 st.sidebar.header("⚙️ Parameter (bisa diedit)")
 
 speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
 speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
-consumption_day = st.sidebar.number_input("Consumption (liter/hari)", value=2880)
+consumption_hour = st.sidebar.number_input("Consumption (liter/jam)", value=120)
+consumption_day = consumption_hour * 24
 harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
 
-charter_day = st.sidebar.number_input("Charter hire/day (Rp)", value=25000000)
-crew_day = st.sidebar.number_input("Crew cost/day (Rp)", value=2000000)
-asuransi_day = st.sidebar.number_input("Asuransi/day (Rp)", value=1666667)
-docking_day = st.sidebar.number_input("Docking Saving/day (Rp)", value=1666667)
-perawatan_day = st.sidebar.number_input("Perawatan/day (Rp)", value=1666667)
+charter_day = st.sidebar.number_input("Charter hire/day (Rp)", value=750000000)
+crew_day = st.sidebar.number_input("Crew cost/day (Rp)", value=60000000)
+asuransi_day = st.sidebar.number_input("Asuransi/day (Rp)", value=50000000)
+docking_day = st.sidebar.number_input("Docking Saving/day (Rp)", value=50000000)
+perawatan_day = st.sidebar.number_input("Perawatan/day (Rp)", value=50000000)
 
 port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
 asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
@@ -29,7 +30,7 @@ port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 cargo_capacity = st.sidebar.number_input("Cargo Capacity (MT)", value=10000)
 
 # ========================
-# Input utama user
+# Input Utama
 # ========================
 st.subheader("📥 Input Utama")
 jarak = st.number_input("Jarak (NM)", value=630)
@@ -69,6 +70,10 @@ cost_per_mt = total_cost / cargo_capacity
 # ========================
 # Output
 # ========================
+
+def format_rupiah(angka):
+    return "Rp {:,.0f}".format(angka).replace(",", ".")
+
 st.subheader("📊 Hasil Perhitungan")
 
 col1, col2 = st.columns(2)
@@ -79,8 +84,8 @@ with col1:
     st.metric("⛽ Total Consumption (liter)", f"{total_consumption:,.0f}")
 
 with col2:
-    st.metric("💰 Total Cost (Rp)", f"{total_cost:,.0f}")
-    st.metric("📦 Cost per MT (Rp/MT)", f"{cost_per_mt:,.0f}")
+    st.metric("💰 Total Cost", format_rupiah(total_cost))
+    st.metric("📦 Cost per MT", format_rupiah(cost_per_mt))
 
 # ========================
 # Freight + Profit Table
@@ -89,11 +94,11 @@ st.subheader("📈 Freight dengan Profit Margin")
 
 profits = list(range(0, 55, 5))
 data = {
-    "Profit %": profits,
-    "Freight (Rp/MT)": [cost_per_mt * (1 + p/100) for p in profits]
+    "Profit %": [f"{p}%" for p in profits],
+    "Freight (Rp/MT)": [format_rupiah(cost_per_mt * (1 + p/100)) for p in profits]
 }
 df = pd.DataFrame(data)
 
 st.dataframe(df, use_container_width=True)
 
-st.success("✅ Masukkan **Jarak** dan **Cargo**, hasil otomatis muncul!")
+st.success("✅ Masukkan **Jarak** dan **Cargo**, hasil otomatis muncul dalam Rupiah!")
