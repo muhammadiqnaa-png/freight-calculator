@@ -10,8 +10,8 @@ st.title("🚢 Freight Calculator Batubara")
 # ==============================
 st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
 
-speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=0)
-speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=0)
+speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=4.5)
+speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=3.0)
 consumption = st.sidebar.number_input("Consumption (liter/jam)", value=0)
 harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=0)
 
@@ -31,8 +31,8 @@ port_stay = st.sidebar.number_input("Port Stay (Hari)", value=0)
 # ==============================
 st.header("📥 Input Utama")
 
-total_cargo = st.number_input("Total Cargo (MT)", value=0)
-jarak = st.number_input("Jarak (NM)", value=0)
+total_cargo = st.number_input("Total Cargo (MT)", value=10.000)
+jarak = st.number_input("Jarak (NM)", value=100)
 
 # ==============================
 # Perhitungan
