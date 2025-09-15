@@ -10,29 +10,29 @@ st.title("🚢 Freight Calculator Batubara")
 # ==============================
 st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
 
-speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
-speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
-consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
-harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
+speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=0)
+speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=0)
+consumption = st.sidebar.number_input("Consumption (liter/jam)", value=0)
+harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=0)
 
-charter_hire = st.sidebar.number_input("Charter hire/bulan (Rp)", value=750000000)
-crew_cost = st.sidebar.number_input("Crew cost/bulan (Rp)", value=60000000)
-asuransi = st.sidebar.number_input("Asuransi/bulan (Rp)", value=50000000)
-docking = st.sidebar.number_input("Docking Saving/bulan (Rp)", value=50000000)
-perawatan = st.sidebar.number_input("Perawatan Fleet/bulan (Rp)", value=50000000)
+charter_hire = st.sidebar.number_input("Charter hire/bulan (Rp)", value=0)
+crew_cost = st.sidebar.number_input("Crew cost/bulan (Rp)", value=0)
+asuransi = st.sidebar.number_input("Asuransi/bulan (Rp)", value=0)
+docking = st.sidebar.number_input("Docking Saving/bulan (Rp)", value=0)
+perawatan = st.sidebar.number_input("Perawatan Fleet/bulan (Rp)", value=0)
 
-port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
-asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
-premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
-port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
+port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=0)
+asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=0)
+premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=0)
+port_stay = st.sidebar.number_input("Port Stay (Hari)", value=0)
 
 # ==============================
 # Input Utama dari User
 # ==============================
 st.header("📥 Input Utama")
 
-total_cargo = st.number_input("Total Cargo (MT)", value=10000)
-jarak = st.number_input("Jarak (NM)", value=630)
+total_cargo = st.number_input("Total Cargo (MT)", value=0)
+jarak = st.number_input("Jarak (NM)", value=0)
 
 # ==============================
 # Perhitungan
