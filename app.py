@@ -148,7 +148,7 @@ def generate_pdf(input_data, results, profit_df):
     elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
     table_input = Table(input_data, colWidths=[200, 200])
     table_input.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.whitesmoke),
         ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke),
     ]))
     elements.append(table_input)
@@ -158,7 +158,7 @@ def generate_pdf(input_data, results, profit_df):
     elements.append(Paragraph("📊 Hasil Perhitungan & Biaya", styles["Heading2"]))
     table_results = Table(results, colWidths=[200, 200])
     table_results.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.whitesmoke),
         ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke),
     ]))
     elements.append(table_results)
