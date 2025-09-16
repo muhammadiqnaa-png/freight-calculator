@@ -102,12 +102,12 @@ st.write(f"**Sailing Time (jam):** {sailing_time:,.2f}")
 st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
 st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
 
-st.subheader(f"💰 Biaya Mode ({mode})")
-for k, v in biaya_mode.items():
+st.subheader(f"💰 Biaya Mode Rp ({mode})")
+for k, v in biaya_mode_Rp.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
-st.subheader("💰 Biaya Umum")
-for k, v in biaya_umum.items():
+st.subheader("💰 Biaya Umum Rp")
+for k, v in biaya_umum_Rp.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
 st.subheader("🧮 Total Cost")
