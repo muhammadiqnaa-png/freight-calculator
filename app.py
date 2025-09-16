@@ -153,8 +153,8 @@ def generate_pdf():
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, y, f"Cost per MT: Rp {cost_per_mt:,.0f} / MT")
 
-    # Tambah jarak ekstra biar gak numpuk
-y -= 40 
+
+    
 
     # --- Profit Scenario ---
     c.setFont("Helvetica-Bold", 12)
