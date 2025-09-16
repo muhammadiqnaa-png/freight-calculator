@@ -116,7 +116,6 @@ def generate_pdf():
 
     # Gabungkan semua data jadi 1 tabel panjang
     data_all = []
-
     # ---- Info Utama ----
     data_all.append(["📥 Input Utama", ""])
     data_all.extend([
@@ -148,7 +147,7 @@ def generate_pdf():
         ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
         ["", ""],
     ])
-    # -------- DATA BAGIAN 3: Profit Scenario --------
+    # -------- Profit Scenario --------
     data_profit = [["📈 Profit Scenario", "", "", ""],
                    ["Profit %", "Freight / MT (Rp)", "Revenue (Rp)", "Net Profit (Rp)"]]
 
@@ -162,7 +161,6 @@ def generate_pdf():
             f"Rp {revenue:,.0f}",
             f"Rp {net_profit:,.0f}"
         ])
-
     table_profit = Table(data_profit, colWidths=[60, 120, 180, 180])
     table_profit.setStyle(TableStyle([
         ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
