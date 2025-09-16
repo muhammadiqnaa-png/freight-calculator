@@ -143,7 +143,6 @@ def generate_pdf(input_data, results, profit_df):
 
     # Judul
     elements.append(Paragraph("🚢 Freight Report Tongkang", styles["Title"]))
-    elements.append(Spacer(1, 12))
 
     # Input Utama
     elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
