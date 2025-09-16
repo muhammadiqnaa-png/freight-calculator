@@ -161,6 +161,8 @@ def generate_pdf(input_data, results, profit_df):
     buffer.seek(0)
     return buffer
 
-pdf_buffer = generate_pdf(input_data, results, profit_df)
-st.download_button("📥 Download Laporan PDF", data=pdf_buffer,
-                   file_name=f"Freight_Report_{pol}_{pod}.pdf", mime="application
+st.download_button(
+    "📥 Download Laporan PDF",
+    data=pdf_buffer,
+    file_name=f"Freight_Report_{pol}_{pod}.pdf",
+    mime="application/pdf"
