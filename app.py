@@ -159,6 +159,7 @@ def generate_pdf(input_data, results, profit_df):
     table_input.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
         ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
+        ("FONTSIZE", (0,0), (-1,-1), 8)
     ]))
     elements.append(table_input)
     elements.append(Spacer(1,1))
@@ -168,6 +169,7 @@ def generate_pdf(input_data, results, profit_df):
     table_results.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
         ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
+        ("FONTSIZE", (0,0), (-1,-1), 8)
     ]))
     elements.append(table_results)
     elements.append(Spacer(1,1))
@@ -179,6 +181,7 @@ def generate_pdf(input_data, results, profit_df):
         ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
         ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
         ("ALIGN", (1,1), (-1,-1), "RIGHT")
+        ("FONTSIZE", (0,0), (-1,-1), 8)
     ]))
     elements.append(table_profit)
 
