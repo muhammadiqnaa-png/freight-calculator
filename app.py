@@ -25,6 +25,8 @@ total_cargo_default = st.sidebar.number_input("Total Cargo (MT)", value=7500)
 # Pilihan Mode Owner / Charter
 # ==============================
 
+st.sidebar.header("💼 Mode Biaya")
+mode = st.sidebar.radio("Pilih Mode:", ["Owner", "Charter"])
 if mode == "Owner":
     st.sidebar.subheader("💰 Biaya Owner")
     angsuran = st.sidebar.number_input("Angsuran (Bulan)", value=0)
@@ -62,8 +64,6 @@ else:
 # Input Utama dari User
 # ==============================
 st.header("📥 Input Utama")
-st.sidebar.header("💼 Mode Biaya")
-mode = st.sidebar.radio("Pilih Mode:", ["Owner", "Charter"])
 pol = st.text_input("Port of Loading (POL)", value="")
 pod = st.text_input("Port of Discharge (POD)", value="")
 total_cargo = st.number_input("Total Cargo (MT)", value=int(total_cargo_default))
