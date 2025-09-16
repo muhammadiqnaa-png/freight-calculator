@@ -148,48 +148,37 @@ def generate_pdf():
         ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
         ["", ""],
     ])
-    # ---- Profit Scenario ----
-    data_all.append(["📈 Profit Scenario (0% - 50%)", ""])
-    data_all.append(["Profit %", "Freight / MT (Rp) | Revenue (Rp)"])
+    # -------- DATA BAGIAN 3: Profit Scenario --------
+    data_profit = [["📈 Profit Scenario", "", "", ""],
+                   ["Profit %", "Freight / MT (Rp)", "Revenue (Rp)", "Net Profit (Rp)"]]
+
     for p in range(0, 55, 5):
         freight = cost_per_mt * (1 + (p/100))
         revenue = freight * total_cargo
-        data_all.append([f"{p}%", f"Rp {freight:,.0f}   |   Rp {revenue:,.0f}"])
+        net_profit = revenue - total_cost
+        data_profit.append([
+            f"{p}%",
+            f"Rp {freight:,.0f}",
+            f"Rp {revenue:,.0f}",
+            f"Rp {net_profit:,.0f}"
+        ])
 
-    # Buat tabel besar
-    table = Table(data_all, colWidths=[200, 300])
-
-    # Style tabel
-    table.setStyle(TableStyle([
+    table_profit = Table(data_profit, colWidths=[60, 120, 180, 180])
+    table_profit.setStyle(TableStyle([
         ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
         ("FONTSIZE", (0, 0), (-1, -1), 9),
-        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("ALIGN", (0, 1), (-1, -1), "RIGHT"),
+        ("ALIGN", (0, 0), (-1, 1), "CENTER"),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-
-        # Kotak & grid
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
         ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
-        ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
-
-        # Heading style
-        ("SPAN", (0, 0), (1, 0)),
-        ("SPAN", (0, 5), (1, 5)),
-        ("SPAN", (0, 9), (1, 9)),
-        ("SPAN", (0, 19), (1, 19)),
-        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-        ("BACKGROUND", (0, 5), (-1, 5), colors.lightgrey),
-        ("BACKGROUND", (0, 9), (-1, 9), colors.lightgrey),
-        ("BACKGROUND", (0, 19), (-1, 19), colors.lightgrey),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTNAME", (0, 5), (-1, 5), "Helvetica-Bold"),
-        ("FONTNAME", (0, 9), (-1, 9), "Helvetica-Bold"),
-        ("FONTNAME", (0, 19), (-1, 19), "Helvetica-Bold"),
-
-        # Highlight total
-        ("BACKGROUND", (0, 16), (1, 16), colors.lightgrey),
-        ("FONTNAME", (0, 16), (1, 16), "Helvetica-Bold"),
+        ("SPAN", (0, 0), (3, 0)),
+        ("BACKGROUND", (0, 0), (3, 0), colors.lightgrey),
+        ("FONTNAME", (0, 0), (3, 0), "Helvetica-Bold"),
+        ("BACKGROUND", (0, 1), (3, 1), colors.lightgrey),
+        ("FONTNAME", (0, 1), (3, 1), "Helvetica-Bold"),
     ]))
-
-    elements.append(table)
+    elements.append(table_profit)
 
     # Build PDF
     doc.build(elements)
