@@ -110,7 +110,6 @@ def generate_pdf():
     doc = SimpleDocTemplate(buffer, pagesize=A4)
     elements = []
     styles = getSampleStyleSheet()
-
     # Judul
     elements.append(Paragraph("🚢 Freight Report Batubara", styles["Title"]))
     elements.append(Spacer(1, 12))
@@ -127,7 +126,6 @@ def generate_pdf():
         ["Total Cargo (MT)", f"{total_cargo:,}"],
         ["", ""],
     ])
-
     # ---- Hasil Perhitungan ----
     data_all.append(["📊 Hasil Perhitungan", ""])
     data_all.extend([
@@ -136,7 +134,6 @@ def generate_pdf():
         ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
         ["", ""],
     ])
-
     # ---- Biaya Detail ----
     data_all.append(["💰 Biaya Detail", ""])
     data_all.extend([
@@ -151,7 +148,6 @@ def generate_pdf():
         ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
         ["", ""],
     ])
-
     # ---- Profit Scenario ----
     data_all.append(["📈 Profit Scenario (0% - 50%)", ""])
     data_all.append(["Profit %", "Freight / MT (Rp) | Revenue (Rp)"])
