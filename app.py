@@ -187,3 +187,15 @@ def generate_pdf():
     doc.build(elements)
     buffer.seek(0)
     return buffer
+
+# ==============================
+# Tombol Download PDF
+# ==============================
+pdf_buffer = generate_pdf()
+
+st.download_button(
+    label="📥 Download Laporan PDF",
+    data=pdf_buffer,
+    file_name=f"Freight_Report_{pol}_{pod}.pdf",
+    mime="application/pdf"
+)
