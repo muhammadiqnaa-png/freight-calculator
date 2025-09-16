@@ -115,45 +115,31 @@ def generate_pdf():
     elements.append(Paragraph("🚢 Freight Report Batubara", styles["Title"]))
     elements.append(Spacer(1, 12))
 
-    # Info Utama
-    data_info = [
+    # Gabungkan semua data jadi 1 tabel panjang
+    data_all = []
+
+    # ---- Info Utama ----
+    data_all.append(["📥 Input Utama", ""])
+    data_all.extend([
         ["Port of Loading (POL)", pol],
         ["Port of Discharge (POD)", pod],
         ["Jarak (NM)", f"{jarak:,}"],
         ["Total Cargo (MT)", f"{total_cargo:,}"],
-    ]
-    t_info = Table(data_info, hAlign="LEFT")
-    t_info.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey),
-        ("TEXTCOLOR", (0, 0), (-1, -1), colors.black),
-        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
-        ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
-        ("FONTSIZE", (0, 0), (-1, -1), 10),
-        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
-        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
-    ]))
-    elements.append(t_info)
-    elements.append(Spacer(1, 12))
+        ["", ""],
+    ])
 
-    # Hasil Perhitungan
-    elements.append(Paragraph("Hasil Perhitungan", styles["Heading2"]))
-    data_calc = [
+    # ---- Hasil Perhitungan ----
+    data_all.append(["📊 Hasil Perhitungan", ""])
+    data_all.extend([
         ["Sailing Time (jam)", f"{sailing_time:,.2f}"],
         ["Total Voyage Days", f"{voyage_days:,.2f}"],
         ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
-    ]
-    t_calc = Table(data_calc, hAlign="LEFT")
-    t_calc.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey),
-        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
-        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
-    ]))
-    elements.append(t_calc)
-    elements.append(Spacer(1, 12))
+        ["", ""],
+    ])
 
-    # Biaya Detail
-    elements.append(Paragraph("Biaya Detail", styles["Heading2"]))
-    data_biaya = [
+    # ---- Biaya Detail ----
+    data_all.append(["💰 Biaya Detail", ""])
+    data_all.extend([
         ["Biaya Charter", f"Rp {biaya_charter:,.0f}"],
         ["Biaya Bunker", f"Rp {biaya_bunker:,.0f}"],
         ["Biaya Crew", f"Rp {biaya_crew:,.0f}"],
@@ -163,34 +149,51 @@ def generate_pdf():
         ["Other Cost", f"Rp {other_cost:,.0f}"],
         ["TOTAL COST", f"Rp {total_cost:,.0f}"],
         ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
-    ]
-    t_biaya = Table(data_biaya, hAlign="LEFT")
-    t_biaya.setStyle(TableStyle([
-        ("BACKGROUND", (0, -2), (-1, -1), colors.lightgrey),  # highlight total & cost/MT
-        ("TEXTCOLOR", (0, -2), (-1, -1), colors.black),
-        ("FONTNAME", (0, -2), (-1, -1), "Helvetica-Bold"),
-        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
-        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
-    ]))
-    elements.append(t_biaya)
-    elements.append(Spacer(1, 12))
+        ["", ""],
+    ])
 
-    # Profit Scenario
-    elements.append(Paragraph("Profit Scenario (0% - 50%)", styles["Heading2"]))
-    data_profit = [["Profit %", "Freight per MT (Rp)"]]
+    # ---- Profit Scenario ----
+    data_all.append(["📈 Profit Scenario (0% - 50%)", ""])
+    data_all.append(["Profit %", "Freight / MT (Rp) | Revenue (Rp)"])
     for p in range(0, 55, 5):
         freight = cost_per_mt * (1 + (p/100))
-        data_profit.append([f"{p}%", f"Rp {freight:,.0f}"])
+        revenue = freight * total_cargo
+        data_all.append([f"{p}%", f"Rp {freight:,.0f}   |   Rp {revenue:,.0f}"])
 
-    t_profit = Table(data_profit, hAlign="LEFT")
-    t_profit.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+    # Buat tabel besar
+    table = Table(data_all, colWidths=[200, 300])
+
+    # Style tabel
+    table.setStyle(TableStyle([
+        ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 0), (-1, -1), 9),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+
+        # Kotak & grid
         ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
-        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+
+        # Heading style
+        ("SPAN", (0, 0), (1, 0)),
+        ("SPAN", (0, 5), (1, 5)),
+        ("SPAN", (0, 9), (1, 9)),
+        ("SPAN", (0, 19), (1, 19)),
+        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+        ("BACKGROUND", (0, 5), (-1, 5), colors.lightgrey),
+        ("BACKGROUND", (0, 9), (-1, 9), colors.lightgrey),
+        ("BACKGROUND", (0, 19), (-1, 19), colors.lightgrey),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTNAME", (0, 5), (-1, 5), "Helvetica-Bold"),
+        ("FONTNAME", (0, 9), (-1, 9), "Helvetica-Bold"),
+        ("FONTNAME", (0, 19), (-1, 19), "Helvetica-Bold"),
+
+        # Highlight total
+        ("BACKGROUND", (0, 16), (1, 16), colors.lightgrey),
+        ("FONTNAME", (0, 16), (1, 16), "Helvetica-Bold"),
     ]))
-    elements.append(t_profit)
+
+    elements.append(table)
 
     # Build PDF
     doc.build(elements)
