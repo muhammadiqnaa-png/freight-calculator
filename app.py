@@ -1,8 +1,12 @@
 import streamlit as st
 import pandas as pd
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
 st.set_page_config(page_title="Freight Calculator", layout="wide")
-
 st.title("🚢 Freight Calculator Batubara")
 
 # ==============================
@@ -28,7 +32,7 @@ Other_Cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
 # ==============================
-# Input Utama dari User
+# Input Utama
 # ==============================
 st.header("📥 Input Utama")
 
@@ -56,125 +60,92 @@ total_cost = biaya_charter + biaya_bunker + biaya_crew + biaya_port + premi_cost
 cost_per_mt = total_cost / total_cargo
 
 # ==============================
-# Tampilkan Hasil
+# Kumpulan Data untuk PDF
 # ==============================
-st.header("📊 Hasil Perhitungan")
+input_data = [
+    ["Port of Loading (POL)", pol],
+    ["Port of Discharge (POD)", pod],
+    ["Jarak (NM)", f"{jarak:,}"],
+    ["Total Cargo (MT)", f"{total_cargo:,}"],
+]
 
-st.write(f"**Sailing Time (jam):** {sailing_time:,.2f}")
-st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
-st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
-
-st.subheader("💰 Biaya Detail")
-st.write(f"- Biaya Charter: Rp {biaya_charter:,.0f}")
-st.write(f"- Biaya Bunker: Rp {biaya_bunker:,.0f}")
-st.write(f"- Biaya Crew: Rp {biaya_crew:,.0f}")
-st.write(f"- Biaya Port: Rp {biaya_port:,.0f}")
-st.write(f"- Premi Cost: Rp {premi_cost:,.0f}")
-st.write(f"- Asist Tug: Rp {biaya_asist:,.0f}")
-st.write(f"- Other Cost: Rp {other_cost:,.0f}")
-st.write(f"**Total Cost: Rp {total_cost:,.0f}**")
-
-st.subheader("📦 Cost per MT")
-st.write(f"Rp {cost_per_mt:,.0f} / MT")
-
-# ==============================
-# Profit Scenario 0% - 50%
-# ==============================
-st.subheader("📈 Freight dengan Profit (0% - 50%)")
+results = [
+    ["Sailing Time (jam)", f"{sailing_time:,.2f}"],
+    ["Total Voyage Days", f"{voyage_days:,.2f}"],
+    ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
+    ["Biaya Charter", f"Rp {biaya_charter:,.0f}"],
+    ["Biaya Bunker", f"Rp {biaya_bunker:,.0f}"],
+    ["Biaya Crew", f"Rp {biaya_crew:,.0f}"],
+    ["Biaya Port", f"Rp {biaya_port:,.0f}"],
+    ["Premi Cost", f"Rp {premi_cost:,.0f}"],
+    ["Asist Tug", f"Rp {biaya_asist:,.0f}"],
+    ["Other Cost", f"Rp {other_cost:,.0f}"],
+    ["TOTAL COST", f"Rp {total_cost:,.0f}"],
+    ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
+]
 
 profit_list = []
 for p in range(0, 55, 5):
     freight = cost_per_mt * (1 + (p/100))
     revenue = freight * total_cargo
-    profit_list.append([f"{p}%", freight, revenue])
+    net_profit = revenue - total_cost
+    profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {net_profit:,.0f}"])
 
-df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT", "Revenue"])
+profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Net Profit"])
 
-# Hilangkan index
-df.index = [""] * len(df)
-
-# Format kolom angka jadi Rupiah
-df["Freight per MT"] = df["Freight per MT"].apply(lambda x: f"Rp {x:,.0f}")
-df["Revenue"] = df["Revenue"].apply(lambda x: f"Rp {x:,.0f}")
-
-st.table(df)
-
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-
+# ==============================
+# Fungsi Generate PDF
+# ==============================
 def generate_pdf(input_data, results, profit_df):
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4)
-    styles = getSampleStyleSheet()
     elements = []
+    styles = getSampleStyleSheet()
 
     # Judul
-    elements.append(Paragraph("Laporan Perhitungan Biaya Operasional", styles["Title"]))
+    elements.append(Paragraph("🚢 Freight Report Batubara", styles["Title"]))
     elements.append(Spacer(1, 12))
 
-    # ---------- INPUT DATA ----------
-    data_input = [["Input", "Value"]]
-    for key, val in input_data.items():
-        data_input.append([key, val])
-    table_input = Table(data_input, colWidths=[200, 200])
+    # Input Utama
+    elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
+    table_input = Table(input_data, colWidths=[200, 200])
     table_input.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
-        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, -1), 9),
-        ("BOX", (0, 0), (-1, -1), 0.5, colors.grey),
-        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke),
     ]))
-    elements.append(Paragraph("Input Data", styles["Heading2"]))
     elements.append(table_input)
     elements.append(Spacer(1, 12))
 
-    # ---------- HASIL PERHITUNGAN ----------
-    data_results = [["Hasil", "Value"]]
-    for key, val in results.items():
-        data_results.append([key, val])
-    table_results = Table(data_results, colWidths=[200, 200])
+    # Hasil Perhitungan & Biaya
+    elements.append(Paragraph("📊 Hasil Perhitungan & Biaya", styles["Heading2"]))
+    table_results = Table(results, colWidths=[200, 200])
     table_results.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
-        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, -1), 9),
-        ("BOX", (0, 0), (-1, -1), 0.5, colors.grey),
-        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke),
     ]))
-    elements.append(Paragraph("Hasil Perhitungan", styles["Heading2"]))
     elements.append(table_results)
     elements.append(Spacer(1, 12))
 
-    # ---------- PROFIT SCENARIO ----------
+    # Profit Scenario
+    elements.append(Paragraph("📈 Profit Scenario (0% - 50%)", styles["Heading2"]))
     data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
-    table_profit = Table(data_profit, colWidths=[100, 120, 120, 120])
+    table_profit = Table(data_profit, colWidths=[60, 100, 120, 120])
     table_profit.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
-        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, -1), 8),
-        ("BOX", (0, 0), (-1, -1), 0.5, colors.grey),
-        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
     ]))
-    elements.append(Paragraph("Profit Scenario", styles["Heading2"]))
     elements.append(table_profit)
 
-    # Build PDF
     doc.build(elements)
-    pdf = buffer.getvalue()
-    buffer.close()
-    return pdf
+    buffer.seek(0)
+    return buffer
 
 # ==============================
 # Tombol Download PDF
 # ==============================
-pdf_buffer = generate_pdf()
+pdf_buffer = generate_pdf(input_data, results, profit_df)
 
 st.download_button(
     label="📥 Download Laporan PDF",
