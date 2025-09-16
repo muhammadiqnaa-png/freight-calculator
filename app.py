@@ -103,11 +103,11 @@ st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
 st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
 
 st.subheader(f"💰 Biaya Mode ({mode})")
-biaya_mode_Rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items():
+for k, v in biaya_mode.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
 st.subheader("💰 Biaya Umum ")
-biaya_umum_Rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items():
+for k, v in biaya_umum.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
 st.subheader("🧮 Total Cost")
@@ -138,7 +138,7 @@ input_data = [
     ["Total Cargo (MT)", f"{total_cargo:,}"],
 ]
 
-results = list(biaya_mode_Rp.items()) + list(biaya_umum_Rp.items())
+results = list(biaya_mode_Rp.items f"Rp (biaya_mode:,.0f)) + list(biaya_umum.items f"Rp (biaya_umum:,.0f))
 results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
 results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
