@@ -29,6 +29,7 @@ perawatan = st.sidebar.number_input("Perawatan Fleet/bulan (Rp)", value=50000000
 port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
 asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
 premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
+Other_Cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
 # ==============================
