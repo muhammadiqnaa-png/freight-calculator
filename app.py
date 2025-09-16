@@ -32,8 +32,10 @@ port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 # ==============================
 st.header("📥 Input Utama")
 
-total_cargo = st.number_input("Total Cargo (MT)", value=10000)
+pol = st.text_input("Port of Loading (POL)", value="Jetty SIP")
+pod = st.text_input("Port of Discharge (POD)", value="Marunda")
 jarak = st.number_input("Jarak (NM)", value=630)
+total_cargo = st.number_input("Total Cargo (MT)", value=10000)
 
 # ==============================
 # Perhitungan
