@@ -99,6 +99,9 @@ cost_per_mt = total_cost / total_cargo
 biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
 biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
 
+
+ st.write(f"- {k}: Rp {v:,.0f}")
+
 # ==============================
 # Tampilkan Hasil Detail
 # ==============================
