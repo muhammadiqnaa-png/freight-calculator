@@ -8,7 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 
-st.title("🚢 Freight Calculator Batubara")
+st.title("🚢 Freight Calculator Tongkang")
 
 # ==============================
 # Default Parameter (editable)
@@ -37,9 +37,9 @@ port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 # Input Utama dari User
 # ==============================
 st.header("📥 Input Utama")
-pol = st.text_input("Port of Loading (POL)", value="Jetty SIP")
-pod = st.text_input("Port of Discharge (POD)", value="Marunda")
-total_cargo = st.number_input("Total Cargo (MT)", value=10000)
+pol = st.text_input("Port of Loading (POL)", value="")
+pod = st.text_input("Port of Discharge (POD)", value="")
+total_cargo = st.number_input("Total Cargo (MT)", value=7500)
 jarak = st.number_input("Jarak (NM)", value=630)
 
 # ==============================
@@ -139,7 +139,7 @@ def generate_pdf(input_data, results, profit_df):
     styles = getSampleStyleSheet()
 
     # Judul
-    elements.append(Paragraph("🚢 Freight Report Batubara", styles["Title"]))
+    elements.append(Paragraph("🚢 Freight Report Tongkang", styles["Title"]))
     elements.append(Spacer(1, 12))
 
     # Input Utama
