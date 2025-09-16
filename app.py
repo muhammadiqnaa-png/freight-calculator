@@ -10,10 +10,9 @@ st.set_page_config(page_title="Freight Calculator", layout="wide")
 st.title("🚢 Freight Calculator Tongkang")
 
 # ==============================
-# Pilihan Mode
+# Pilih Mode
 # ==============================
-st.header("💼 Pilih Mode Biaya")
-mode = st.radio("Owner / Charter", ["Owner", "Charter"])
+mode = st.radio("Pilih Mode Biaya:", ["Owner", "Charter"])
 
 # ==============================
 # Input Utama Kapal / Operasional
@@ -23,28 +22,36 @@ pol = st.text_input("Port of Loading (POL)")
 pod = st.text_input("Port of Discharge (POD)")
 total_cargo = st.number_input("Total Cargo (MT)", value=7500)
 jarak = st.number_input("Jarak (NM)", value=630)
-port_stay = st.number_input("Port Stay (Hari)", value=10)
 
 # ==============================
-# Sidebar Parameter Default
+# Sidebar Parameter (Dinamis sesuai mode)
 # ==============================
 st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
+
+# Parameter umum
 speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
 speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
 consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
 harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
 harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
-charter_hire = st.sidebar.number_input("Charter hire/bulan (Rp)", value=750_000_000)
-crew_cost = st.sidebar.number_input("Crew cost/bulan (Rp)", value=60_000_000)
-asuransi = st.sidebar.number_input("Asuransi/bulan (Rp)", value=50_000_000)
-docking = st.sidebar.number_input("Docking Saving/bulan (Rp)", value=50_000_000)
-perawatan = st.sidebar.number_input("Perawatan Fleet/bulan (Rp)", value=50_000_000)
-sertifikat = st.sidebar.number_input("Sertifikat/bulan (Rp)", value=50_000_000)
-port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50_000_000)
-asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35_000_000)
-premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50_000)
-depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45_000_000_000)
-other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50_000_000)
+port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
+asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
+premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
+port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
+
+# Parameter khusus per mode
+if mode == "Owner":
+    angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=750000000)
+    crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=60000000)
+    asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=50000000)
+    docking = st.sidebar.number_input("Docking (Rp/bulan)", value=50000000)
+    perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=50000000)
+    sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
+    depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
+    other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
+elif mode == "Charter":
+    charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
+    other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
 # ==============================
 # Perhitungan Dasar
@@ -62,12 +69,10 @@ biaya_umum = {
     "Asist": asist_tug
 }
 
-# ==============================
 # Biaya per Mode
-# ==============================
 if mode == "Owner":
     biaya_mode = {
-        "Angsuran": 0,  # bisa ditambahkan jika ada cicilan
+        "Angsuran": (Angsuran / 30) * voyage_days,
         "Crew Cost": (crew_cost / 30) * voyage_days,
         "Asuransi": (asuransi / 30) * voyage_days,
         "Docking": (docking / 30) * voyage_days,
@@ -82,9 +87,7 @@ else:  # Charter
         "Other": other_cost
     }
 
-# ==============================
 # Total Biaya
-# ==============================
 total_cost = sum(biaya_mode.values()) + sum(biaya_umum.values())
 cost_per_mt = total_cost / total_cargo
 
@@ -123,7 +126,7 @@ profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Reve
 st.table(profit_df)
 
 # ==============================
-# PDF
+# PDF Report
 # ==============================
 input_data = [
     ["POL", pol],
