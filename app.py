@@ -162,7 +162,8 @@ def generate_pdf(input_data, results, profit_df):
     return buffer
 
 st.download_button(
-    "📥 Download Laporan PDF",
+    label="📥 Download Laporan PDF",
     data=pdf_buffer,
     file_name=f"Freight_Report_{pol}_{pod}.pdf",
     mime="application/pdf"
+)
