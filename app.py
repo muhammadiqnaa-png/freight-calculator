@@ -92,97 +92,98 @@ st.table(df)
 
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
-# ==============================
-# Fungsi Generate PDF
-# ==============================
 def generate_pdf():
     buffer = BytesIO()
-    c = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
 
-    y = height - 50
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(50, y, "🚢 Freight Report Batubara")
-    y -= 30
+    # Judul
+    elements.append(Paragraph("🚢 Freight Report Batubara", styles["Title"]))
+    elements.append(Spacer(1, 12))
 
-    c.setFont("Helvetica", 12)
-    c.drawString(50, y, f"Port of Loading (POL): {pol}")
-    y -= 20
-    c.drawString(50, y, f"Port of Discharge (POD): {pod}")
-    y -= 20
-    c.drawString(50, y, f"Jarak: {jarak} NM")
-    y -= 20
-    c.drawString(50, y, f"Total Cargo: {total_cargo} MT")
-    y -= 40
+    # Info Utama
+    data_info = [
+        ["Port of Loading (POL)", pol],
+        ["Port of Discharge (POD)", pod],
+        ["Jarak (NM)", f"{jarak:,}"],
+        ["Total Cargo (MT)", f"{total_cargo:,}"],
+    ]
+    t_info = Table(data_info, hAlign="LEFT")
+    t_info.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey),
+        ("TEXTCOLOR", (0, 0), (-1, -1), colors.black),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 0), (-1, -1), 10),
+        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
+    ]))
+    elements.append(t_info)
+    elements.append(Spacer(1, 12))
 
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, y, "Hasil Perhitungan")
-    y -= 20
-    c.setFont("Helvetica", 11)
-    c.drawString(50, y, f"Sailing Time (jam): {sailing_time:,.2f}")
-    y -= 20
-    c.drawString(50, y, f"Total Voyage Days: {voyage_days:,.2f}")
-    y -= 20
-    c.drawString(50, y, f"Total Consumption (liter): {total_consumption:,.0f}")
-    y -= 30
+    # Hasil Perhitungan
+    elements.append(Paragraph("Hasil Perhitungan", styles["Heading2"]))
+    data_calc = [
+        ["Sailing Time (jam)", f"{sailing_time:,.2f}"],
+        ["Total Voyage Days", f"{voyage_days:,.2f}"],
+        ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
+    ]
+    t_calc = Table(data_calc, hAlign="LEFT")
+    t_calc.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey),
+        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
+    ]))
+    elements.append(t_calc)
+    elements.append(Spacer(1, 12))
 
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, y, "Biaya Detail")
-    y -= 20
-    c.setFont("Helvetica", 11)
-    c.drawString(50, y, f"Biaya Charter: Rp {biaya_charter:,.0f}")
-    y -= 20
-    c.drawString(50, y, f"Biaya Bunker: Rp {biaya_bunker:,.0f}")
-    y -= 20
-    c.drawString(50, y, f"Biaya Crew: Rp {biaya_crew:,.0f}")
-    y -= 20
-    c.drawString(50, y, f"Biaya Port: Rp {biaya_port:,.0f}")
-    y -= 20
-    c.drawString(50, y, f"Premi Cost: Rp {premi_cost:,.0f}")
-    y -= 20
-    c.drawString(50, y, f"Asist Tug: Rp {biaya_asist:,.0f}")
-    y -= 20
-    c.drawString(50, y, f"Other Cost: Rp {other_cost:,.0f}")
-    y -= 30
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, y, f"TOTAL COST: Rp {total_cost:,.0f}")
-    y -= 30
+    # Biaya Detail
+    elements.append(Paragraph("Biaya Detail", styles["Heading2"]))
+    data_biaya = [
+        ["Biaya Charter", f"Rp {biaya_charter:,.0f}"],
+        ["Biaya Bunker", f"Rp {biaya_bunker:,.0f}"],
+        ["Biaya Crew", f"Rp {biaya_crew:,.0f}"],
+        ["Biaya Port", f"Rp {biaya_port:,.0f}"],
+        ["Premi Cost", f"Rp {premi_cost:,.0f}"],
+        ["Asist Tug", f"Rp {biaya_asist:,.0f}"],
+        ["Other Cost", f"Rp {other_cost:,.0f}"],
+        ["TOTAL COST", f"Rp {total_cost:,.0f}"],
+        ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
+    ]
+    t_biaya = Table(data_biaya, hAlign="LEFT")
+    t_biaya.setStyle(TableStyle([
+        ("BACKGROUND", (0, -2), (-1, -1), colors.lightgrey),  # highlight total & cost/MT
+        ("TEXTCOLOR", (0, -2), (-1, -1), colors.black),
+        ("FONTNAME", (0, -2), (-1, -1), "Helvetica-Bold"),
+        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
+    ]))
+    elements.append(t_biaya)
+    elements.append(Spacer(1, 12))
 
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, y, f"Cost per MT: Rp {cost_per_mt:,.0f} / MT")
-
-    
-    #==============================
-    # --- Profit Scenario ---
-    #==============================
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, y, "Profit Scenario (0% - 50%)")
-    y -= 20
-    c.setFont("Helvetica", 11)
-
+    # Profit Scenario
+    elements.append(Paragraph("Profit Scenario (0% - 50%)", styles["Heading2"]))
+    data_profit = [["Profit %", "Freight per MT (Rp)"]]
     for p in range(0, 55, 5):
         freight = cost_per_mt * (1 + (p/100))
-        c.drawString(60, y, f"{p}% Profit → Rp {freight:,.0f} / MT")
-        y -= 18
-        if y < 80:  # kalau sudah mentok halaman
-            c.showPage()
-            y = height - 50
-            c.setFont("Helvetica", 11)
+        data_profit.append([f"{p}%", f"Rp {freight:,.0f}"])
 
-    c.showPage()
-    c.save()
+    t_profit = Table(data_profit, hAlign="LEFT")
+    t_profit.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("BOX", (0, 0), (-1, -1), 0.25, colors.grey),
+    ]))
+    elements.append(t_profit)
+
+    # Build PDF
+    doc.build(elements)
     buffer.seek(0)
     return buffer
-
-# ==============================
-# Tombol Download PDF
-# ==============================
-pdf_file = generate_pdf()
-st.download_button(
-    label="📥 Download Laporan PDF",
-    data=pdf_file,
-    file_name="freight_report.pdf",
-    mime="application/pdf"
-)
