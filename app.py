@@ -89,3 +89,84 @@ for p in range(0, 55, 5):
 
 df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT"])
 st.table(df)
+
+
+# --- Fungsi buat PDF ---
+def generate_pdf():
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    styles = getSampleStyleSheet()
+    elements = []
+
+    # Judul
+    elements.append(Paragraph("Laporan Perhitungan Biaya Operasional Kapal", styles['Title']))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f"Tanggal: {datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}", styles['Normal']))
+    elements.append(Spacer(1, 12))
+
+    # Voyage Info
+    elements.append(Paragraph("1. Voyage Info", styles['Heading2']))
+    data_voyage = [
+        ["Port of Loading (POL)", pol],
+        ["Port of Discharge (POD)", pod],
+    ]
+    table_voyage = Table(data_voyage, hAlign="LEFT")
+    table_voyage.setStyle(TableStyle([
+        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
+        ('BACKGROUND', (0,0), (-1,0), colors.lightgrey)
+    ]))
+    elements.append(table_voyage)
+    elements.append(Spacer(1, 12))
+
+    # Parameter Input
+    elements.append(Paragraph("2. Parameter Input", styles['Heading2']))
+    data_param = [
+        ["Speed Kosong (knot)", speed_kosong],
+        ["Speed Isi (knot)", speed_isi],
+        ["Consumption (liter/jam)", consumption],
+        ["Harga Bunker (Rp/liter)", f"Rp {harga_bunker:,.0f}"],
+        ["Charter Hire (Rp/bulan)", f"Rp {charter_hire:,.0f}"],
+        ["Crew Cost (Rp/bulan)", f"Rp {crew_cost:,.0f}"],
+        ["Asuransi (Rp/bulan)", f"Rp {asuransi:,.0f}"],
+    ]
+    table_param = Table(data_param, hAlign="LEFT")
+    table_param.setStyle(TableStyle([
+        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
+        ('BACKGROUND', (0,0), (-1,0), colors.lightgrey)
+    ]))
+    elements.append(table_param)
+    elements.append(Spacer(1, 12))
+
+    # Hasil Perhitungan
+    elements.append(Paragraph("3. Hasil Perhitungan", styles['Heading2']))
+    data_hasil = [
+        ["Biaya Bunker/bulan", f"Rp {biaya_bunker:,.0f}"],
+        ["Charter Hire/bulan", f"Rp {charter_hire:,.0f}"],
+        ["Crew Cost/bulan", f"Rp {crew_cost:,.0f}"],
+        ["Asuransi/bulan", f"Rp {asuransi:,.0f}"],
+        ["Total Biaya", f"Rp {total_biaya:,.0f}"]
+    ]
+    table_hasil = Table(data_hasil, hAlign="LEFT")
+    table_hasil.setStyle(TableStyle([
+        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
+        ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
+    ]))
+    elements.append(table_hasil)
+    elements.append(Spacer(1, 20))
+
+    # Catatan
+    elements.append(Paragraph("4. Catatan:", styles['Heading2']))
+    elements.append(Paragraph("Perhitungan ini bersifat estimasi dan dapat berubah sesuai kondisi operasional.", styles['Normal']))
+
+    doc.build(elements)
+    pdf = buffer.getvalue()
+    buffer.close()
+    return pdf
+
+# --- Tombol Download PDF ---
+pdf_file = generate_pdf()
+st.download_button(
+    label="📥 Download Laporan PDF",
+    data=pdf_file,
+    file_name="laporan_biaya_operasional.pdf",
+    mime="application/pdf"
