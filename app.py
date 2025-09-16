@@ -37,7 +37,6 @@ harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=1200
 port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
 asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
 premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
-port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
 # Parameter khusus per mode
 if mode == "Owner":
@@ -52,6 +51,9 @@ if mode == "Owner":
 elif mode == "Charter":
     charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
     other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
+
+# Port Stay paling bawah
+port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
 # ==============================
 # Perhitungan Dasar
