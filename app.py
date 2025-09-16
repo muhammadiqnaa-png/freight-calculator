@@ -158,7 +158,6 @@ def generate_pdf(input_data, results, profit_df):
     table_input = Table(input_data, colWidths=[200, 200])
     table_input.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
     ]))
     elements.append(table_input)
     elements.append(Spacer(1,1))
