@@ -108,9 +108,10 @@ st.subheader("💰 Biaya Umum")
 for k, v in biaya_umum.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
-st.subheader("🧮 Total Cost & Cost per MT")
+st.subheader("🧮 Total Cost")
 st.write(f"**TOTAL COST: Rp {total_cost:,.0f}**")
-st.write(f"Rp {cost_per_mt:,.0f} / MT")
+st.subheader("🧮 Cost per MT")
+st.write(f"** FREIGHT: Rp {cost_per_mt:,.0f} / MT")
 
 # ==============================
 # Profit Scenario 0% - 50%
