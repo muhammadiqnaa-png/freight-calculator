@@ -150,7 +150,7 @@ results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 def generate_pdf(input_data, results, profit_df):
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4,
-        leftMargin=50,
+        leftMargin=60,
         rightMargin=50,
         topMargin=30,
         bottomMargin=40
