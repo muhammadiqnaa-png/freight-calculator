@@ -72,7 +72,7 @@ biaya_umum = {
 # Biaya per Mode
 if mode == "Owner":
     biaya_mode = {
-        "Angsuran": (Angsuran / 30) * voyage_days,
+        "Angsuran": (angsuran / 30) * voyage_days,
         "Crew Cost": (crew_cost / 30) * voyage_days,
         "Asuransi": (asuransi / 30) * voyage_days,
         "Docking": (docking / 30) * voyage_days,
