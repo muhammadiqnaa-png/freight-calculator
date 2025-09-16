@@ -20,12 +20,12 @@ speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
 consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
 harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
 
-charter_hire_/Cicilan = st.sidebar.number_input("Charter/Cicinan hire/bulan (Rp)", value=750000000)
+charter_hire = st.sidebar.number_input("Charter hire/bulan (Rp)", value=750000000)
 crew_cost = st.sidebar.number_input("Crew cost/bulan (Rp)", value=60000000)
 asuransi = st.sidebar.number_input("Asuransi/bulan (Rp)", value=50000000)
 docking = st.sidebar.number_input("Docking Saving/bulan (Rp)", value=50000000)
 perawatan = st.sidebar.number_input("Perawatan Fleet/bulan (Rp)", value=50000000)
-
+Sertifikat = st.sidebar.number_input("Sertifikat/bulan (Rp)", value=50000000)
 port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
 asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
 premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
@@ -55,9 +55,9 @@ biaya_crew = (crew_cost / 30) * voyage_days
 biaya_port = port_cost * 2
 premi_cost = premi_nm * jarak
 biaya_asist = asist_tug
-other_cost = ((asuransi / 30) * voyage_days) + ((docking / 30) * voyage_days) + ((perawatan / 30) * voyage_days) + (Other_Cost) + (((Depresiasi / 15) / 12 / 30) * voyage_days)
+other_cost = ((asuransi / 30) * voyage_days) + ((docking / 30) * voyage_days) + ((perawatan / 30) * voyage_days) + ((Sertifikat / 30) * voyage_days) + (Other_Cost) + (((Depresiasi / 15) / 12 / 30) * voyage_days)
 
-total_cost = biaya_charter_/Cicilan + biaya_bunker + biaya_crew + biaya_port + premi_cost + biaya_asist + other_cost
+total_cost = biaya_charter + biaya_bunker + biaya_crew + biaya_port + premi_cost + biaya_asist + other_cost
 cost_per_mt = total_cost / total_cargo
 
 # ==============================
