@@ -63,7 +63,7 @@ voyage_days = (sailing_time / 24) + port_stay
 total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
 # Biaya umum (sama untuk semua mode)
-biaya_umum_Rp = {k: Rp {v:,.0f}" For k, v in biaya_umum.items()}
+biaya_umum = {
     "Bunker BBM": total_consumption * harga_bunker,
     "Air Tawar": (voyage_days * 2) * harga_air_tawar,
     "Port Cost": port_cost * 2,
@@ -73,7 +73,7 @@ biaya_umum_Rp = {k: Rp {v:,.0f}" For k, v in biaya_umum.items()}
 
 # Biaya per Mode
 if mode == "Owner":
-    biaya_mode = {k: Rp {v:,.0f}" For k, v in biaya_mode.items()}
+    biaya_mode = {
         "Angsuran": (angsuran / 30) * voyage_days,
         "Crew Cost": (crew_cost / 30) * voyage_days,
         "Asuransi": (asuransi / 30) * voyage_days,
@@ -84,7 +84,7 @@ if mode == "Owner":
         "Other": other_cost
     }
 else:  # Charter
-    biaya_mode = {k: Rp {v:,.0f}" For k, v in biaya_mode.items()}
+    biaya_mode = {
         "Charter Hire": (charter_hire / 30) * voyage_days,
         "Other": other_cost
     }
@@ -138,7 +138,7 @@ input_data = [
     ["Total Cargo (MT)", f"{total_cargo:,}"],
 ]
 
-results = list(biaya_mode_Rp.items ()) + list(biaya_umum_Rp.items ())
+results = list(biaya_mode.items ()) + list(biaya_umum.items ())
 results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
 results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
