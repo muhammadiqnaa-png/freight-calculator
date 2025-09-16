@@ -54,7 +54,7 @@ biaya_crew = (crew_cost / 30) * voyage_days
 biaya_port = port_cost * 2
 premi_cost = premi_nm * jarak
 biaya_asist = asist_tug
-other_cost = ((asuransi / 30) * voyage_days) + ((docking / 30) * voyage_days) + ((perawatan / 30) * voyage_days)
+other_cost = ((asuransi / 30) * voyage_days) + ((docking / 30) * voyage_days) + ((perawatan / 30) * voyage_days) + (Other_Cost)
 
 total_cost = biaya_charter + biaya_bunker + biaya_crew + biaya_port + premi_cost + biaya_asist + other_cost
 cost_per_mt = total_cost / total_cargo
