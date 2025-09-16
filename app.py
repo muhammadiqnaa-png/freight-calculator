@@ -153,6 +153,21 @@ def generate_pdf():
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, y, f"Cost per MT: Rp {cost_per_mt:,.0f} / MT")
 
+    # --- Profit Scenario ---
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(50, y, "Profit Scenario (0% - 50%)")
+    y -= 20
+    c.setFont("Helvetica", 11)
+
+    for p in range(0, 55, 5):
+        freight = cost_per_mt * (1 + (p/100))
+        c.drawString(60, y, f"{p}% Profit → Rp {freight:,.0f} / MT")
+        y -= 18
+        if y < 80:  # kalau sudah mentok halaman
+            c.showPage()
+            y = height - 50
+            c.setFont("Helvetica", 11)
+
     c.showPage()
     c.save()
     buffer.seek(0)
