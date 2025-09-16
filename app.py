@@ -176,7 +176,7 @@ def generate_pdf(input_data, results, profit_df):
     table_profit.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
         ("BACKGROUND", (0,0), (0,0), colors.lightgrey),
-        ("FONTNAME", (0,0), (0,0), "Helvetica-Bold"),
+        ("FONTNAME", (0,0), (1,0), "Helvetica-Bold"),
         ("ALIGN", (1,1), (-1,-1), "RIGHT")
     ]))
     elements.append(table_profit)
