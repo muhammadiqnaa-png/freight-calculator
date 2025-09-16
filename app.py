@@ -170,7 +170,7 @@ def generate_pdf(input_data, results, profit_df):
         ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
     ]))
     elements.append(table_results)
-    elements.append(Spacer(1,12))
+    elements.append(Spacer(1,10))
     elements.append(Paragraph("📈 Profit Scenario (0% - 50%)", styles["Heading2"]))
     data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
     table_profit = Table(data_profit, colWidths=[60,100,120,120])
