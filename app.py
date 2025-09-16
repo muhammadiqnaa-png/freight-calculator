@@ -9,67 +9,41 @@ from reportlab.lib.styles import getSampleStyleSheet
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 st.title("🚢 Freight Calculator Tongkang")
 
+# ==============================
+# Pilihan Mode di Depan
+# ==============================
+st.header("💼 Pilih Mode Biaya")
+mode = st.radio("Owner atau Charter?", ["Owner", "Charter"])
 
 # ==============================
-# Pilihan Mode Owner / Charter
-# ==============================
-
-st.sidebar.header("💼 Mode Biaya")
-mode = st.sidebar.radio("Pilih Mode:", ["Owner", "Charter"])
-if mode == "Owner":
-    st.sidebar.subheader("💰 Biaya Owner")
-    angsuran = st.sidebar.number_input("Angsuran (Bulan)", value=0)
-    bunker_bbm = st.sidebar.number_input("Bunker BBM (Rp)", value=0)
-    bunker_air = st.sidebar.number_input("Bunker Air Tawar (Rp)", value=0)
-    crew_cost_owner = st.sidebar.number_input("Crew Cost (Rp)", value=0)
-    asuransi_owner = st.sidebar.number_input("Asuransi (Rp)", value=0)
-    docking_owner = st.sidebar.number_input("Docking (Rp)", value=0)
-    perawatan_owner = st.sidebar.number_input("Perawatan (Rp)", value=0)
-    sertifikat_owner = st.sidebar.number_input("Sertifikat (Rp)", value=0)
-    port_cost_owner = st.sidebar.number_input("Port Cost (Rp)", value=0)
-    premi_owner = st.sidebar.number_input("Premi (Rp)", value=0)
-    asist_owner = st.sidebar.number_input("Asist (Rp)", value=0)
-    depresiasi_owner = st.sidebar.number_input("Depresiasi (Rp)", value=0)
-    other_owner = st.sidebar.number_input("Other (Rp)", value=0)
-
-    total_biaya_mode = (angsuran + bunker_bbm + bunker_air + crew_cost_owner + asuransi_owner +
-                        docking_owner + perawatan_owner + sertifikat_owner + port_cost_owner +
-                        premi_owner + asist_owner + depresiasi_owner + other_owner)
-
-else:
-    st.sidebar.subheader("💰 Biaya Charter")
-    charter_hire = st.sidebar.number_input("Charter Hire (Bulan)", value=0)
-    bunker_bbm_charter = st.sidebar.number_input("Bunker BBM (Rp)", value=0)
-    bunker_air_charter = st.sidebar.number_input("Bunker Air Tawar (Rp)", value=0)
-    port_cost_charter = st.sidebar.number_input("Port Cost (Rp)", value=0)
-    premi_charter = st.sidebar.number_input("Premi (Rp)", value=0)
-    asist_charter = st.sidebar.number_input("Asist (Rp)", value=0)
-    other_charter = st.sidebar.number_input("Other (Rp)", value=0)
-
-    total_biaya_mode = (charter_hire + bunker_bbm_charter + bunker_air_charter +
-                        port_cost_charter + premi_charter + asist_charter + other_charter)
-
-# ==============================
-# Default Parameter (editable)
-# ==============================
-st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
-speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
-speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
-consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
-harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
-jarak_default = st.sidebar.number_input("Jarak Default (NM)", value=630)
-port_stay_default = st.sidebar.number_input("Port Stay (Hari)", value=10)
-total_cargo_default = st.sidebar.number_input("Total Cargo (MT)", value=7500)
-
-# ==============================
-# Input Utama dari User
+# Input Utama Kapal / Operasional
 # ==============================
 st.header("📥 Input Utama")
-pol = st.text_input("Port of Loading (POL)", value="")
-pod = st.text_input("Port of Discharge (POD)", value="")
-total_cargo = st.number_input("Total Cargo (MT)", value=int(total_cargo_default))
-jarak = st.number_input("Jarak (NM)", value=int(jarak_default))
-port_stay = st.number_input("Port Stay (Hari)", value=int(port_stay_default))
+pol = st.text_input("Port of Loading (POL)")
+pod = st.text_input("Port of Discharge (POD)")
+total_cargo = st.number_input("Total Cargo (MT)", value=7500)
+jarak = st.number_input("Jarak (NM)", value=630)
+port_stay = st.number_input("Port Stay (Hari)", value=10)
+
+# ==============================
+# Parameter Default
+# ==============================
+speed_kosong = st.number_input("Speed Kosong (knot)", value=3.0)
+speed_isi = st.number_input("Speed Isi (knot)", value=4.0)
+consumption = st.number_input("Consumption (liter/jam)", value=120)
+harga_bunker = st.number_input("Harga Bunker (Rp/liter)", value=12500)
+harga_air_tawar = st.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
+charter_hire = st.number_input("Charter hire/bulan (Rp)", value=750_000_000)
+crew_cost = st.number_input("Crew cost/bulan (Rp)", value=60_000_000)
+asuransi = st.number_input("Asuransi/bulan (Rp)", value=50_000_000)
+docking = st.number_input("Docking Saving/bulan (Rp)", value=50_000_000)
+perawatan = st.number_input("Perawatan Fleet/bulan (Rp)", value=50_000_000)
+Sertifikat = st.number_input("Sertifikat/bulan (Rp)", value=50_000_000)
+port_cost = st.number_input("Port cost/call (Rp)", value=50_000_000)
+asist_tug = st.number_input("Asist Tug (Rp)", value=35_000_000)
+premi_nm = st.number_input("Premi (Rp/NM)", value=50_000)
+Depresiasi = st.number_input("Depresiasi (Rp/Beli)", value=45_000_000_000)
+Other_Cost = st.number_input("Other Cost (Rp)", value=50_000_000)
 
 # ==============================
 # Perhitungan
@@ -77,9 +51,25 @@ port_stay = st.number_input("Port Stay (Hari)", value=int(port_stay_default))
 sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
 voyage_days = (sailing_time / 24) + port_stay
 total_consumption = (sailing_time * consumption) + (port_stay * consumption)
-biaya_bunker = total_consumption * harga_bunker
 
-total_cost = total_biaya_mode + biaya_bunker
+if mode == "Owner":
+    biaya_mode = ((crew_cost / 30) * voyage_days + 
+                  (asuransi / 30) * voyage_days + 
+                  ((docking / 30) * voyage_days) + 
+                  ((perawatan / 30) * voyage_days) +
+                  ((Sertifikat / 30) * voyage_days) +
+                  Other_Cost +
+                  (((Depresiasi / 15) / 12 / 30) * voyage_days))
+else:
+    biaya_mode = (charter_hire / 30) * voyage_days
+
+biaya_bunker = total_consumption * harga_bunker
+biaya_air_tawar = (voyage_days * 2) * harga_air_tawar
+biaya_port = port_cost * 2
+premi_cost = premi_nm * jarak
+biaya_asist = asist_tug
+
+total_cost = biaya_mode + biaya_bunker + biaya_air_tawar + biaya_port + premi_cost + biaya_asist
 cost_per_mt = total_cost / total_cargo
 
 # ==============================
@@ -89,10 +79,14 @@ st.header("📊 Hasil Perhitungan")
 st.write(f"**Sailing Time (jam):** {sailing_time:,.2f}")
 st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
 st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
-st.subheader(f"💰 Total Biaya ({mode})")
-st.write(f"Rp {total_biaya_mode:,.0f} (Biaya Mode)")
+st.subheader(f"💰 Total Cost ({mode})")
+st.write(f"Rp {biaya_mode:,.0f} (Biaya Mode)")
 st.write(f"Rp {biaya_bunker:,.0f} (Bunker BBM)")
-st.write(f"**Total Cost: Rp {total_cost:,.0f}**")
+st.write(f"Rp {biaya_air_tawar:,.0f} (Air Tawar)")
+st.write(f"Rp {biaya_port:,.0f} (Port Cost)")
+st.write(f"Rp {premi_cost:,.0f} (Premi)")
+st.write(f"Rp {biaya_asist:,.0f} (Asist)")
+st.write(f"**TOTAL COST: Rp {total_cost:,.0f}**")
 st.subheader("📦 Cost per MT")
 st.write(f"Rp {cost_per_mt:,.0f} / MT")
 
@@ -123,8 +117,12 @@ results = [
     ["Sailing Time (jam)", f"{sailing_time:,.2f}"],
     ["Total Voyage Days", f"{voyage_days:,.2f}"],
     ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
-    ["Total Biaya Mode", f"Rp {total_biaya_mode:,.0f}"],
+    ["Biaya Mode", f"Rp {biaya_mode:,.0f}"],
     ["Bunker BBM", f"Rp {biaya_bunker:,.0f}"],
+    ["Air Tawar", f"Rp {biaya_air_tawar:,.0f}"],
+    ["Port Cost", f"Rp {biaya_port:,.0f}"],
+    ["Premi", f"Rp {premi_cost:,.0f}"],
+    ["Asist", f"Rp {biaya_asist:,.0f}"],
     ["TOTAL COST", f"Rp {total_cost:,.0f}"],
     ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
 ]
@@ -165,4 +163,4 @@ def generate_pdf(input_data, results, profit_df):
 
 pdf_buffer = generate_pdf(input_data, results, profit_df)
 st.download_button("📥 Download Laporan PDF", data=pdf_buffer,
-                   file_name=f"Freight_Report_{pol}_{pod}.pdf", mime="application/pdf")
+                   file_name=f"Freight_Report_{pol}_{pod}.pdf", mime="application
