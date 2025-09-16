@@ -90,8 +90,9 @@ for p in range(0, 55, 5):
 df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT"])
 st.table(df)
 
-
-# --- Fungsi buat PDF ---
+# ==============================
+# Generate PDF Laporan
+# ==============================
 def generate_pdf():
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4)
@@ -99,7 +100,7 @@ def generate_pdf():
     elements = []
 
     # Judul
-    elements.append(Paragraph("Laporan Perhitungan Biaya Operasional Kapal", styles['Title']))
+    elements.append(Paragraph("Laporan Freight Calculator Batubara", styles['Title']))
     elements.append(Spacer(1, 12))
     elements.append(Paragraph(f"Tanggal: {datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}", styles['Normal']))
     elements.append(Spacer(1, 12))
@@ -109,64 +110,65 @@ def generate_pdf():
     data_voyage = [
         ["Port of Loading (POL)", pol],
         ["Port of Discharge (POD)", pod],
+        ["Jarak (NM)", jarak],
+        ["Total Cargo (MT)", total_cargo],
     ]
     table_voyage = Table(data_voyage, hAlign="LEFT")
-    table_voyage.setStyle(TableStyle([
-        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
-        ('BACKGROUND', (0,0), (-1,0), colors.lightgrey)
-    ]))
+    table_voyage.setStyle(TableStyle([('GRID', (0,0), (-1,-1), 0.5, colors.black)]))
     elements.append(table_voyage)
     elements.append(Spacer(1, 12))
 
-    # Parameter Input
-    elements.append(Paragraph("2. Parameter Input", styles['Heading2']))
-    data_param = [
-        ["Speed Kosong (knot)", speed_kosong],
-        ["Speed Isi (knot)", speed_isi],
-        ["Consumption (liter/jam)", consumption],
-        ["Harga Bunker (Rp/liter)", f"Rp {harga_bunker:,.0f}"],
-        ["Charter Hire (Rp/bulan)", f"Rp {charter_hire:,.0f}"],
-        ["Crew Cost (Rp/bulan)", f"Rp {crew_cost:,.0f}"],
-        ["Asuransi (Rp/bulan)", f"Rp {asuransi:,.0f}"],
+    # Hasil Perhitungan
+    elements.append(Paragraph("2. Hasil Perhitungan", styles['Heading2']))
+    data_hasil = [
+        ["Sailing Time (jam)", f"{sailing_time:,.2f}"],
+        ["Total Voyage Days", f"{voyage_days:,.2f}"],
+        ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
+        ["Total Cost", f"Rp {total_cost:,.0f}"],
+        ["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"],
     ]
-    table_param = Table(data_param, hAlign="LEFT")
-    table_param.setStyle(TableStyle([
+    table_hasil = Table(data_hasil, hAlign="LEFT")
+    table_hasil.setStyle(TableStyle([('GRID', (0,0), (-1,-1), 0.5, colors.black)]))
+    elements.append(table_hasil)
+    elements.append(Spacer(1, 12))
+
+    # Biaya Detail
+    elements.append(Paragraph("3. Biaya Detail", styles['Heading2']))
+    data_biaya = [
+        ["Biaya Charter", f"Rp {biaya_charter:,.0f}"],
+        ["Biaya Bunker", f"Rp {biaya_bunker:,.0f}"],
+        ["Biaya Crew", f"Rp {biaya_crew:,.0f}"],
+        ["Biaya Port", f"Rp {biaya_port:,.0f}"],
+        ["Premi Cost", f"Rp {premi_cost:,.0f}"],
+        ["Asist Tug", f"Rp {biaya_asist:,.0f}"],
+        ["Other Cost", f"Rp {other_cost:,.0f}"],
+    ]
+    table_biaya = Table(data_biaya, hAlign="LEFT")
+    table_biaya.setStyle(TableStyle([('GRID', (0,0), (-1,-1), 0.5, colors.black)]))
+    elements.append(table_biaya)
+    elements.append(Spacer(1, 12))
+
+    # Profit Scenario
+    elements.append(Paragraph("4. Freight dengan Profit (0% - 50%)", styles['Heading2']))
+    data_profit = [["Profit", "Freight per MT"]] + profit_list
+    table_profit = Table(data_profit, hAlign="LEFT")
+    table_profit.setStyle(TableStyle([
         ('GRID', (0,0), (-1,-1), 0.5, colors.black),
         ('BACKGROUND', (0,0), (-1,0), colors.lightgrey)
     ]))
-    elements.append(table_param)
-    elements.append(Spacer(1, 12))
-
-    # Hasil Perhitungan
-    elements.append(Paragraph("3. Hasil Perhitungan", styles['Heading2']))
-    data_hasil = [
-        ["Biaya Bunker/bulan", f"Rp {biaya_bunker:,.0f}"],
-        ["Charter Hire/bulan", f"Rp {charter_hire:,.0f}"],
-        ["Crew Cost/bulan", f"Rp {crew_cost:,.0f}"],
-        ["Asuransi/bulan", f"Rp {asuransi:,.0f}"],
-        ["Total Biaya", f"Rp {total_biaya:,.0f}"]
-    ]
-    table_hasil = Table(data_hasil, hAlign="LEFT")
-    table_hasil.setStyle(TableStyle([
-        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
-        ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
-    ]))
-    elements.append(table_hasil)
-    elements.append(Spacer(1, 20))
-
-    # Catatan
-    elements.append(Paragraph("4. Catatan:", styles['Heading2']))
-    elements.append(Paragraph("Perhitungan ini bersifat estimasi dan dapat berubah sesuai kondisi operasional.", styles['Normal']))
+    elements.append(table_profit)
 
     doc.build(elements)
     pdf = buffer.getvalue()
     buffer.close()
     return pdf
 
-# --- Tombol Download PDF ---
+# ==============================
+# Tombol Download PDF
+# ==============================
 pdf_file = generate_pdf()
 st.download_button(
     label="📥 Download Laporan PDF",
     data=pdf_file,
-    file_name="laporan_biaya_operasional.pdf",
+    file_name="laporan_freight_calculator.pdf",
     mime="application/pdf"
