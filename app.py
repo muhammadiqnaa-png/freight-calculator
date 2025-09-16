@@ -5,7 +5,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.pdfgen import canvas
 
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 st.title("🚢 Freight Calculator Tongkang")
@@ -154,7 +153,7 @@ def generate_pdf(input_data, results, profit_df):
     elements = []
     styles = getSampleStyleSheet()
 
-    elements.append(Paragraph("🚢 Freight Report Tongkang", styles["Title"]))
+    elements.append(Paragraph("🚢 Laporan Freight Tongkang", styles["Title"]))
     elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
     table_input = Table(input_data, colWidths=[200, 200])
     table_input.setStyle(TableStyle([
@@ -172,7 +171,7 @@ def generate_pdf(input_data, results, profit_df):
     ]))
     elements.append(table_results)
     elements.append(Spacer(1,1))
-    elements.append(Paragraph("📈 Profit Scenario (0% - 50%)", styles["Heading2"]))
+    elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading2"]))
     data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
     table_profit = Table(data_profit, colWidths=[60,100,120,120])
     table_profit.setStyle(TableStyle([
