@@ -161,7 +161,7 @@ def generate_pdf(input_data, results, profit_df):
         ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
     ]))
     elements.append(table_input)
-    elements.append(Spacer(1,12))
+    elements.append(Spacer(1,6))
 
     elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
     table_results = Table(results, colWidths=[200, 200])
