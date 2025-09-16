@@ -49,7 +49,7 @@ sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
 voyage_days = (sailing_time / 24) + port_stay
 total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
-biaya_charter = (charter_hire_/Cicilan / 30) * voyage_days
+biaya_charter = (charter_hire / 30) * voyage_days
 biaya_bunker = total_consumption * harga_bunker
 biaya_crew = (crew_cost / 30) * voyage_days
 biaya_port = port_cost * 2
