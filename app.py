@@ -143,7 +143,6 @@ input_data = [
     ["Jarak (NM)", f"{jarak:,}"],
     ["Total Cargo (MT)", f"{total_cargo:,}"],
 ]
-
 results = list(biaya_mode_rp.items()) + list(biaya_umum_rp.items())
 results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
 results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
@@ -172,7 +171,6 @@ def generate_pdf(input_data, results, profit_df):
     ]))
     elements.append(table_results)
     elements.append(Spacer(1,12))
-
     elements.append(Paragraph("📈 Profit Scenario (0% - 50%)", styles["Heading2"]))
     data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
     table_profit = Table(data_profit, colWidths=[60,100,120,120])
