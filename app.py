@@ -90,7 +90,7 @@ else:  # Charter
     }
 
 # Total Biaya
-total_cost = sum(biaya_mode_Rp.values()) + sum(biaya_umum_Rp.values())
+total_cost = sum(biaya_mode.values()) + sum(biaya_umum.values())
 cost_per_mt = total_cost / total_cargo
 
 # ==============================
