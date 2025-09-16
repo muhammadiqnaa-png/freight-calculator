@@ -48,7 +48,7 @@ if mode == "Owner":
     sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
     depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
     other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
-elif mode == "Charter":
+else:  # Charter
     charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
     other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
@@ -99,30 +99,27 @@ cost_per_mt = total_cost / total_cargo
 biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
 biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
 
-
- st.write(f"- {k}: Rp {v:,.0f}")
-
 # ==============================
 # Tampilkan Hasil Detail
 # ==============================
 st.header("📊 Hasil Perhitungan")
 
-st.write(f"**Sailing Time (jam):** {sailing_time:,.2f}")
-st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
-st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
+st.write(f"*Sailing Time (jam):* {sailing_time:,.2f}")
+st.write(f"*Total Voyage Days:* {voyage_days:,.2f}")
+st.write(f"*Total Consumption (liter):* {total_consumption:,.0f}")
 
 st.subheader(f"💰 Biaya Mode ({mode})")
 for k, v in biaya_mode_rp.items():
-    st.write(f"- {k}: Rp {v:,.0f}")
+    st.write(f"- {k}: {v}")
 
-st.subheader("💰 Biaya Umum ")
+st.subheader("💰 Biaya Umum")
 for k, v in biaya_umum_rp.items():
-    st.write(f"- {k}: Rp {v:,.0f}")
+    st.write(f"- {k}: {v}")
 
 st.subheader("🧮 Total Cost")
-st.write(f"**TOTAL COST: Rp {total_cost:,.0f}**")
+st.write(f"*TOTAL COST: Rp {total_cost:,.0f}*")
 st.subheader("🧮 Cost per MT")
-st.write(f"**FREIGHT: Rp {cost_per_mt:,.0f} / MT**")
+st.write(f"*FREIGHT: Rp {cost_per_mt:,.0f} / MT*")
 
 # ==============================
 # Profit Scenario 0% - 50%
@@ -147,7 +144,7 @@ input_data = [
     ["Total Cargo (MT)", f"{total_cargo:,}"],
 ]
 
-results = list(biaya_mode_rp.items ()) + list(biaya_umum_rp.items ())
+results = list(biaya_mode_rp.items()) + list(biaya_umum_rp.items())
 results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
 results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
@@ -160,25 +157,31 @@ def generate_pdf(input_data, results, profit_df):
     elements.append(Paragraph("🚢 Freight Report Tongkang", styles["Title"]))
     elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
     table_input = Table(input_data, colWidths=[200, 200])
-    table_input.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-                                     ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)]))
+    table_input.setStyle(TableStyle([
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
+    ]))
     elements.append(table_input)
     elements.append(Spacer(1,12))
 
     elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
     table_results = Table(results, colWidths=[200, 200])
-    table_results.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-                                       ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)]))
+    table_results.setStyle(TableStyle([
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
+    ]))
     elements.append(table_results)
     elements.append(Spacer(1,12))
 
     elements.append(Paragraph("📈 Profit Scenario (0% - 50%)", styles["Heading2"]))
     data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
     table_profit = Table(data_profit, colWidths=[60,100,120,120])
-    table_profit.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-                                     ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
-                                     ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-                                     ("ALIGN", (1,1), (-1,-1), "RIGHT")]))
+    table_profit.setStyle(TableStyle([
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+        ("ALIGN", (1,1), (-1,-1), "RIGHT")
+    ]))
     elements.append(table_profit)
 
     doc.build(elements)
