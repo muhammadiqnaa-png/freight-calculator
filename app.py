@@ -153,7 +153,7 @@ def generate_pdf(input_data, results, profit_df):
     elements = []
     styles = getSampleStyleSheet()
 
-    elements.append(Paragraph("🚢 Laporan Freight Tongkang", styles["Title"]))
+    elements.append(Paragraph("🚢 Laporan Freight Tongkang", styles["Heading2"]))
     elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
     table_input = Table(input_data, colWidths=[200, 200])
     table_input.setStyle(TableStyle([
