@@ -111,7 +111,7 @@ for k, v in biaya_umum.items():
 st.subheader("🧮 Total Cost")
 st.write(f"**TOTAL COST: Rp {total_cost:,.0f}**")
 st.subheader("🧮 Cost per MT")
-st.write(f"** FREIGHT: Rp {cost_per_mt:,.0f} / MT")
+st.write(f"** FREIGHT: Rp {cost_per_mt:,.0f} / MT**")
 
 # ==============================
 # Profit Scenario 0% - 50%
