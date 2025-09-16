@@ -138,7 +138,7 @@ input_data = [
     ["Total Cargo (MT)", f"{total_cargo:,}"],
 ]
 
-results = list(biaya_mode_Rp.items f"Rp (biaya_mode:,.0f)) + list(biaya_umum.items f"Rp (biaya_umum:,.0f))
+results = list(biaya_mode.items f"Rp (biaya_mode:,.0f)) + list(biaya_umum.items f"Rp (biaya_umum:,.0f))
 results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
 results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
