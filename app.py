@@ -94,6 +94,12 @@ total_cost = sum(biaya_mode.values()) + sum(biaya_umum.values())
 cost_per_mt = total_cost / total_cargo
 
 # ==============================
+# Ubah semua biaya ke format Rp
+# ==============================
+biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
+biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
+
+# ==============================
 # Tampilkan Hasil Detail
 # ==============================
 st.header("📊 Hasil Perhitungan")
@@ -103,11 +109,11 @@ st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
 st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
 
 st.subheader(f"💰 Biaya Mode ({mode})")
-for k, v in biaya_mode.items():
+for k, v in biaya_mode_rp.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
 st.subheader("💰 Biaya Umum ")
-for k, v in biaya_umum.items():
+for k, v in biaya_umum_rp.items():
     st.write(f"- {k}: Rp {v:,.0f}")
 
 st.subheader("🧮 Total Cost")
@@ -138,7 +144,7 @@ input_data = [
     ["Total Cargo (MT)", f"{total_cargo:,}"],
 ]
 
-results = list(biaya_mode.items ()) + list(biaya_umum.items ())
+results = list(biaya_mode_rp.items ()) + list(biaya_umum_rp.items ())
 results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
 results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
