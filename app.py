@@ -85,10 +85,12 @@ st.subheader("📈 Freight dengan Profit (0% - 50%)")
 profit_list = []
 for p in range(0, 55, 5):
     freight = cost_per_mt * (1 + (p/100))
-    profit_list.append([f"{p}%", f"Rp {freight:,.0f}"])
+    revenue = freight * total_cargo
+    profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}"])
 
-df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT"])
+df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT", "Revenue"])
 st.table(df)
+
 
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
