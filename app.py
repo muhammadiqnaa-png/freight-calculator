@@ -86,11 +86,18 @@ profit_list = []
 for p in range(0, 55, 5):
     freight = cost_per_mt * (1 + (p/100))
     revenue = freight * total_cargo
-    profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}"])
+    profit_list.append([f"{p}%", freight, revenue])
 
 df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT", "Revenue"])
-st.table(df)
 
+# Hilangkan index
+df.index = [""] * len(df)
+
+# Format kolom angka jadi Rupiah
+df["Freight per MT"] = df["Freight per MT"].apply(lambda x: f"Rp {x:,.0f}")
+df["Revenue"] = df["Revenue"].apply(lambda x: f"Rp {x:,.0f}")
+
+st.table(df)
 
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
