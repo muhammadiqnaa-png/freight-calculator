@@ -153,10 +153,10 @@ def generate_pdf():
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, y, f"Cost per MT: Rp {cost_per_mt:,.0f} / MT")
 
-
     
-
+    #==============================
     # --- Profit Scenario ---
+    #==============================
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, y, "Profit Scenario (0% - 50%)")
     y -= 20
