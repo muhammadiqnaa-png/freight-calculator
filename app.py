@@ -1,12 +1,8 @@
 import streamlit as st
 import pandas as pd
-from io import BytesIO
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
 
 st.set_page_config(page_title="Freight Calculator", layout="wide")
+
 st.title("🚢 Freight Calculator Batubara")
 
 # ==============================
@@ -28,18 +24,15 @@ perawatan = st.sidebar.number_input("Perawatan Fleet/bulan (Rp)", value=50000000
 port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
 asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
 premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
-Other_Cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
 # ==============================
-# Input Utama
+# Input Utama dari User
 # ==============================
 st.header("📥 Input Utama")
 
-pol = st.text_input("Port of Loading (POL)", value="Jetty SIP")
-pod = st.text_input("Port of Discharge (POD)", value="Marunda")
-jarak = st.number_input("Jarak (NM)", value=630)
 total_cargo = st.number_input("Total Cargo (MT)", value=10000)
+jarak = st.number_input("Jarak (NM)", value=630)
 
 # ==============================
 # Perhitungan
@@ -54,10 +47,45 @@ biaya_crew = (crew_cost / 30) * voyage_days
 biaya_port = port_cost * 2
 premi_cost = premi_nm * jarak
 biaya_asist = asist_tug
-other_cost = ((asuransi / 30) * voyage_days) + ((docking / 30) * voyage_days) + ((perawatan / 30) * voyage_days) + (Other_Cost)
+other_cost = ((asuransi / 30) * voyage_days) + ((docking / 30) * voyage_days) + ((perawatan / 30) * voyage_days)
 
 total_cost = biaya_charter + biaya_bunker + biaya_crew + biaya_port + premi_cost + biaya_asist + other_cost
 cost_per_mt = total_cost / total_cargo
+
+# ==============================
+# Tampilkan Hasil
+# ==============================
+st.header("📊 Hasil Perhitungan")
+
+st.write(f"**Sailing Time (jam):** {sailing_time:,.2f}")
+st.write(f"**Total Voyage Days:** {voyage_days:,.2f}")
+st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
+
+st.subheader("💰 Biaya Detail")
+st.write(f"- Biaya Charter: Rp {biaya_charter:,.0f}")
+st.write(f"- Biaya Bunker: Rp {biaya_bunker:,.0f}")
+st.write(f"- Biaya Crew: Rp {biaya_crew:,.0f}")
+st.write(f"- Biaya Port: Rp {biaya_port:,.0f}")
+st.write(f"- Premi Cost: Rp {premi_cost:,.0f}")
+st.write(f"- Asist Tug: Rp {biaya_asist:,.0f}")
+st.write(f"- Other Cost: Rp {other_cost:,.0f}")
+st.write(f"**Total Cost: Rp {total_cost:,.0f}**")
+
+st.subheader("📦 Cost per MT")
+st.write(f"Rp {cost_per_mt:,.0f} / MT")
+
+# ==============================
+# Profit Scenario 0% - 50%
+# ==============================
+st.subheader("📈 Freight dengan Profit (0% - 50%)")
+
+profit_list = []
+for p in range(0, 55, 5):
+    freight = cost_per_mt * (1 + (p/100))
+    profit_list.append([f"{p}%", f"Rp {freight:,.0f}"])
+
+df = pd.DataFrame(profit_list, columns=["Profit", "Freight per MT"])
+st.table(df)
 
 # ==============================
 # Kumpulan Data untuk PDF
