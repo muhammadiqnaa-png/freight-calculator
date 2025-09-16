@@ -158,25 +158,26 @@ def generate_pdf(input_data, results, profit_df):
     table_input = Table(input_data, colWidths=[200, 200])
     table_input.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-
+        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
     ]))
     elements.append(table_input)
-    elements.append(Spacer(0,0))
+    elements.append(Spacer(1,1))
 
     elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
     table_results = Table(results, colWidths=[200, 200])
     table_results.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("BACKGROUND", (0,0), (-1,0), colors.whitesmoke)
     ]))
     elements.append(table_results)
-    elements.append(Spacer(0,0))
+    elements.append(Spacer(1,1))
     elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading2"]))
     data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
     table_profit = Table(data_profit, colWidths=[60,100,120,120])
     table_profit.setStyle(TableStyle([
         ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("BACKGROUND", (0,0), (0,0), colors.lightgrey),
-        ("FONTNAME", (0,0), (1,0), "Helvetica-Bold"),
+        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
         ("ALIGN", (1,1), (-1,-1), "RIGHT")
     ]))
     elements.append(table_profit)
