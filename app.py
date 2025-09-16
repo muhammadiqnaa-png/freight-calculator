@@ -113,6 +113,7 @@ results = [
     ["Total Consumption (liter)", f"{total_consumption:,.0f}"],
     ["Biaya Charter", f"Rp {biaya_charter:,.0f}"],
     ["Biaya Bunker", f"Rp {biaya_bunker:,.0f}"],
+    ["Biaya Air Tawar", f"Rp {biaya_air_tawar:,.0f}"],
     ["Biaya Crew", f"Rp {biaya_crew:,.0f}"],
     ["Biaya Port", f"Rp {biaya_port:,.0f}"],
     ["Premi Cost", f"Rp {premi_cost:,.0f}"],
