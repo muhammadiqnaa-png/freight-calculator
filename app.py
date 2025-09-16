@@ -9,6 +9,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 st.title("🚢 Freight Calculator Tongkang")
 
+
 # ==============================
 # Pilihan Mode Owner / Charter
 # ==============================
@@ -59,45 +60,6 @@ harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
 jarak_default = st.sidebar.number_input("Jarak Default (NM)", value=630)
 port_stay_default = st.sidebar.number_input("Port Stay (Hari)", value=10)
 total_cargo_default = st.sidebar.number_input("Total Cargo (MT)", value=7500)
-
-# ==============================
-# Pilihan Mode Owner / Charter
-# ==============================
-
-st.sidebar.header("💼 Mode Biaya")
-mode = st.sidebar.radio("Pilih Mode:", ["Owner", "Charter"])
-if mode == "Owner":
-    st.sidebar.subheader("💰 Biaya Owner")
-    angsuran = st.sidebar.number_input("Angsuran (Bulan)", value=0)
-    bunker_bbm = st.sidebar.number_input("Bunker BBM (Rp)", value=0)
-    bunker_air = st.sidebar.number_input("Bunker Air Tawar (Rp)", value=0)
-    crew_cost_owner = st.sidebar.number_input("Crew Cost (Rp)", value=0)
-    asuransi_owner = st.sidebar.number_input("Asuransi (Rp)", value=0)
-    docking_owner = st.sidebar.number_input("Docking (Rp)", value=0)
-    perawatan_owner = st.sidebar.number_input("Perawatan (Rp)", value=0)
-    sertifikat_owner = st.sidebar.number_input("Sertifikat (Rp)", value=0)
-    port_cost_owner = st.sidebar.number_input("Port Cost (Rp)", value=0)
-    premi_owner = st.sidebar.number_input("Premi (Rp)", value=0)
-    asist_owner = st.sidebar.number_input("Asist (Rp)", value=0)
-    depresiasi_owner = st.sidebar.number_input("Depresiasi (Rp)", value=0)
-    other_owner = st.sidebar.number_input("Other (Rp)", value=0)
-
-    total_biaya_mode = (angsuran + bunker_bbm + bunker_air + crew_cost_owner + asuransi_owner +
-                        docking_owner + perawatan_owner + sertifikat_owner + port_cost_owner +
-                        premi_owner + asist_owner + depresiasi_owner + other_owner)
-
-else:
-    st.sidebar.subheader("💰 Biaya Charter")
-    charter_hire = st.sidebar.number_input("Charter Hire (Bulan)", value=0)
-    bunker_bbm_charter = st.sidebar.number_input("Bunker BBM (Rp)", value=0)
-    bunker_air_charter = st.sidebar.number_input("Bunker Air Tawar (Rp)", value=0)
-    port_cost_charter = st.sidebar.number_input("Port Cost (Rp)", value=0)
-    premi_charter = st.sidebar.number_input("Premi (Rp)", value=0)
-    asist_charter = st.sidebar.number_input("Asist (Rp)", value=0)
-    other_charter = st.sidebar.number_input("Other (Rp)", value=0)
-
-    total_biaya_mode = (charter_hire + bunker_bbm_charter + bunker_air_charter +
-                        port_cost_charter + premi_charter + asist_charter + other_charter)
 
 # ==============================
 # Input Utama dari User
