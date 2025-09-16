@@ -2,4 +2,4 @@ streamlit
 pandas
 xlsxwriter
 openpyxl
-reportlab.platypus.Table
+reportlab
