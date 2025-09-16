@@ -30,7 +30,8 @@ port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 # Input Utama dari User
 # ==============================
 st.header("📥 Input Utama")
-
+pol = st.text_input("Port of Loading (POL)", value="Jetty SIP")
+pod = st.text_input("Port of Discharge (POD)", value="Marunda")
 total_cargo = st.number_input("Total Cargo (MT)", value=10000)
 jarak = st.number_input("Jarak (NM)", value=630)
 
