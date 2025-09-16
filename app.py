@@ -104,11 +104,11 @@ st.write(f"**Total Consumption (liter):** {total_consumption:,.0f}")
 
 st.subheader(f"💰 Biaya Mode ({mode})")
 for k, v in biaya_mode.items():
-    st.write(f"- {k}: Rp {v:,.0f}")
+    st.write(f"Rp- {k}: Rp {v:,.0f}")
 
 st.subheader("💰 Biaya Umum")
 for k, v in biaya_umum.items():
-    st.write(f"- {k}: Rp {v:,.0f}")
+    st.write(f"Rp- {k}: Rp {v:,.0f}")
 
 st.subheader("🧮 Total Cost")
 st.write(f"**TOTAL COST: Rp {total_cost:,.0f}**")
