@@ -129,9 +129,10 @@ profit_list = []
 for p in range(0, 55, 5):
     freight = cost_per_mt * (1 + (p / 100))
     revenue = freight * total_cargo
-    net_profit = revenue - total_cost
-    profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {net_profit:,.0f}"])
-profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Net Profit"])
+    Pph_1,2% = revenue * 1,2%
+    net_profit = revenue - - Pph_1,2% - total_cost
+    profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {Pph_1,2%:,.0f}", f"Rp {net_profit:,.0f}"])
+profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Pph 1,2%", "Net Profit"])
 st.table(profit_df)
 
 # ==============================
