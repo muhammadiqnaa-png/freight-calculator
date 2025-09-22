@@ -48,7 +48,7 @@ else:
 # Form input master data
 with st.sidebar.form("form_rute"):
     nama_rute = st.text_input("Nama Rute (contoh: Jakarta - Surabaya)")
-    jarak_rute = st.number_input("Jarak Rute (NM)", min_value=1, step=1, value=0)
+    jarak_rute = st.number_input("Jarak Rute (NM)", min_value=0, step=0, value=0)
     simpan = st.form_submit_button("Simpan")
 
     if simpan:
