@@ -6,7 +6,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-login_btn = st.button("Login")
 
 # Daftar user & password sederhana
 USER_CREDENTIALS = {
@@ -17,29 +16,35 @@ USER_CREDENTIALS = {
 # Simpan session login
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+    st.session_state.username = ""
 
+# Halaman Login
 if not st.session_state.logged_in:
-    st.title("🔒 Login Aplikasi Freight Calculator")
+    st.title("🔒 Login Aplikasi")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     login_btn = st.button("Login")
 
     if login_btn:
-    if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-        st.session_state.logged_in = True
-        st.session_state.username = username
-        st.success("Login berhasil ✅\nSelamat datang, {username}!")
-        st.experimental_rerun()
+        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.success(f"Login berhasil ✅\nSelamat datang, {username}!")
+            st.experimental_rerun()
         else:
             st.error("Username / password salah")
-else:
-    st.sidebar.success("Login sebagai: " + username)
-    st.title("🚢 Freight Calculator")
 
-if st.session_state.logged_in:
+# Halaman setelah login
+else:
     st.sidebar.success("Login sebagai: " + st.session_state.username)
-    st.title("🚢 Freight Calculator")
+    st.title("✅ Anda sudah login")
+    st.write("Selamat datang di aplikasi Anda!")
+    logout_btn = st.button("Logout")
+    if logout_btn:
+        st.session_state.logged_in = False
+        st.session_state.username = ""
+        st.experimental_rerun()
 
 # ==============================
 # Pilih Mode
