@@ -6,6 +6,35 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+import streamlit as st
+
+# Daftar user & password sederhana
+USER_CREDENTIALS = {
+    "admin": "12345",
+    "user1": "abcde"
+}
+
+# Simpan session login
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.title("🔒 Login Aplikasi Freight Calculator")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    login_btn = st.button("Login")
+
+    if login_btn:
+        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+            st.session_state.logged_in = True
+            st.success("Login berhasil ✅")
+            st.experimental_rerun()
+        else:
+            st.error("Username / password salah")
+else:
+    st.sidebar.success("Login sebagai: " + username)
+    st.title("🚢 Freight Calculator")
 
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 st.title("🚢 Freight Calculator Tongkang")
