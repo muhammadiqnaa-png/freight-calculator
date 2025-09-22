@@ -7,44 +7,33 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
-# Daftar user & password sederhana
-USER_CREDENTIALS = {
-    "admin": "12345",
-    "user1": "abcde"
-}
+# Dummy login
+USER_CREDENTIALS = {"admin":"12345"}
 
-# Simpan session login
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
-# Halaman Login
+# ===== Login =====
 if not st.session_state.logged_in:
     st.title("🔒 Login Aplikasi")
-
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     login_btn = st.button("Login")
-
     if login_btn:
         if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
             st.session_state.logged_in = True
             st.session_state.username = username
-            st.success(f"Login berhasil ✅\nSelamat datang, {username}!")
+            st.success(f"Login berhasil ✅")
             st.experimental_rerun()
         else:
             st.error("Username / password salah")
 
-# Halaman setelah login
+# ===== Halaman utama hanya muncul setelah login =====
 else:
     st.sidebar.success("Login sebagai: " + st.session_state.username)
-    st.title("✅ Anda sudah login")
-    st.write("Selamat datang di aplikasi Anda!")
-    logout_btn = st.button("Logout")
-    if logout_btn:
-        st.session_state.logged_in = False
-        st.session_state.username = ""
-        st.experimental_rerun()
+    st.title("🚢 Freight Calculator")
+    st.write("Ini baru muncul setelah login ✅")
 
 # ==============================
 # Pilih Mode
