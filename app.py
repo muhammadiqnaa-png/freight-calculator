@@ -28,6 +28,50 @@ jarak = st.number_input("Jarak (NM)", value=630)
 # Sidebar Parameter (Dinamis sesuai mode)
 # ==============================
 st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
+# ==============================
+# Sidebar Input Parameter
+# ==============================
+st.sidebar.header("Parameter (Bisa di Edit)")
+
+# === Tambahan: Master Data Rute ===
+st.sidebar.subheader("📂 Master Data Rute")
+
+FILE_MASTER = "master_rute.csv"
+
+# Cek apakah file sudah ada
+if not os.path.exists(FILE_MASTER):
+    df_rute = pd.DataFrame(columns=["Rute", "Jarak (NM)"])
+    df_rute.to_csv(FILE_MASTER, index=False)
+else:
+    df_rute = pd.read_csv(FILE_MASTER)
+
+# Form input master data
+with st.sidebar.form("form_rute"):
+    nama_rute = st.text_input("Nama Rute (contoh: Jakarta - Surabaya)")
+    jarak_rute = st.number_input("Jarak Rute (NM)", min_value=1, step=1, value=0)
+    simpan = st.form_submit_button("Simpan")
+
+    if simpan:
+        if nama_rute and jarak_rute > 0:
+            new_row = pd.DataFrame([[nama_rute, jarak_rute]], columns=["Rute", "Jarak (NM)"])
+            df_rute = pd.concat([df_rute, new_row], ignore_index=True)
+            df_rute.to_csv(FILE_MASTER, index=False)
+            st.sidebar.success(f"Rute {nama_rute} berhasil disimpan!")
+            st.experimental_rerun()
+        else:
+            st.sidebar.error("Isi semua field!")
+
+# Dropdown pilih rute
+if not df_rute.empty:
+    pilih_rute = st.sidebar.selectbox("Pilih Rute Tersimpan:", df_rute["Rute"])
+    data_rute = df_rute[df_rute["Rute"] == pilih_rute].iloc[0]
+    jarak = data_rute["Jarak (NM)"]   # override jarak input utama
+    st.sidebar.info(f"Jarak otomatis: {jarak} NM")
+
+# === Lanjut dengan input lain seperti POL, POD, Speed, dll ===
+pol = st.sidebar.text_input("POL", "Jakarta")
+pod = st.sidebar.text_input("POD", "Surabaya")
+
 
 # Parameter umum
 speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
