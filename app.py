@@ -1,22 +1,31 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-import os
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
-# Dummy login
-USER_CREDENTIALS = {"admin":"12345"}
+# ==============================
+# User & Password
+# ==============================
+USER_CREDENTIALS = {
+    "admin": "12345",
+    "user1": "abcde"
+}
 
+# ==============================
+# Session State Login
+# ==============================
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
-# ===== Login =====
+# ==============================
+# Login Page
+# ==============================
 if not st.session_state.logged_in:
-    st.title("🔒 Login Aplikasi")
+    st.title("🔒 Login Aplikasi Freight Calculator")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     login_btn = st.button("Login")
@@ -24,207 +33,202 @@ if not st.session_state.logged_in:
         if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
             st.session_state.logged_in = True
             st.session_state.username = username
-            st.success(f"Login berhasil ✅")
+            st.success(f"Login berhasil ✅ Selamat datang, {username}!")
             st.experimental_rerun()
         else:
             st.error("Username / password salah")
 
-# ===== Halaman utama hanya muncul setelah login =====
+# ==============================
+# Halaman Utama (hanya muncul setelah login)
+# ==============================
 else:
     st.sidebar.success("Login sebagai: " + st.session_state.username)
-    st.title("🚢 Freight Calculator")
-    st.write("Ini baru muncul setelah login ✅")
+    st.title("🚢 Freight Calculator Tongkang")
 
-# ==============================
-# Pilih Mode
-# ==============================
-mode = st.radio("Pilih Mode Biaya:", ["Owner", "Charter"])
+    st.set_page_config(page_title="Freight Calculator", layout="wide")
 
-# ==============================
-# Input Utama Kapal / Operasional
-# ==============================
-st.header("📥 Input Utama")
-pol = st.text_input("Port of Loading (POL)")
-pod = st.text_input("Port of Discharge (POD)")
-total_cargo = st.number_input("Total Cargo (MT)", value=7500)
-jarak = st.number_input("Jarak (NM)", value=630)
+    # ==============================
+    # Pilih Mode
+    # ==============================
+    mode = st.radio("Pilih Mode Biaya:", ["Owner", "Charter"])
 
-# ==============================
-# Sidebar Parameter (Dinamis sesuai mode)
-# ==============================
-st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
+    # ==============================
+    # Input Utama Kapal / Operasional
+    # ==============================
+    st.header("📥 Input Utama")
+    pol = st.text_input("Port of Loading (POL)")
+    pod = st.text_input("Port of Discharge (POD)")
+    total_cargo = st.number_input("Total Cargo (MT)", value=7500)
+    jarak = st.number_input("Jarak (NM)", value=630)
 
-# Parameter umum
-speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
-speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
-consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
-harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
-harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
-port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
-asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
-premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
+    # ==============================
+    # Sidebar Parameter
+    # ==============================
+    st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
 
-# Parameter khusus per mode
-if mode == "Owner":
-    angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=750000000)
-    crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=60000000)
-    asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=50000000)
-    docking = st.sidebar.number_input("Docking (Rp/bulan)", value=50000000)
-    perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=50000000)
-    sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
-    depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
-    other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
-else:  # Charter
-    charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
-    other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
+    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
+    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
+    consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
+    harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
+    harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
+    port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
+    asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
+    premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
 
-# Port Stay paling bawah
-port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
+    if mode == "Owner":
+        angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=750000000)
+        crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=60000000)
+        asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=50000000)
+        docking = st.sidebar.number_input("Docking (Rp/bulan)", value=50000000)
+        perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=50000000)
+        sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
+        depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
+        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
+    else:  # Charter
+        charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
+        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
-# ==============================
-# Perhitungan Dasar
-# ==============================
-sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
-voyage_days = (sailing_time / 24) + port_stay
-total_consumption = (sailing_time * consumption) + (port_stay * consumption)
+    port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
-# Biaya umum (sama untuk semua mode)
-biaya_umum = {
-    "Bunker BBM": total_consumption * harga_bunker,
-    "Air Tawar": (voyage_days * 2) * harga_air_tawar,
-    "Port Cost": port_cost * 2,
-    "Premi": premi_nm * jarak,
-    "Asist": asist_tug
-}
+    # ==============================
+    # Perhitungan Dasar
+    # ==============================
+    sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
+    voyage_days = (sailing_time / 24) + port_stay
+    total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
-# Biaya per Mode
-if mode == "Owner":
-    biaya_mode = {
-        "Angsuran": (angsuran / 30) * voyage_days,
-        "Crew Cost": (crew_cost / 30) * voyage_days,
-        "Asuransi": (asuransi / 30) * voyage_days,
-        "Docking": (docking / 30) * voyage_days,
-        "Perawatan": (perawatan / 30) * voyage_days,
-        "Sertifikat": (sertifikat / 30) * voyage_days,
-        "Depresiasi": ((depresiasi / 15) / 12 / 30) * voyage_days,
-        "Other": other_cost
-    }
-else:  # Charter
-    biaya_mode = {
-        "Charter Hire": (charter_hire / 30) * voyage_days,
-        "Other": other_cost
+    # Biaya umum
+    biaya_umum = {
+        "Bunker BBM": total_consumption * harga_bunker,
+        "Air Tawar": (voyage_days * 2) * harga_air_tawar,
+        "Port Cost": port_cost * 2,
+        "Premi": premi_nm * jarak,
+        "Asist": asist_tug
     }
 
-# Total Biaya
-total_cost = sum(biaya_mode.values()) + sum(biaya_umum.values())
-cost_per_mt = total_cost / total_cargo
+    # Biaya per Mode
+    if mode == "Owner":
+        biaya_mode = {
+            "Angsuran": (angsuran / 30) * voyage_days,
+            "Crew Cost": (crew_cost / 30) * voyage_days,
+            "Asuransi": (asuransi / 30) * voyage_days,
+            "Docking": (docking / 30) * voyage_days,
+            "Perawatan": (perawatan / 30) * voyage_days,
+            "Sertifikat": (sertifikat / 30) * voyage_days,
+            "Depresiasi": ((depresiasi / 15) / 12 / 30) * voyage_days,
+            "Other": other_cost
+        }
+    else:
+        biaya_mode = {
+            "Charter Hire": (charter_hire / 30) * voyage_days,
+            "Other": other_cost
+        }
 
-# ==============================
-# Ubah semua biaya ke format Rp
-# ==============================
-biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
-biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
+    total_cost = sum(biaya_mode.values()) + sum(biaya_umum.values())
+    cost_per_mt = total_cost / total_cargo
 
-# ==============================
-# Tampilkan Hasil Detail
-# ==============================
-st.header("📊 Hasil Perhitungan")
+    biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
+    biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
 
-st.write(f"*Sailing Time (jam):* {sailing_time:,.2f}")
-st.write(f"*Total Voyage Days:* {voyage_days:,.2f}")
-st.write(f"*Total Consumption (liter):* {total_consumption:,.0f}")
+    # ==============================
+    # Tampilkan Hasil
+    # ==============================
+    st.header("📊 Hasil Perhitungan")
+    st.write(f"Sailing Time (jam): {sailing_time:,.2f}")
+    st.write(f"Total Voyage Days: {voyage_days:,.2f}")
+    st.write(f"Total Consumption (liter): {total_consumption:,.0f}")
 
-st.subheader(f"💰 Biaya Mode ({mode})")
-for k, v in biaya_mode_rp.items():
-    st.write(f"- {k}: {v}")
+    st.subheader(f"💰 Biaya Mode ({mode})")
+    for k, v in biaya_mode_rp.items():
+        st.write(f"- {k}: {v}")
 
-st.subheader("💰 Biaya Umum")
-for k, v in biaya_umum_rp.items():
-    st.write(f"- {k}: {v}")
+    st.subheader("💰 Biaya Umum")
+    for k, v in biaya_umum_rp.items():
+        st.write(f"- {k}: {v}")
 
-st.subheader("🧮 Total Cost")
-st.write(f"*TOTAL COST: Rp {total_cost:,.0f}*")
-st.subheader("🧮 Cost per MT")
-st.write(f"*FREIGHT: Rp {cost_per_mt:,.0f} / MT*")
+    st.subheader("🧮 Total Cost")
+    st.write(f"TOTAL COST: Rp {total_cost:,.0f}")
+    st.subheader("🧮 Cost per MT")
+    st.write(f"FREIGHT: Rp {cost_per_mt:,.0f} / MT")
 
-# ==============================
-# Profit Scenario 0% - 50%
-# ==============================
-st.subheader("📈 Freight dengan Profit (0% - 50%)")
-profit_list = []
-for p in range(0, 55, 5):
-    freight = cost_per_mt * (1 + (p / 100))
-    revenue = freight * total_cargo
-    Pph = revenue * 0.012
-    net_profit = revenue - Pph - total_cost
-    profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {Pph:,.0f}", f"Rp {net_profit:,.0f}"])
-profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Pph", "Net Profit"])
-st.table(profit_df)
+    # ==============================
+    # Profit Scenario
+    # ==============================
+    st.subheader("📈 Freight dengan Profit (0% - 50%)")
+    profit_list = []
+    for p in range(0, 55, 5):
+        freight = cost_per_mt * (1 + (p / 100))
+        revenue = freight * total_cargo
+        Pph = revenue * 0.012
+        net_profit = revenue - Pph - total_cost
+        profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {Pph:,.0f}", f"Rp {net_profit:,.0f}"])
+    profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Pph", "Net Profit"])
+    st.table(profit_df)
 
-# ==============================
-# PDF Report
-# ==============================
-input_data = [
-    ["POL", pol],
-    ["POD", pod],
-    ["Jarak (NM)", f"{jarak:,}"],
-    ["Total Cargo (MT)", f"{total_cargo:,}"],
-]
-results = list(biaya_mode_rp.items()) + list(biaya_umum_rp.items())
-results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
-results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
+    # ==============================
+    # PDF Report
+    # ==============================
+    input_data = [
+        ["POL", pol],
+        ["POD", pod],
+        ["Jarak (NM)", f"{jarak:,}"],
+        ["Total Cargo (MT)", f"{total_cargo:,}"],
+    ]
+    results = list(biaya_mode_rp.items()) + list(biaya_umum_rp.items())
+    results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
+    results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
-def generate_pdf(input_data, results, profit_df):
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4,
-        leftMargin=60,
-        rightMargin=50,
-        topMargin=30,
-        bottomMargin=40
+    def generate_pdf(input_data, results, profit_df):
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4,
+            leftMargin=60, rightMargin=50, topMargin=30, bottomMargin=40
+        )
+        elements = []
+        styles = getSampleStyleSheet()
+        elements.append(Paragraph("🚢 Laporan Freight Tongkang", styles["Title"]))
+        elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
+        table_input = Table(input_data, colWidths=[200, 200])
+        table_input.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey), ("FONTSIZE", (0,0), (-1,-1), 9)]))
+        elements.append(table_input)
+        elements.append(Spacer(1,1))
+
+        elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
+        table_results = Table(results, colWidths=[200, 200])
+        table_results.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey), ("FONTSIZE", (0,0), (-1,-1), 9)]))
+        elements.append(table_results)
+        elements.append(Spacer(1,1))
+
+        elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading2"]))
+        data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
+        table_profit = Table(data_profit, colWidths=[60,100,120,120,120])
+        table_profit.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+            ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+            ("ALIGN", (1,1), (-1,-1), "RIGHT"),
+            ("ALIGN", (0,1), (0,-1), "LEFT"),
+            ("FONTSIZE", (0,0), (-1,-1), 9)
+        ]))
+        elements.append(table_profit)
+        doc.build(elements)
+        buffer.seek(0)
+        return buffer
+
+    pdf_buffer = generate_pdf(input_data, results, profit_df)
+
+    st.download_button(
+        label="📥 Download Laporan PDF",
+        data=pdf_buffer,
+        file_name=f"Freight_Report_{pol or 'POL'}_{pod or 'POD'}.pdf",
+        mime="application/pdf"
     )
-    
-    elements = []
-    styles = getSampleStyleSheet()
 
-    elements.append(Paragraph("🚢 Laporan Freight Tongkang", styles["Title"]))
-    elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
-    table_input = Table(input_data, colWidths=[200, 200])
-    table_input.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTSIZE", (0,0), (-1,-1), 9)
-    ]))
-    elements.append(table_input)
-    elements.append(Spacer(1,1))
-
-    elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
-    table_results = Table(results, colWidths=[200, 200])
-    table_results.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTSIZE", (0,0), (-1,-1), 9)
-    ]))
-    elements.append(table_results)
-    elements.append(Spacer(1,1))
-    elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading2"]))
-    data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
-    table_profit = Table(data_profit, colWidths=[60,100,120,120])
-    table_profit.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
-        ("FONTSIZE", (0,0), (-1,-1), 9)
-    ]))
-    elements.append(table_profit)
-
-    doc.build(elements)
-    buffer.seek(0)
-    return buffer
-
-pdf_buffer = generate_pdf(input_data, results, profit_df)
-
-st.download_button(
-    label="📥 Download Laporan PDF",
-    data=pdf_buffer,
-    file_name=f"Freight_Report_{pol}_{pod}.pdf",
-    mime="application/pdf"
-)
+    # ==============================
+    # Logout
+    # ==============================
+    st.sidebar.markdown("---")
+    logout_btn = st.sidebar.button("Logout")
+    if logout_btn:
+        st.session_state.logged_in = False
+        st.session_state.username = ""
+        st.experimental_rerun()
