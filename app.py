@@ -6,6 +6,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+login_btn = st.button("Login")
 
 # Daftar user & password sederhana
 USER_CREDENTIALS = {
@@ -27,8 +28,8 @@ if not st.session_state.logged_in:
     if login_btn:
     if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
         st.session_state.logged_in = True
-        st.session_state.username = username  # simpan username
-        st.success("Login berhasil ✅")
+        st.session_state.username = username
+        st.success("Login berhasil ✅\nSelamat datang, {username}!")
         st.experimental_rerun()
         else:
             st.error("Username / password salah")
