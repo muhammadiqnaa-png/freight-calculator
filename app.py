@@ -25,18 +25,20 @@ if not st.session_state.logged_in:
     login_btn = st.button("Login")
 
     if login_btn:
-        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-            st.session_state.logged_in = True
-            st.success("Login berhasil ✅")
-            st.experimental_rerun()
+    if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+        st.session_state.logged_in = True
+        st.session_state.username = username  # simpan username
+        st.success("Login berhasil ✅")
+        st.experimental_rerun()
         else:
             st.error("Username / password salah")
 else:
     st.sidebar.success("Login sebagai: " + username)
     st.title("🚢 Freight Calculator")
 
-st.set_page_config(page_title="Freight Calculator", layout="wide")
-st.title("🚢 Freight Calculator Tongkang")
+if st.session_state.logged_in:
+    st.sidebar.success("Login sebagai: " + st.session_state.username)
+    st.title("🚢 Freight Calculator")
 
 # ==============================
 # Pilih Mode
