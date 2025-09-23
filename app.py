@@ -14,63 +14,47 @@ USER_CREDENTIALS = {
     "user1": "abcde"
 }
 
-# =======================
+# ==============================
 # Inisialisasi session_state
-# =======================
+# ==============================
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 
-# =======================
+# ==============================
 # Fungsi login
-# =======================
+# ==============================
 def login():
     username = st.session_state['input_user']
     password = st.session_state['input_pass']
-    if username == "admin" and password == "123":
+    if username == "admin" and password == "12345":
         st.session_state['logged_in'] = True
         st.session_state['username'] = username
-        st.experimental_rerun()  # Hanya rerun saat login berhasil
+        st.experimental_rerun()
     else:
         st.error("Username atau password salah!")
 
-# =======================
+# ==============================
 # Fungsi logout
-# =======================
+# ==============================
 def logout():
     st.session_state['logged_in'] = False
-    st.session_state['username'] = ''
-    st.experimental_rerun()  # Rerun saat logout
+    st.session_state['username'] = ""
+    st.experimental_rerun()
 
-# =======================
-# Halaman utama
-# =======================
+# ==============================
+# Halaman Utama / Login
+# ==============================
+st.set_page_config(page_title="Freight Calculator", layout="wide")
+
 if st.session_state['logged_in']:
+    # --- Header ---
     st.success(f"Login berhasil! Selamat datang, {st.session_state['username']}")
+    st.sidebar.success("Login sebagai: " + st.session_state['username'])
     
-    # ---- Konten aplikasi setelah login ----
-    st.write("Ini adalah halaman utama aplikasi.")
-    st.write("Di sini bisa ditambahkan semua data dan tabel yang ingin ditampilkan.")
-    
-    if st.button("Logout"):
-        logout()
-
-else:
-    st.title("Login Aplikasi")
-    st.text_input("Username", key='input_user')
-    st.text_input("Password", key='input_pass', type="password")
-    st.button("Login", on_click=login)
-
-# ==============================
-# Halaman Utama (hanya muncul setelah login)
-# ==============================
-else:
-    st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
-
-    st.set_page_config(page_title="Freight Calculator", layout="wide")
 
     # ==============================
     # Pilih Mode
@@ -90,7 +74,6 @@ else:
     # Sidebar Parameter
     # ==============================
     st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
-
     speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
     speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
     consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
@@ -99,7 +82,7 @@ else:
     port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
     asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
     premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
-
+    
     if mode == "Owner":
         angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=750000000)
         crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=60000000)
@@ -109,7 +92,7 @@ else:
         sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
         depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
         other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
-    else:  # Charter
+    else:
         charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
         other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
@@ -249,11 +232,14 @@ else:
     )
 
     # ==============================
-    # Logout
+    # Logout Button
     # ==============================
-    st.sidebar.markdown("---")
-    logout_btn = st.sidebar.button("Logout")
-    if logout_btn:
-        st.session_state.logged_in = False
-        st.session_state.username = ""
-        st.experimental_rerun()
+    if st.sidebar.button("Logout"):
+        logout()
+
+else:
+    # Halaman login
+    st.title("Login Aplikasi")
+    st.text_input("Username", key='input_user')
+    st.text_input("Password", key='input_pass', type="password")
+    st.button("Login", on_click=login
