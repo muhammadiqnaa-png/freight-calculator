@@ -29,7 +29,7 @@ if 'username' not in st.session_state:
 def login():
     username = st.session_state['input_user']
     password = st.session_state['input_pass']
-    if username == "admin" and password == "12345":
+    if username in USER_CREDENTIALS and password == USER_CREDENTIALS[username]:
         st.session_state['logged_in'] = True
         st.session_state['username'] = username
         st.experimental_rerun()
@@ -45,10 +45,13 @@ def logout():
     st.experimental_rerun()
 
 # ==============================
-# Halaman Utama / Login
+# Set halaman
 # ==============================
 st.set_page_config(page_title="Freight Calculator", layout="wide")
 
+# ==============================
+# Halaman Utama / Login
+# ==============================
 if st.session_state['logged_in']:
     # --- Header ---
     st.success(f"Login berhasil! Selamat datang, {st.session_state['username']}")
