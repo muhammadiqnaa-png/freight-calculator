@@ -15,49 +15,37 @@ USER_CREDENTIALS = {
 }
 
 # ==============================
-# Inisialisasi session_state
+# Session State Login
 # ==============================
-if 'logged_in' not in st.session_state:
-    st.session_state['logged_in'] = False
-
-if 'username' not in st.session_state:
-    st.session_state['username'] = ''
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+    st.session_state.username = ""
 
 # ==============================
-# Fungsi login
+# Login Page
 # ==============================
-def login():
-    username = st.session_state['input_user']
-    password = st.session_state['input_pass']
-    if username in USER_CREDENTIALS and password == USER_CREDENTIALS[username]:
-        st.session_state['logged_in'] = True
-        st.session_state['username'] = username
-        st.experimental_rerun()
-    else:
-        st.error("Username atau password salah!")
+if not st.session_state.logged_in:
+    st.title("🔒 Login Aplikasi Freight Calculator")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    login_btn = st.button("Login")
+    if login_btn:
+        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.success(f"Login berhasil ✅ Selamat datang, {username}!")
+            st.experimental_rerun()
+        else:
+            st.error("Username / password salah")
 
 # ==============================
-# Fungsi logout
+# Halaman Utama (hanya muncul setelah login)
 # ==============================
-def logout():
-    st.session_state['logged_in'] = False
-    st.session_state['username'] = ""
-    st.experimental_rerun()
-
-# ==============================
-# Set halaman
-# ==============================
-st.set_page_config(page_title="Freight Calculator", layout="wide")
-
-# ==============================
-# Halaman Utama / Login
-# ==============================
-if st.session_state['logged_in']:
-    # --- Header ---
-    st.success(f"Login berhasil! Selamat datang, {st.session_state['username']}")
-    st.sidebar.success("Login sebagai: " + st.session_state['username'])
-    
+else:
+    st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
+
+    st.set_page_config(page_title="Freight Calculator", layout="wide")
 
     # ==============================
     # Pilih Mode
@@ -77,6 +65,7 @@ if st.session_state['logged_in']:
     # Sidebar Parameter
     # ==============================
     st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
+
     speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
     speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
     consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
@@ -85,7 +74,7 @@ if st.session_state['logged_in']:
     port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
     asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
     premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
-    
+
     if mode == "Owner":
         angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=750000000)
         crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=60000000)
@@ -95,7 +84,7 @@ if st.session_state['logged_in']:
         sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
         depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
         other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
-    else:
+    else:  # Charter
         charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
         other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
@@ -202,3 +191,44 @@ if st.session_state['logged_in']:
         table_input.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey), ("FONTSIZE", (0,0), (-1,-1), 9)]))
         elements.append(table_input)
         elements.append(Spacer(1,1))
+
+        elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
+        table_results = Table(results, colWidths=[200, 200])
+        table_results.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey), ("FONTSIZE", (0,0), (-1,-1), 9)]))
+        elements.append(table_results)
+        elements.append(Spacer(1,1))
+
+        elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading2"]))
+        data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
+        table_profit = Table(data_profit, colWidths=[60,100,120,120,120])
+        table_profit.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+            ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+            ("ALIGN", (1,1), (-1,-1), "RIGHT"),
+            ("ALIGN", (0,1), (0,-1), "LEFT"),
+            ("FONTSIZE", (0,0), (-1,-1), 9)
+        ]))
+        elements.append(table_profit)
+        doc.build(elements)
+        buffer.seek(0)
+        return buffer
+
+    pdf_buffer = generate_pdf(input_data, results, profit_df)
+
+    st.download_button(
+        label="📥 Download Laporan PDF",
+        data=pdf_buffer,
+        file_name=f"Freight_Report_{pol or 'POL'}_{pod or 'POD'}.pdf",
+        mime="application/pdf"
+    )
+
+    # ==============================
+    # Logout
+    # ==============================
+    st.sidebar.markdown("---")
+    logout_btn = st.sidebar.button("Logout")
+    if logout_btn:
+        st.session_state.logged_in = False
+        st.session_state.username = ""
+        st.experimental_rerun()
