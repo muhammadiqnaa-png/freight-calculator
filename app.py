@@ -14,34 +14,51 @@ USER_CREDENTIALS = {
     "user1": "abcde"
 }
 
-# ===== Inisialisasi session_state =====
+# =======================
+# Inisialisasi session_state
+# =======================
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 
-# ===== Fungsi login =====
+# =======================
+# Fungsi login
+# =======================
 def login():
     username = st.session_state['input_user']
     password = st.session_state['input_pass']
     if username == "admin" and password == "123":
         st.session_state['logged_in'] = True
         st.session_state['username'] = username
-        st.experimental_rerun()  # Rerun hanya saat login berhasil
+        st.experimental_rerun()  # Hanya rerun saat login berhasil
     else:
         st.error("Username atau password salah!")
 
-# ===== Tampilkan halaman =====
+# =======================
+# Fungsi logout
+# =======================
+def logout():
+    st.session_state['logged_in'] = False
+    st.session_state['username'] = ''
+    st.experimental_rerun()  # Rerun saat logout
+
+# =======================
+# Halaman utama
+# =======================
 if st.session_state['logged_in']:
     st.success(f"Login berhasil! Selamat datang, {st.session_state['username']}")
-    # Di sini bisa ditambahkan konten utama aplikasi kamu
+    
+    # ---- Konten aplikasi setelah login ----
     st.write("Ini adalah halaman utama aplikasi.")
+    st.write("Di sini bisa ditambahkan semua data dan tabel yang ingin ditampilkan.")
+    
     if st.button("Logout"):
-        st.session_state['logged_in'] = False
-        st.experimental_rerun()  # Rerun saat logout
+        logout()
+
 else:
-    st.text("Silakan login dulu:")
+    st.title("Login Aplikasi")
     st.text_input("Username", key='input_user')
     st.text_input("Password", key='input_pass', type="password")
     st.button("Login", on_click=login)
