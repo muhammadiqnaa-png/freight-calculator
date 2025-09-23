@@ -242,4 +242,4 @@ else:
     st.title("Login Aplikasi")
     st.text_input("Username", key='input_user')
     st.text_input("Password", key='input_pass', type="password")
-    st.button("Login", on_click=login
+    st.button("Login", on_click=login)
