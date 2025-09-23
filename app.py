@@ -31,12 +31,12 @@ if 'logged_in' not in st.session_state:
 if not st.session_state['logged_in']:
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        if username == "admin" and password == "123":
-            st.session_state['logged_in'] = True
-            st.experimental_rerun()  # Rerun setelah state berubah
-        else:
-            st.error("Username atau password salah")
+if st.button("Login"):
+if username == "admin" and password == "123":
+   st.session_state['logged_in'] = True
+   st.experimental_rerun()  # Rerun setelah state berubah
+else:
+   st.error("Username atau password salah")
 else:
     st.success("Login berhasil ✅ Selamat datang, admin!")
 
