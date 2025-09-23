@@ -14,29 +14,37 @@ USER_CREDENTIALS = {
     "user1": "abcde"
 }
 
-# ==============================
-# Session State Login
-# ==============================
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-    st.session_state.username = ""
+# ===== Inisialisasi session_state =====
+if 'logged_in' not in st.session_state:
+    st.session_state['logged_in'] = False
 
-# ==============================
-# Login Page
-# ==============================
-if not st.session_state.logged_in:
-    st.title("🔒 Login Aplikasi Freight Calculator")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    login_btn = st.button("Login")
-    if login_btn:
-        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.success(f"Login berhasil ✅ Selamat datang, {username}!")
-            st.experimental_rerun()
-        else:
-            st.error("Username / password salah")
+if 'username' not in st.session_state:
+    st.session_state['username'] = ''
+
+# ===== Fungsi login =====
+def login():
+    username = st.session_state['input_user']
+    password = st.session_state['input_pass']
+    if username == "admin" and password == "123":
+        st.session_state['logged_in'] = True
+        st.session_state['username'] = username
+        st.experimental_rerun()  # Rerun hanya saat login berhasil
+    else:
+        st.error("Username atau password salah!")
+
+# ===== Tampilkan halaman =====
+if st.session_state['logged_in']:
+    st.success(f"Login berhasil! Selamat datang, {st.session_state['username']}")
+    # Di sini bisa ditambahkan konten utama aplikasi kamu
+    st.write("Ini adalah halaman utama aplikasi.")
+    if st.button("Logout"):
+        st.session_state['logged_in'] = False
+        st.experimental_rerun()  # Rerun saat logout
+else:
+    st.text("Silakan login dulu:")
+    st.text_input("Username", key='input_user')
+    st.text_input("Password", key='input_pass', type="password")
+    st.button("Login", on_click=login)
 
 # ==============================
 # Halaman Utama (hanya muncul setelah login)
