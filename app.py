@@ -173,7 +173,7 @@ else:
         ["POD", pod],
         ["Jarak (NM)", f"{jarak:,}"],
         ["Total Cargo (MT)", f"{total_cargo:,}"],
-        ["Voyage Days", f"{total_voyage_days:,.2f} hari"],
+        ["Voyage Days", f"{voyage_days:,.2f} hari"],
     ]
     results = list(biaya_mode_rp.items()) + list(biaya_umum_rp.items())
     results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
