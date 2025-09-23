@@ -24,19 +24,21 @@ if "logged_in" not in st.session_state:
 # ==============================
 # Login Page
 # ==============================
-if not st.session_state.logged_in:
-    st.title("🔒 Login Aplikasi Freight Calculator")
+if 'logged_in' not in st.session_state:
+    st.session_state['logged_in'] = False
+
+# Form login
+if not st.session_state['logged_in']:
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    login_btn = st.button("Login")
-    if login_btn:
-        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.success(f"Login berhasil ✅ Selamat datang, {username}!")
-            st.experimental_rerun()
+    if st.button("Login"):
+        if username == "admin" and password == "123":
+            st.session_state['logged_in'] = True
+            st.experimental_rerun()  # Rerun setelah state berubah
         else:
-            st.error("Username / password salah")
+            st.error("Username atau password salah")
+else:
+    st.success("Login berhasil ✅ Selamat datang, admin!")
 
 # ==============================
 # Halaman Utama (hanya muncul setelah login)
