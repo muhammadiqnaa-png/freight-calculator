@@ -175,6 +175,7 @@ else:
         ["Total Cargo (MT)", f"{total_cargo:,}"],
     ]
     results = list(biaya_mode_rp.items()) + list(biaya_umum_rp.items())
+    results.append(["TOTAL VOYAGE", f"{total_voyage:,}"])
     results.append(["TOTAL COST", f"Rp {total_cost:,.0f}"])
     results.append(["Cost per MT", f"Rp {cost_per_mt:,.0f} / MT"])
 
