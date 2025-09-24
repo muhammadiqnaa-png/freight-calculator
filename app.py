@@ -25,19 +25,6 @@ if "logged_in" not in st.session_state:
 # Login Page
 # ==============================
 if not st.session_state.logged_in:
-    # 🔹 Background khusus halaman login
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background-image: url("tugbarge.png");
-            background-size: cover;
-            background-position: center;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
     st.title("🔒 Login Aplikasi Freight Calculator")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
