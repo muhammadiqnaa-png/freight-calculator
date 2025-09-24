@@ -42,9 +42,11 @@ if not st.session_state.logged_in:
         background: 
             linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
             url("data:image/png;base64,{img_base64}");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
+         background-size: contain;
+         background-position: center;
+         background-repeat: no-repeat;
+         background-attachment: fixed;
+         background-color: black; /* warna kosong di sekitar gambar */
     }}
     [data-testid="stHeader"] {{ background: rgba(0,0,0,0); }}
     [data-testid="stSidebar"] {{ background: rgba(255,255,255,0.7); }}
