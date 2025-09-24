@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import base64
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -15,6 +16,14 @@ USER_CREDENTIALS = {
 }
 
 # ==============================
+# Fungsi ubah gambar jadi base64 (untuk background login)
+# ==============================
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# ==============================
 # Session State Login
 # ==============================
 if "logged_in" not in st.session_state:
@@ -25,10 +34,41 @@ if "logged_in" not in st.session_state:
 # Login Page
 # ==============================
 if not st.session_state.logged_in:
-    st.title("🔒 Login Aplikasi Freight Calculator")
+    # background hanya untuk halaman login
+    img_base64 = get_base64_of_bin_file("Backgroundapk.png")
+    page_bg = f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background: 
+            linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+            url("data:image/png;base64,{img_base64}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    [data-testid="stHeader"] {{ background: rgba(0,0,0,0); }}
+    [data-testid="stSidebar"] {{ background: rgba(255,255,255,0.7); }}
+    .login-card {{
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+        max-width: 350px;
+        margin: 100px auto;
+        text-align: center;
+    }}
+    </style>
+    """
+    st.markdown(page_bg, unsafe_allow_html=True)
+
+    # Form login dalam card
+    st.markdown("<div class='login-card'>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color:black;'>🔒 Login Aplikasi Freight Calculator</h2>", unsafe_allow_html=True)
+
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     login_btn = st.button("Login")
+
     if login_btn:
         if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
             st.session_state.logged_in = True
@@ -38,34 +78,29 @@ if not st.session_state.logged_in:
         else:
             st.error("Username / password salah")
 
+    st.markdown("</div>", unsafe_allow_html=True)
+
 # ==============================
 # Halaman Utama (hanya muncul setelah login)
 # ==============================
 else:
+    st.set_page_config(page_title="Freight Calculator", layout="wide")
+
     st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
 
-    st.set_page_config(page_title="Freight Calculator", layout="wide")
-
-    # ==============================
-    # Pilih Mode
-    # ==============================
+    # --- Input Mode ---
     mode = st.radio("Pilih Mode Biaya:", ["Owner", "Charter"])
 
-    # ==============================
-    # Input Utama Kapal / Operasional
-    # ==============================
+    # --- Input utama ---
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
     total_cargo = st.number_input("Total Cargo (MT)", value=7500)
     jarak = st.number_input("Jarak (NM)", value=630)
 
-    # ==============================
-    # Sidebar Parameter
-    # ==============================
+    # --- Sidebar Parameter ---
     st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
-
     speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
     speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
     consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
@@ -84,15 +119,13 @@ else:
         sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=50000000)
         depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=45000000000)
         other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
-    else:  # Charter
+    else:
         charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=750000000)
         other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
     port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
-    # ==============================
-    # Perhitungan Dasar
-    # ==============================
+    # --- Perhitungan Dasar ---
     sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
     voyage_days = (sailing_time / 24) + port_stay
     total_consumption = (sailing_time * consumption) + (port_stay * consumption)
@@ -106,7 +139,7 @@ else:
         "Asist": asist_tug
     }
 
-    # Biaya per Mode
+    # Biaya per mode
     if mode == "Owner":
         biaya_mode = {
             "Angsuran": (angsuran / 30) * voyage_days,
@@ -130,9 +163,7 @@ else:
     biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
     biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
 
-    # ==============================
-    # Tampilkan Hasil
-    # ==============================
+    # --- Tampilkan Hasil ---
     st.header("📊 Hasil Perhitungan")
     st.write(f"Sailing Time (jam): {sailing_time:,.2f}")
     st.write(f"Total Voyage Days: {voyage_days:,.2f}")
@@ -151,9 +182,7 @@ else:
     st.subheader("🧮 Cost per MT")
     st.write(f"FREIGHT: Rp {cost_per_mt:,.0f} / MT")
 
-    # ==============================
-    # Profit Scenario
-    # ==============================
+    # --- Profit Scenario ---
     st.subheader("📈 Freight dengan Profit (0% - 50%)")
     profit_list = []
     for p in range(0, 55, 5):
@@ -165,9 +194,7 @@ else:
     profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Pph", "Net Profit"])
     st.table(profit_df)
 
-    # ==============================
-    # PDF Report
-    # ==============================
+    # --- PDF Report ---
     input_data = [
         ["POL", pol],
         ["POD", pod],
@@ -224,9 +251,7 @@ else:
         mime="application/pdf"
     )
 
-    # ==============================
-    # Logout
-    # ==============================
+    # --- Logout ---
     st.sidebar.markdown("---")
     logout_btn = st.sidebar.button("Logout")
     if logout_btn:
