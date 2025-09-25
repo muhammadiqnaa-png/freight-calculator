@@ -7,6 +7,11 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
 # ==============================
+# Konfigurasi Halaman
+# ==============================
+st.set_page_config(page_title="Freight Calculator", layout="wide")
+
+# ==============================
 # User & Password
 # ==============================
 USER_CREDENTIALS = {
@@ -45,8 +50,6 @@ else:
     st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
 
-    st.set_page_config(page_title="Freight Calculator", layout="wide")
-
     # ==============================
     # Pilih Mode
     # ==============================
@@ -58,10 +61,9 @@ else:
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
-    pol = st.text_input("Port of Loading (POL)")
     total_cargo = st.number_input("Total Cargo (MT)", value=7500)
-    jarak_laden = st.number_input("Jarak laden (NM)", value=630)
-    jarak_ballast = st.number_input("Jarak ballast (NM)", value=630)
+    jarak_laden = st.number_input("Jarak Laden (NM)", value=630)
+    jarak_ballast = st.number_input("Jarak Ballast (NM)", value=100)
 
     # ==============================
     # Sidebar Parameter
@@ -95,7 +97,7 @@ else:
     # ==============================
     # Perhitungan Dasar
     # ==============================
-    sailing_time = (jarak ballast / speed_kosong) + (jarak laden / speed_isi)
+    sailing_time = (jarak_ballast / speed_kosong) + (jarak_laden / speed_isi)
     voyage_days = (sailing_time / 24) + port_stay
     total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
@@ -104,7 +106,7 @@ else:
         "Bunker BBM": total_consumption * harga_bunker,
         "Air Tawar": (voyage_days * 2) * harga_air_tawar,
         "Port Cost": port_cost * 2,
-        "Premi": premi_nm * jarak,
+        "Premi": premi_nm * (jarak_laden),
         "Asist": asist_tug
     }
 
@@ -163,7 +165,13 @@ else:
         revenue = freight * total_cargo
         Pph = revenue * 0.012
         net_profit = revenue - Pph - total_cost
-        profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {Pph:,.0f}", f"Rp {net_profit:,.0f}"])
+        profit_list.append([
+            f"{p}%",
+            f"Rp {freight:,.0f}",
+            f"Rp {revenue:,.0f}",
+            f"Rp {Pph:,.0f}",
+            f"Rp {net_profit:,.0f}"
+        ])
     profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Pph", "Net Profit"])
     st.table(profit_df)
 
@@ -173,9 +181,8 @@ else:
     input_data = [
         ["POL", pol],
         ["POD", pod],
-        ["POL", pol],
-        ["Jarak laden (NM)", f"{jarak_laden:,}"],
-        ["Jarak ballast (NM)", f"{jarak_ballast:,}"],
+        ["Jarak Laden (NM)", f"{jarak_laden:,}"],
+        ["Jarak Ballast (NM)", f"{jarak_ballast:,}"],
         ["Total Cargo (MT)", f"{total_cargo:,}"],
         ["Voyage Days", f"{voyage_days:,.2f} hari"],
     ]
@@ -185,7 +192,8 @@ else:
 
     def generate_pdf(input_data, results, profit_df):
         buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=A4,
+        doc = SimpleDocTemplate(
+            buffer, pagesize=A4,
             leftMargin=60, rightMargin=50, topMargin=30, bottomMargin=40
         )
         elements = []
