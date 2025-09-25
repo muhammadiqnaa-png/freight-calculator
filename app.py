@@ -7,11 +7,6 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
 # ==============================
-# Konfigurasi Halaman
-# ==============================
-st.set_page_config(page_title="Freight Calculator", layout="wide")
-
-# ==============================
 # User & Password
 # ==============================
 USER_CREDENTIALS = {
@@ -30,6 +25,20 @@ if "logged_in" not in st.session_state:
 # Login Page
 # ==============================
 if not st.session_state.logged_in:
+    # 🔹 Background khusus halaman login
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-image: url("tugbarge.png");
+            background-size: cover;
+            background-position: center;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.title("🔒 Login Aplikasi Freight Calculator")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -47,8 +56,22 @@ if not st.session_state.logged_in:
 # Halaman Utama (hanya muncul setelah login)
 # ==============================
 else:
+    # 🔹 Reset background ke putih setelah login
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background: white;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
+
+    st.set_page_config(page_title="Freight Calculator", layout="wide")
 
     # ==============================
     # Pilih Mode
@@ -69,7 +92,8 @@ else:
     # ==============================
     st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
 
-    speed = st.sidebar.number_input("Speed (knot)", value=4.0)
+    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
+    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
     consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
     harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
     harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
@@ -95,7 +119,7 @@ else:
     # ==============================
     # Perhitungan Dasar
     # ==============================
-    sailing_time = jarak / speed
+    sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
     voyage_days = (sailing_time / 24) + port_stay
     total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
@@ -163,13 +187,7 @@ else:
         revenue = freight * total_cargo
         Pph = revenue * 0.012
         net_profit = revenue - Pph - total_cost
-        profit_list.append([
-            f"{p}%",
-            f"Rp {freight:,.0f}",
-            f"Rp {revenue:,.0f}",
-            f"Rp {Pph:,.0f}",
-            f"Rp {net_profit:,.0f}"
-        ])
+        profit_list.append([f"{p}%", f"Rp {freight:,.0f}", f"Rp {revenue:,.0f}", f"Rp {Pph:,.0f}", f"Rp {net_profit:,.0f}"])
     profit_df = pd.DataFrame(profit_list, columns=["Profit %", "Freight / MT", "Revenue", "Pph", "Net Profit"])
     st.table(profit_df)
 
@@ -189,8 +207,7 @@ else:
 
     def generate_pdf(input_data, results, profit_df):
         buffer = BytesIO()
-        doc = SimpleDocTemplate(
-            buffer, pagesize=A4,
+        doc = SimpleDocTemplate(buffer, pagesize=A4,
             leftMargin=60, rightMargin=50, topMargin=30, bottomMargin=40
         )
         elements = []
