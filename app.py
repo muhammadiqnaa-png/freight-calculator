@@ -58,6 +58,7 @@ else:
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
+    pol = st.text_input("Port of Loading (POL)")
     total_cargo = st.number_input("Total Cargo (MT)", value=7500)
     jarak laden = st.number_input("Jarak (NM)", value=630)
     jarak ballast = st.number_input("Jarak (NM)", value=630)
@@ -172,7 +173,9 @@ else:
     input_data = [
         ["POL", pol],
         ["POD", pod],
-        ["Jarak (NM)", f"{jarak:,}"],
+        ["POL", pol],
+        ["Jarak laden (NM)", f"{jarak_laden:,}"],
+        ["Jarak ballast (NM)", f"{jarak_ballast:,}"],
         ["Total Cargo (MT)", f"{total_cargo:,}"],
         ["Voyage Days", f"{voyage_days:,.2f} hari"],
     ]
