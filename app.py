@@ -61,7 +61,7 @@ else:
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
-    total_cargo = st.number_input("Total Cargo (MT)", value=7500)
+    total_cargo = st.number_input("Total Cargo (MT/M3)", value=7500)
     jarak_laden = st.number_input("Jarak Laden (NM)", value=630)
     jarak_ballast = st.number_input("Jarak Ballast (NM)", value=100)
 
