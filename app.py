@@ -61,17 +61,15 @@ else:
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
-    total_cargo = st.number_input("Total Cargo (MT/M3)", value=7500)
-    jarak_laden = st.number_input("Jarak Laden (NM)", value=630)
-    jarak_ballast = st.number_input("Jarak Ballast (NM)", value=100)
+    total_cargo = st.number_input("Total Cargo (MT)", value=7500)
+    jarak = st.number_input("Jarak (NM)", value=630)
 
     # ==============================
     # Sidebar Parameter
     # ==============================
     st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
 
-    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
-    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
+    speed = st.sidebar.number_input("Speed (knot)", value=4.0)
     consumption = st.sidebar.number_input("Consumption (liter/jam)", value=120)
     harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
     harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
@@ -97,7 +95,7 @@ else:
     # ==============================
     # Perhitungan Dasar
     # ==============================
-    sailing_time = (jarak_ballast / speed_kosong) + (jarak_laden / speed_isi)
+    sailing_time = jarak / speed
     voyage_days = (sailing_time / 24) + port_stay
     total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
@@ -106,7 +104,7 @@ else:
         "Bunker BBM": total_consumption * harga_bunker,
         "Air Tawar": (voyage_days * 2) * harga_air_tawar,
         "Port Cost": port_cost * 2,
-        "Premi": premi_nm * (jarak_laden),
+        "Premi": premi_nm * jarak,
         "Asist": asist_tug
     }
 
@@ -181,8 +179,7 @@ else:
     input_data = [
         ["POL", pol],
         ["POD", pod],
-        ["Jarak Laden (NM)", f"{jarak_laden:,}"],
-        ["Jarak Ballast (NM)", f"{jarak_ballast:,}"],
+        ["Jarak (NM)", f"{jarak:,}"],
         ["Total Cargo (MT)", f"{total_cargo:,}"],
         ["Voyage Days", f"{voyage_days:,.2f} hari"],
     ]
