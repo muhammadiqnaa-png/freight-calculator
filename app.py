@@ -41,18 +41,6 @@ if "logged_in" not in st.session_state:
 # Halaman Utama (hanya muncul setelah login)
 # ==============================
 else:
-    # 🔹 Reset background ke putih setelah login
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background: white;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
     st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
 
