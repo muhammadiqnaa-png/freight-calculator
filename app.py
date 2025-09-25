@@ -59,7 +59,8 @@ else:
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
     total_cargo = st.number_input("Total Cargo (MT)", value=7500)
-    jarak = st.number_input("Jarak (NM)", value=630)
+    jarak laden = st.number_input("Jarak (NM)", value=630)
+    jarak ballast = st.number_input("Jarak (NM)", value=630)
 
     # ==============================
     # Sidebar Parameter
@@ -93,7 +94,7 @@ else:
     # ==============================
     # Perhitungan Dasar
     # ==============================
-    sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
+    sailing_time = (jarak ballast / speed_kosong) + (jarak laden / speed_isi)
     voyage_days = (sailing_time / 24) + port_stay
     total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
