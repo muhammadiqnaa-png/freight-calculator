@@ -60,8 +60,8 @@ else:
     pod = st.text_input("Port of Discharge (POD)")
     pol = st.text_input("Port of Loading (POL)")
     total_cargo = st.number_input("Total Cargo (MT)", value=7500)
-    jarak laden = st.number_input("Jarak (NM)", value=630)
-    jarak ballast = st.number_input("Jarak (NM)", value=630)
+    jarak_laden = st.number_input("Jarak laden (NM)", value=630)
+    jarak_ballast = st.number_input("Jarak ballast (NM)", value=630)
 
     # ==============================
     # Sidebar Parameter
