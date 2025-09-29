@@ -15,7 +15,6 @@ DB_PATH = "data.db"
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    # Drop table lama kalau strukturnya beda
     try:
         c.execute("PRAGMA table_info(kapal)")
         cols = [row[1] for row in c.fetchall()]
@@ -43,7 +42,6 @@ def init_db():
     """)
     conn.commit()
     conn.close()
-
 
 def tambah_kapal(data):
     conn = sqlite3.connect(DB_PATH)
@@ -256,83 +254,76 @@ else:
     st.table(profit_df)
 
     # ==============================
-    # PDF Export (1 Halaman)
+    # PDF Export
     # ==============================
     input_data = [["POL", pol],["POD", pod],["Jarak (NM)", f"{jarak:,}"],["Total Cargo (MT)", f"{total_cargo:,}"],["Voyage Days", f"{voyage_days:,.2f} hari"]]
     results = list(biaya_mode.items()) + list(biaya_umum.items())
     results.append(["TOTAL COST", total_cost])
     results.append(["Cost per MT", cost_per_mt])
 
-def generate_pdf(input_data, results, profit_df):
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(
-        buffer, 
-        pagesize=A4,
-        leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30
-    )
-    elements = []
+    def generate_pdf(input_data, results, profit_df):
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4,
+                                rightMargin=20, leftMargin=20,
+                                topMargin=20, bottomMargin=20)
+        elements = []
+        styles = getSampleStyleSheet()
+        style_title = styles["Title"]; style_title.fontSize = 14
+        style_heading = styles["Heading2"]; style_heading.fontSize = 11
+        style_normal = styles["Normal"]; style_normal.fontSize = 9
 
-    # ==== Styles ====
-    from reportlab.lib.styles import ParagraphStyle
-    styles = getSampleStyleSheet()
-    title_style = ParagraphStyle(
-        "TitleStyle", parent=styles["Title"], fontSize=20, alignment=1, spaceAfter=12
-    )
-    heading_style = ParagraphStyle(
-        "HeadingStyle", parent=styles["Heading2"], fontSize=14, spaceAfter=6
-    )
-    normal_style = ParagraphStyle(
-        "NormalStyle", parent=styles["Normal"], fontSize=10, spaceAfter=4
-    )
+        # Judul
+        elements.append(Paragraph("LAPORAN PERHITUNGAN FREIGHT", style_title))
+        elements.append(Spacer(1, 6))
 
-    # ==== Judul ====
-    elements.append(Paragraph("🚢 Laporan Freight Tongkang", title_style))
-    elements.append(Spacer(1, 12))
+        # Input Utama
+        elements.append(Paragraph("Input Utama", style_heading))
+        table_input = Table(input_data, colWidths=[150, 300])
+        table_input.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+            ("FONTNAME", (0,0), (-1,-1), "Helvetica"),
+            ("FONTSIZE", (0,0), (-1,-1), 9),
+            ("ALIGN", (0,0), (-1,-1), "LEFT")
+        ]))
+        elements.append(table_input)
+        elements.append(Spacer(1, 10))
 
-    # ==== Input Utama ====
-    elements.append(Paragraph("📥 Input Utama", heading_style))
-    table_input = Table(input_data, colWidths=[200, 200])
-    table_input.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTSIZE", (0,0), (-1,-1), 10),
-        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
-    ]))
-    elements.append(table_input)
-    elements.append(Spacer(1, 12))
+        # Hasil Perhitungan
+        elements.append(Paragraph("Hasil Perhitungan", style_heading))
+        table_results = Table(
+            [[k, f"Rp {v:,.0f}" if isinstance(v, (int, float)) else v] for k, v in results],
+            colWidths=[200, 250]
+        )
+        table_results.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+            ("FONTNAME", (0,0), (-1,-1), "Helvetica"),
+            ("FONTSIZE", (0,0), (-1,-1), 9),
+            ("ALIGN", (0,0), (-1,-1), "LEFT")
+        ]))
+        elements.append(table_results)
+        elements.append(Spacer(1, 10))
 
-    # ==== Hasil Perhitungan ====
-    elements.append(Paragraph("📊 Hasil Perhitungan", heading_style))
-    table_results = Table(
-        [[k, f"Rp {v:,.0f}" if isinstance(v,(int,float)) else v] for k,v in results],
-        colWidths=[200, 200]
-    )
-    table_results.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTSIZE", (0,0), (-1,-1), 10),
-        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
-    ]))
-    elements.append(table_results)
-    elements.append(Spacer(1, 12))
+        # Profit Scenario
+        elements.append(Paragraph("Skenario Profit (0% - 50%)", style_heading))
+        data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
+        table_profit = Table(data_profit, colWidths=[60, 90, 100, 100, 100])
+        table_profit.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+            ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+            ("FONTNAME", (0,0), (-1,-1), "Helvetica"),
+            ("FONTSIZE", (0,0), (-1,-1), 8),
+            ("ALIGN", (0,0), (-1,-1), "CENTER")
+        ]))
+        elements.append(table_profit)
 
-    # ==== Profit Table ====
-    elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", heading_style))
-    data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
-    table_profit = Table(data_profit, colWidths=[60, 100, 120, 120, 120])
-    table_profit.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTSIZE", (0,0), (-1,-1), 10),
-        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
-        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),  # header abu-abu
-    ]))
-    elements.append(table_profit)
-
-    # ==== Build ====
-    doc.build(elements)
-    buffer.seek(0)
-    return buffer
+        doc.build(elements)
+        buffer.seek(0)
+        return buffer
 
     pdf_buffer = generate_pdf(input_data, results, profit_df)
-    st.download_button("📥 Download Laporan PDF", data=pdf_buffer, file_name=f"Freight_Report_{pol or 'POL'}_{pod or 'POD'}.pdf", mime="application/pdf")
+    st.download_button("📥 Download Laporan PDF", data=pdf_buffer,
+                       file_name=f"Freight_Report_{pol or 'POL'}_{pod or 'POD'}.pdf",
+                       mime="application/pdf")
 
     # Logout
     st.sidebar.markdown("---")
