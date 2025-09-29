@@ -7,31 +7,20 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
-# -----------------------------
-# Page config (call early)
-# -----------------------------
-st.set_page_config(page_title="Freight Calculator", layout="wide")
-
-# ==============================
-# Database (SQLite) helpers
-# ==============================
 DB_PATH = "data.db"
 
+# ==============================
+# Database Setup
+# ==============================
 def init_db():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS kapal (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nama_kapal TEXT UNIQUE,
-            speed_kosong REAL,
-            speed_isi REAL,
+            total_cargo REAL,
             consumption REAL,
-            harga_bunker REAL,
-            harga_air_tawar REAL,
-            port_cost REAL,
-            asist_tug REAL,
-            premi_nm REAL,
             angsuran REAL,
             crew_cost REAL,
             asuransi REAL,
@@ -39,77 +28,33 @@ def init_db():
             perawatan REAL,
             sertifikat REAL,
             depresiasi REAL,
-            other_cost REAL,
-            charter_hire REAL,
-            port_stay REAL
+            charter_hire REAL
         )
     """)
     conn.commit()
-    return conn
+    conn.close()
 
-def tambah_kapal(data: dict):
-    conn = init_db()
+init_db()
+
+def tambah_kapal(data):
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    cols = ",".join(data.keys())
-    placeholders = ",".join(["?"] * len(data))
-    try:
-        c.execute(f"INSERT INTO kapal ({cols}) VALUES ({placeholders})", tuple(data.values()))
-        conn.commit()
-        return True, "Berhasil menyimpan kapal."
-    except Exception as e:
-        return False, str(e)
-    finally:
-        conn.close()
+    c.execute("""
+        INSERT OR REPLACE INTO kapal 
+        (nama_kapal, total_cargo, consumption, angsuran, crew_cost, asuransi, docking, perawatan, sertifikat, depresiasi, charter_hire)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, data)
+    conn.commit()
+    conn.close()
 
-def ambil_kapal_df():
-    conn = init_db()
-    try:
-        df = pd.read_sql_query("SELECT * FROM kapal", conn)
-    except Exception:
-        df = pd.DataFrame()
+def ambil_kapal():
+    conn = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query("SELECT * FROM kapal", conn)
     conn.close()
     return df
 
-def get_kapal_by_name(nama):
-    conn = init_db()
-    c = conn.cursor()
-    c.execute("SELECT * FROM kapal WHERE nama_kapal=?", (nama,))
-    row = c.fetchone()
-    conn.close()
-    if not row:
-        return None
-    cols = [d[0] for d in sqlite3.connect(DB_PATH).cursor().execute("PRAGMA table_info(kapal)").fetchall()]
-    # fallback: build dict by index (safer)
-    keys = ['id','nama_kapal','speed_kosong','speed_isi','consumption','harga_bunker','harga_air_tawar','port_cost','asist_tug','premi_nm','angsuran','crew_cost','asuransi','docking','perawatan','sertifikat','depresiasi','other_cost','charter_hire','port_stay']
-    return dict(zip(keys, row))
-
-def update_kapal_by_id(id_kapal, data: dict):
-    conn = init_db()
-    c = conn.cursor()
-    assignments = ",".join([f"{k}=?" for k in data.keys()])
-    try:
-        c.execute(f"UPDATE kapal SET {assignments} WHERE id=?", tuple(data.values()) + (id_kapal,))
-        conn.commit()
-        return True
-    except Exception as e:
-        return False
-    finally:
-        conn.close()
-
-def hapus_kapal_by_id(id_kapal):
-    conn = init_db()
-    c = conn.cursor()
-    try:
-        c.execute("DELETE FROM kapal WHERE id=?", (id_kapal,))
-        conn.commit()
-        return True
-    except Exception:
-        return False
-    finally:
-        conn.close()
-
 # ==============================
-# User & Password (existing)
+# User & Password
 # ==============================
 USER_CREDENTIALS = {
     "admin": "12345",
@@ -127,6 +72,7 @@ if "logged_in" not in st.session_state:
 # Login Page
 # ==============================
 if not st.session_state.logged_in:
+    st.set_page_config(page_title="Freight Calculator", layout="wide")
     st.title("🔒 Login Aplikasi Freight Calculator")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -141,160 +87,112 @@ if not st.session_state.logged_in:
             st.error("Username / password salah")
 
 # ==============================
-# Halaman Utama (hanya muncul setelah login)
+# Halaman Utama
 # ==============================
 else:
     st.sidebar.success("Login sebagai: " + st.session_state.username)
     st.title("🚢 Freight Calculator Tongkang")
 
-    # ------------------
-    # Sidebar: kapal selector & parameter
-    # ------------------
-    st.sidebar.header("⚓ Kapal (Database)")
-    df_kapal = ambil_kapal_df()
-    kapal_list = df_kapal['nama_kapal'].tolist() if not df_kapal.empty else []
-    kapal_choice = st.sidebar.selectbox("Pilih Kapal (atau pilih 'Manual')", ["Manual"] + kapal_list)
-
-    # helper to safely get float
-    def safe(val, default=0.0):
-        try:
-            return float(val) if val is not None else default
-        except:
-            return default
-
-    # if kapal selected, fetch its params
-    kapal_params = None
-    if kapal_choice != "Manual":
-        kapal_row = get_kapal_by_name(kapal_choice)
-        if kapal_row:
-            kapal_params = kapal_row
-
-    st.sidebar.markdown("---")
-    st.sidebar.header("⚙️ Parameter (bisa otomatis dari Kapal)")
-
-    # Default values (from DB if kapal selected, else fallbacks)
-    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=safe(kapal_params.get('speed_kosong') if kapal_params else 3.0))
-    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=safe(kapal_params.get('speed_isi') if kapal_params else 4.0))
-    consumption = st.sidebar.number_input("Consumption (liter/jam)", value=safe(kapal_params.get('consumption') if kapal_params else 120))
-    harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=safe(kapal_params.get('harga_bunker') if kapal_params else 12500))
-    harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=safe(kapal_params.get('harga_air_tawar') if kapal_params else 120000))
-    port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=safe(kapal_params.get('port_cost') if kapal_params else 50000000))
-    asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=safe(kapal_params.get('asist_tug') if kapal_params else 35000000))
-    premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=safe(kapal_params.get('premi_nm') if kapal_params else 50000))
-
+    # ==============================
+    # Pilih Mode
+    # ==============================
     mode = st.radio("Pilih Mode Biaya:", ["Owner", "Charter"])
 
-    if mode == "Owner":
-        angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=safe(kapal_params.get('angsuran') if kapal_params else 750000000))
-        crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=safe(kapal_params.get('crew_cost') if kapal_params else 60000000))
-        asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=safe(kapal_params.get('asuransi') if kapal_params else 50000000))
-        docking = st.sidebar.number_input("Docking (Rp/bulan)", value=safe(kapal_params.get('docking') if kapal_params else 50000000))
-        perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=safe(kapal_params.get('perawatan') if kapal_params else 50000000))
-        sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=safe(kapal_params.get('sertifikat') if kapal_params else 50000000))
-        depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=safe(kapal_params.get('depresiasi') if kapal_params else 45000000000))
-        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=safe(kapal_params.get('other_cost') if kapal_params else 50000000))
-    else:
-        charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=safe(kapal_params.get('charter_hire') if kapal_params else 750000000))
-        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=safe(kapal_params.get('other_cost') if kapal_params else 50000000))
-
-    port_stay = st.sidebar.number_input("Port Stay (Hari)", value=safe(kapal_params.get('port_stay') if kapal_params else 10))
-
-    st.sidebar.markdown("---")
-    # Save current sidebar parameters as kapal
-    with st.sidebar.expander("💾 Simpan parameter ini sebagai Kapal baru"):
-        new_kapal_name = st.text_input("Nama Kapal baru", value="")
-        if st.button("Simpan Kapal Baru"):
-            if not new_kapal_name.strip():
-                st.error("Nama kapal wajib diisi!")
-            else:
-                data = {
-                    'nama_kapal': new_kapal_name.strip(),
-                    'speed_kosong': speed_kosong,
-                    'speed_isi': speed_isi,
-                    'consumption': consumption,
-                    'harga_bunker': harga_bunker,
-                    'harga_air_tawar': harga_air_tawar,
-                    'port_cost': port_cost,
-                    'asist_tug': asist_tug,
-                    'premi_nm': premi_nm,
-                    'angsuran': angsuran if mode == 'Owner' else None,
-                    'crew_cost': crew_cost if mode == 'Owner' else None,
-                    'asuransi': asuransi if mode == 'Owner' else None,
-                    'docking': docking if mode == 'Owner' else None,
-                    'perawatan': perawatan if mode == 'Owner' else None,
-                    'sertifikat': sertifikat if mode == 'Owner' else None,
-                    'depresiasi': depresiasi if mode == 'Owner' else None,
-                    'other_cost': other_cost,
-                    'charter_hire': charter_hire if mode == 'Charter' else None,
-                    'port_stay': port_stay
-                }
-                success, msg = tambah_kapal(data)
-                if success:
-                    st.success(msg)
-                    st.experimental_rerun()
-                else:
-                    st.error(f"Gagal menyimpan: {msg}")
-
-    st.sidebar.markdown("---")
-    # Manage kapal (edit/delete)
-    with st.sidebar.expander("🛠️ Manage Kapal (Edit / Hapus)"):
-        if df_kapal.empty:
-            st.info("Belum ada kapal tersimpan.")
-        else:
-            edit_choice = st.selectbox("Pilih Kapal untuk Edit/Hapus", df_kapal['nama_kapal'].tolist())
-            if edit_choice:
-                row = get_kapal_by_name(edit_choice)
-                if row:
-                    with st.form("edit_kapal_form"):
-                        e_name = st.text_input("Nama Kapal", value=row['nama_kapal'])
-                        e_speed_kosong = st.number_input("Speed Kosong (knot)", value=safe(row.get('speed_kosong')))
-                        e_speed_isi = st.number_input("Speed Isi (knot)", value=safe(row.get('speed_isi')))
-                        e_consumption = st.number_input("Consumption (liter/jam)", value=safe(row.get('consumption')))
-                        e_harga_bunker = st.number_input("Harga Bunker (Rp/liter)", value=safe(row.get('harga_bunker')))
-                        e_harga_air = st.number_input("Harga Air Tawar (Rp/Ton)", value=safe(row.get('harga_air_tawar')))
-                        e_port_cost = st.number_input("Port cost/call (Rp)", value=safe(row.get('port_cost')))
-                        submitted_edit = st.form_submit_button("Update Kapal")
-                        if submitted_edit:
-                            data_update = {
-                                'nama_kapal': e_name.strip(),
-                                'speed_kosong': e_speed_kosong,
-                                'speed_isi': e_speed_isi,
-                                'consumption': e_consumption,
-                                'harga_bunker': e_harga_bunker,
-                                'harga_air_tawar': e_harga_air,
-                                'port_cost': e_port_cost
-                            }
-                            ok = update_kapal_by_id(row['id'], data_update)
-                            if ok:
-                                st.success("Data kapal diperbarui.")
-                                st.experimental_rerun()
-                            else:
-                                st.error("Gagal update kapal.")
-                    if st.button(f"Hapus kapal {row['nama_kapal']}"):
-                        ok = hapus_kapal_by_id(row['id'])
-                        if ok:
-                            st.warning("Kapal dihapus.")
-                            st.experimental_rerun()
-                        else:
-                            st.error("Gagal menghapus kapal.")
+    # ==============================
+    # Pilih Kapal dari DB
+    # ==============================
+    df_kapal = ambil_kapal()
+    kapal_pilihan = None
+    if not df_kapal.empty:
+        kapal_pilihan = st.sidebar.selectbox("Pilih Kapal", ["-"] + df_kapal["nama_kapal"].tolist())
 
     # ==============================
-    # Main Inputs (body)
+    # Input Utama Kapal / Operasional
     # ==============================
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
     pod = st.text_input("Port of Discharge (POD)")
-    total_cargo = st.number_input("Total Cargo (MT)", value=7500)
     jarak = st.number_input("Jarak (NM)", value=630)
 
+    # Default values
+    total_cargo = 7500
+    consumption = 120
+    angsuran = crew_cost = asuransi = docking = perawatan = sertifikat = depresiasi = charter_hire = 0
+
+    if kapal_pilihan and kapal_pilihan != "-":
+        data_kapal = df_kapal[df_kapal["nama_kapal"] == kapal_pilihan].iloc[0]
+        total_cargo = data_kapal["total_cargo"]
+        consumption = data_kapal["consumption"]
+        angsuran = data_kapal["angsuran"]
+        crew_cost = data_kapal["crew_cost"]
+        asuransi = data_kapal["asuransi"]
+        docking = data_kapal["docking"]
+        perawatan = data_kapal["perawatan"]
+        sertifikat = data_kapal["sertifikat"]
+        depresiasi = data_kapal["depresiasi"]
+        charter_hire = data_kapal["charter_hire"]
+
+    total_cargo = st.number_input("Total Cargo (MT)", value=float(total_cargo))
+
     # ==============================
-    # Perhitungan Dasar (gunakan params dari sidebar)
+    # Sidebar Parameter (manual input)
     # ==============================
-    sailing_time = (jarak / (speed_kosong if speed_kosong>0 else 1)) + (jarak / (speed_isi if speed_isi>0 else 1))
+    st.sidebar.header("⚙️ Parameter Default (Bisa diubah)")
+
+    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
+    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
+    consumption = st.sidebar.number_input("Consumption (liter/jam)", value=float(consumption))
+    harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
+    harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
+    port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
+    asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
+    premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
+
+    if mode == "Owner":
+        angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=float(angsuran))
+        crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=float(crew_cost))
+        asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=float(asuransi))
+        docking = st.sidebar.number_input("Docking (Rp/bulan)", value=float(docking))
+        perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=float(perawatan))
+        sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=float(sertifikat))
+        depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=float(depresiasi))
+        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
+    else:
+        charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=float(charter_hire))
+        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
+
+    port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
+
+    # ==============================
+    # Tombol Simpan Kapal
+    # ==============================
+    with st.sidebar.expander("💾 Simpan / Update Kapal"):
+        nama_kapal_input = st.text_input("Nama Kapal Baru / Update", value=kapal_pilihan if kapal_pilihan and kapal_pilihan != "-" else "")
+        if st.button("Simpan Kapal"):
+            data = (
+                nama_kapal_input,
+                total_cargo,
+                consumption,
+                angsuran,
+                crew_cost,
+                asuransi,
+                docking,
+                perawatan,
+                sertifikat,
+                depresiasi,
+                charter_hire
+            )
+            tambah_kapal(data)
+            st.success(f"✅ Data kapal '{nama_kapal_input}' berhasil disimpan/diupdate!")
+            st.experimental_rerun()
+
+    # ==============================
+    # Perhitungan Dasar
+    # ==============================
+    sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
     voyage_days = (sailing_time / 24) + port_stay
     total_consumption = (sailing_time * consumption) + (port_stay * consumption)
 
-    # Biaya umum
     biaya_umum = {
         "Bunker BBM": total_consumption * harga_bunker,
         "Air Tawar": (voyage_days * 2) * harga_air_tawar,
@@ -303,7 +201,6 @@ else:
         "Asist": asist_tug
     }
 
-    # Biaya per Mode
     if mode == "Owner":
         biaya_mode = {
             "Angsuran": (angsuran / 30) * voyage_days,
@@ -322,7 +219,7 @@ else:
         }
 
     total_cost = sum(biaya_mode.values()) + sum(biaya_umum.values())
-    cost_per_mt = total_cost / total_cargo if total_cargo>0 else 0
+    cost_per_mt = total_cost / total_cargo
 
     biaya_mode_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_mode.items()}
     biaya_umum_rp = {k: f"Rp {v:,.0f}" for k, v in biaya_umum.items()}
