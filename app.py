@@ -256,7 +256,7 @@ else:
     st.table(profit_df)
 
     # ==============================
-    # PDF Export
+    # PDF Export (1 Halaman)
     # ==============================
     input_data = [["POL", pol],["POD", pod],["Jarak (NM)", f"{jarak:,}"],["Total Cargo (MT)", f"{total_cargo:,}"],["Voyage Days", f"{voyage_days:,.2f} hari"]]
     results = list(biaya_mode.items()) + list(biaya_umum.items())
@@ -265,29 +265,54 @@ else:
 
     def generate_pdf(input_data, results, profit_df):
         buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=A4)
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=A4,
+            leftMargin=15,
+            rightMargin=15,
+            topMargin=15,
+            bottomMargin=15
+        )
         elements = []
         styles = getSampleStyleSheet()
+
         elements.append(Paragraph("🚢 Laporan Freight Tongkang", styles["Title"]))
-        elements.append(Spacer(1,12))
+        elements.append(Spacer(1, 6))
 
-        elements.append(Paragraph("📥 Input Utama", styles["Heading2"]))
-        table_input = Table(input_data, colWidths=[200,200])
-        table_input.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey)]))
+        elements.append(Paragraph("📥 Input Utama", styles["Heading3"]))
+        table_input = Table(input_data, colWidths=[150, 200], rowHeights=15)
+        table_input.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
+            ("FONTSIZE", (0,0), (-1,-1), 8),
+            ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ]))
         elements.append(table_input)
-        elements.append(Spacer(1,12))
+        elements.append(Spacer(1, 6))
 
-        elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading2"]))
-        table_results = Table([[k,f"Rp {v:,.0f}" if isinstance(v,(int,float)) else v] for k,v in results], colWidths=[200,200])
-        table_results.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey)]))
+        elements.append(Paragraph("📊 Hasil Perhitungan", styles["Heading3"]))
+        table_results = Table(
+            [[k, f"Rp {v:,.0f}" if isinstance(v,(int,float)) else v] for k,v in results],
+            colWidths=[150, 200],
+            rowHeights=15
+        )
+        table_results.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
+            ("FONTSIZE", (0,0), (-1,-1), 8),
+            ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ]))
         elements.append(table_results)
-        elements.append(Spacer(1,12))
+        elements.append(Spacer(1, 6))
 
-        elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading2"]))
+        elements.append(Paragraph("📈 Skenario Profit (0% - 50%)", styles["Heading3"]))
         data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
-        table_profit = Table(data_profit, colWidths=[60,100,120,120,120])
-        table_profit.setStyle(TableStyle([("GRID", (0,0), (-1,-1), 0.5, colors.grey)]))
+        table_profit = Table(data_profit, colWidths=[50, 80, 100, 100, 100], rowHeights=15)
+        table_profit.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
+            ("FONTSIZE", (0,0), (-1,-1), 7),
+            ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ]))
         elements.append(table_profit)
+
         doc.build(elements)
         buffer.seek(0)
         return buffer
