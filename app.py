@@ -283,7 +283,7 @@ else:
         table_input = Table(input_data, colWidths=[150, 200], rowHeights=15)
         table_input.setStyle(TableStyle([
             ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
-            ("FONTSIZE", (0,0), (-1,-1), 8),
+            ("FONTSIZE", (0,0), (-1,-1), 14),
             ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
         ]))
         elements.append(table_input)
@@ -297,7 +297,7 @@ else:
         )
         table_results.setStyle(TableStyle([
             ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
-            ("FONTSIZE", (0,0), (-1,-1), 8),
+            ("FONTSIZE", (0,0), (-1,-1), 14),
             ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
         ]))
         elements.append(table_results)
@@ -308,7 +308,7 @@ else:
         table_profit = Table(data_profit, colWidths=[50, 80, 100, 100, 100], rowHeights=15)
         table_profit.setStyle(TableStyle([
             ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
-            ("FONTSIZE", (0,0), (-1,-1), 7),
+            ("FONTSIZE", (0,0), (-1,-1), 14),
             ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
         ]))
         elements.append(table_profit)
