@@ -186,7 +186,7 @@ else:
             )
             tambah_kapal(data)
             st.success("Data kapal berhasil disimpan/diupdate!")
-            st.experimental_rerun()
+            st.rerun()
 
     # ==============================
     # Perhitungan
@@ -300,4 +300,4 @@ else:
     if st.sidebar.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.username = ""
-        st.experimental_rerun()
+        st.rerun()
