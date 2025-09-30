@@ -172,19 +172,19 @@ else:
 # editable fields in Data Kapal section (values default from kapal_data if available)
 consumption = st.sidebar.number_input(
     "Consumption (liter/jam)", 
-    value=float(kapal_data["consumption"]) if kapal_data and kapal_data.get("consumption") is not None else 120.0
+    value=float(kapal_data["consumption"]) if kapal_data and kapal_data.get("consumption") is not None else 120
 )
 
 if mode == "Owner":
-    angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=float(kapal_data["angsuran"]) if kapal_data and kapal_data.get("angsuran") is not None else 750000000.0)
-    crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=float(kapal_data["crew_cost"]) if kapal_data and kapal_data.get("crew_cost") is not None else 60000000.0)
-    asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=float(kapal_data["asuransi"]) if kapal_data and kapal_data.get("asuransi") is not None else 50000000.0)
-    docking = st.sidebar.number_input("Docking (Rp/bulan)", value=float(kapal_data["docking"]) if kapal_data and kapal_data.get("docking") is not None else 50000000.0)
-    perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=float(kapal_data["perawatan"]) if kapal_data and kapal_data.get("perawatan") is not None else 50000000.0)
-    sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=float(kapal_data["sertifikat"]) if kapal_data and kapal_data.get("sertifikat") is not None else 50000000.0)
-    depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=float(kapal_data["depresiasi"]) if kapal_data and kapal_data.get("depresiasi") is not None else 45000000000.0)
+    angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=float(kapal_data["angsuran"]) if kapal_data and kapal_data.get("angsuran") is not None else 750000000)
+    crew_cost = st.sidebar.number_input("Crew Cost (Rp/bulan)", value=float(kapal_data["crew_cost"]) if kapal_data and kapal_data.get("crew_cost") is not None else 60000000)
+    asuransi = st.sidebar.number_input("Asuransi (Rp/bulan)", value=float(kapal_data["asuransi"]) if kapal_data and kapal_data.get("asuransi") is not None else 50000000)
+    docking = st.sidebar.number_input("Docking (Rp/bulan)", value=float(kapal_data["docking"]) if kapal_data and kapal_data.get("docking") is not None else 50000000)
+    perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=float(kapal_data["perawatan"]) if kapal_data and kapal_data.get("perawatan") is not None else 50000000)
+    sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=float(kapal_data["sertifikat"]) if kapal_data and kapal_data.get("sertifikat") is not None else 50000000)
+    depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=float(kapal_data["depresiasi"]) if kapal_data and kapal_data.get("depresiasi") is not None else 45000000000)
 else:
-    charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=float(kapal_data["charter_hire"]) if kapal_data and kapal_data.get("charter_hire") is not None else 750000000.0)
+    charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=float(kapal_data["charter_hire"]) if kapal_data and kapal_data.get("charter_hire") is not None else 750000000)
 
 # 4) Parameter Voyage (sementara)
 st.sidebar.markdown("### ⚓ Parameter Voyage (Sementara)")
@@ -203,7 +203,7 @@ port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 # ------------------------------
 with st.sidebar.expander("💾 Kelola Data Kapal"):
     nama_kapal_input = st.text_input("Nama Kapal", value=kapal_data["nama"] if kapal_data else "")
-    total_cargo_input = st.number_input("Total Cargo (MT)", value=float(kapal_data["total_cargo"]) if kapal_data and kapal_data.get("total_cargo") is not None else 7500.0)
+    total_cargo_input = st.number_input("Total Cargo (MT)", value=float(kapal_data["total_cargo"]) if kapal_data and kapal_data.get("total_cargo") is not None else 7500)
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -246,8 +246,8 @@ st.header("📥 Input Utama Voyage")
 pol = st.text_input("Port of Loading (POL)")
 pod = st.text_input("Port of Discharge (POD)")
 
-total_cargo = st.number_input("Total Cargo (MT)", value=float(kapal_data["total_cargo"]) if kapal_data and kapal_data.get("total_cargo") is not None else 7500.0)
-jarak = st.number_input("Jarak (NM)", value=630.0)
+total_cargo = st.number_input("Total Cargo (MT)", value=float(kapal_data["total_cargo"]) if kapal_data and kapal_data.get("total_cargo") is not None else 7500)
+jarak = st.number_input("Jarak (NM)", value=630)
 
 # Perhitungan
 sailing_time = (jarak / speed_kosong) + (jarak / speed_isi)
