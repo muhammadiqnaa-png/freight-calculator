@@ -15,31 +15,39 @@ DB_PATH = "data.db"
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    try:
-        c.execute("PRAGMA table_info(kapal)")
-        cols = [row[1] for row in c.fetchall()]
-        required = ["id","nama","total_cargo","consumption","angsuran","crew_cost","asuransi","docking","perawatan","sertifikat","depresiasi","charter_hire"]
-        if set(required) - set(cols):
-            c.execute("DROP TABLE IF EXISTS kapal")
-    except:
-        pass
-    
-    c.execute("""
+
+    # struktur tabel yang diinginkan
+    required_cols = {
+        "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+        "nama": "TEXT UNIQUE",
+        "total_cargo": "REAL",
+        "consumption": "REAL",
+        "angsuran": "REAL",
+        "crew_cost": "REAL",
+        "asuransi": "REAL",
+        "docking": "REAL",
+        "perawatan": "REAL",
+        "sertifikat": "REAL",
+        "depresiasi": "REAL",
+        "charter_hire": "REAL"
+    }
+
+    # buat tabel kalau belum ada
+    c.execute(f"""
         CREATE TABLE IF NOT EXISTS kapal (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama TEXT UNIQUE,
-            total_cargo REAL,
-            consumption REAL,
-            angsuran REAL,
-            crew_cost REAL,
-            asuransi REAL,
-            docking REAL,
-            perawatan REAL,
-            sertifikat REAL,
-            depresiasi REAL,
-            charter_hire REAL
+            {", ".join([f"{col} {dtype}" for col, dtype in required_cols.items()])}
         )
     """)
+
+    # cek kolom yang sudah ada
+    c.execute("PRAGMA table_info(kapal)")
+    existing_cols = [row[1] for row in c.fetchall()]
+
+    # tambahin kolom yang belum ada
+    for col, dtype in required_cols.items():
+        if col not in existing_cols:
+            c.execute(f"ALTER TABLE kapal ADD COLUMN {col} {dtype}")
+
     conn.commit()
     conn.close()
 
@@ -50,6 +58,13 @@ def tambah_kapal(data):
         INSERT OR REPLACE INTO kapal (nama,total_cargo,consumption,angsuran,crew_cost,asuransi,docking,perawatan,sertifikat,depresiasi,charter_hire)
         VALUES (?,?,?,?,?,?,?,?,?,?,?)
     """, data)
+    conn.commit()
+    conn.close()
+
+def hapus_kapal(nama):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("DELETE FROM kapal WHERE nama=?", (nama,))
     conn.commit()
     conn.close()
 
@@ -164,27 +179,37 @@ else:
     port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
     # ==============================
-    # Simpan Kapal
+    # Simpan / Update / Hapus Kapal
     # ==============================
-    with st.sidebar.expander("💾 Simpan/Update Kapal"):
+    with st.sidebar.expander("💾 Kelola Data Kapal"):
         nama_kapal_input = st.text_input("Nama Kapal", value=kapal_data["nama"] if kapal_data else "")
-        if st.button("Simpan Kapal"):
-            data = (
-                nama_kapal_input,
-                total_cargo,
-                consumption,
-                angsuran if mode=="Owner" else None,
-                crew_cost if mode=="Owner" else None,
-                asuransi if mode=="Owner" else None,
-                docking if mode=="Owner" else None,
-                perawatan if mode=="Owner" else None,
-                sertifikat if mode=="Owner" else None,
-                depresiasi if mode=="Owner" else None,
-                charter_hire if mode=="Charter" else None
-            )
-            tambah_kapal(data)
-            st.success("Data kapal berhasil disimpan/diupdate!")
-            st.rerun()
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("Simpan / Update"):
+                data = (
+                    nama_kapal_input,
+                    total_cargo,
+                    consumption,
+                    angsuran if mode=="Owner" else None,
+                    crew_cost if mode=="Owner" else None,
+                    asuransi if mode=="Owner" else None,
+                    docking if mode=="Owner" else None,
+                    perawatan if mode=="Owner" else None,
+                    sertifikat if mode=="Owner" else None,
+                    depresiasi if mode=="Owner" else None,
+                    charter_hire if mode=="Charter" else None
+                )
+                tambah_kapal(data)
+                st.success("✅ Data kapal berhasil disimpan / diupdate!")
+                st.rerun()
+        with col2:
+            if kapal_data and st.button("❌ Hapus"):
+                hapus_kapal(nama_kapal_input)
+                st.warning(f"Data kapal '{nama_kapal_input}' sudah dihapus.")
+                st.rerun()
+        with col3:
+            if st.button("🔄 Refresh"):
+                st.rerun()
 
     # ==============================
     # Perhitungan
@@ -272,11 +297,9 @@ else:
         style_heading = styles["Heading2"]; style_heading.fontSize = 11
         style_normal = styles["Normal"]; style_normal.fontSize = 9
 
-        # Judul
         elements.append(Paragraph("LAPORAN PERHITUNGAN FREIGHT", style_title))
         elements.append(Spacer(1, 6))
 
-        # Input Utama
         elements.append(Paragraph("Input Utama", style_heading))
         table_input = Table(input_data, colWidths=[150, 300])
         table_input.setStyle(TableStyle([
@@ -288,7 +311,6 @@ else:
         elements.append(table_input)
         elements.append(Spacer(1, 10))
 
-        # Hasil Perhitungan
         elements.append(Paragraph("Hasil Perhitungan", style_heading))
         table_results = Table(
             [[k, f"Rp {v:,.0f}" if isinstance(v, (int, float)) else v] for k, v in results],
@@ -303,7 +325,6 @@ else:
         elements.append(table_results)
         elements.append(Spacer(1, 10))
 
-        # Profit Scenario
         elements.append(Paragraph("Skenario Profit (0% - 50%)", style_heading))
         data_profit = [list(profit_df.columns)] + profit_df.values.tolist()
         table_profit = Table(data_profit, colWidths=[60, 90, 100, 100, 100])
