@@ -15,39 +15,34 @@ DB_PATH = "data.db"
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-
-    # struktur tabel yang diinginkan
-    required_cols = {
-        "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-        "nama": "TEXT UNIQUE",
-        "total_cargo": "REAL",
-        "consumption": "REAL",
-        "angsuran": "REAL",
-        "crew_cost": "REAL",
-        "asuransi": "REAL",
-        "docking": "REAL",
-        "perawatan": "REAL",
-        "sertifikat": "REAL",
-        "depresiasi": "REAL",
-        "charter_hire": "REAL"
-    }
-
-    # buat tabel kalau belum ada
-    c.execute(f"""
+    try:
+        c.execute("PRAGMA table_info(kapal)")
+        cols = [row[1] for row in c.fetchall()]
+        required = [
+            "id","nama","total_cargo","consumption","angsuran","crew_cost","asuransi",
+            "docking","perawatan","sertifikat","depresiasi","charter_hire"
+        ]
+        if set(required) - set(cols):
+            c.execute("DROP TABLE IF EXISTS kapal")
+    except:
+        pass
+    
+    c.execute("""
         CREATE TABLE IF NOT EXISTS kapal (
-            {", ".join([f"{col} {dtype}" for col, dtype in required_cols.items()])}
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nama TEXT UNIQUE,
+            total_cargo REAL,
+            consumption REAL,
+            angsuran REAL,
+            crew_cost REAL,
+            asuransi REAL,
+            docking REAL,
+            perawatan REAL,
+            sertifikat REAL,
+            depresiasi REAL,
+            charter_hire REAL
         )
     """)
-
-    # cek kolom yang sudah ada
-    c.execute("PRAGMA table_info(kapal)")
-    existing_cols = [row[1] for row in c.fetchall()]
-
-    # tambahin kolom yang belum ada
-    for col, dtype in required_cols.items():
-        if col not in existing_cols:
-            c.execute(f"ALTER TABLE kapal ADD COLUMN {col} {dtype}")
-
     conn.commit()
     conn.close()
 
@@ -55,16 +50,10 @@ def tambah_kapal(data):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        INSERT OR REPLACE INTO kapal (nama,total_cargo,consumption,angsuran,crew_cost,asuransi,docking,perawatan,sertifikat,depresiasi,charter_hire)
+        INSERT OR REPLACE INTO kapal 
+        (nama,total_cargo,consumption,angsuran,crew_cost,asuransi,docking,perawatan,sertifikat,depresiasi,charter_hire)
         VALUES (?,?,?,?,?,?,?,?,?,?,?)
     """, data)
-    conn.commit()
-    conn.close()
-
-def hapus_kapal(nama):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("DELETE FROM kapal WHERE nama=?", (nama,))
     conn.commit()
     conn.close()
 
@@ -138,7 +127,7 @@ else:
             )
 
     # ==============================
-    # Input Utama
+    # Input Utama Voyage
     # ==============================
     st.header("📥 Input Utama")
     pol = st.text_input("Port of Loading (POL)")
@@ -148,20 +137,16 @@ else:
     jarak = st.number_input("Jarak (NM)", value=630)
 
     # ==============================
-    # Sidebar Parameter
+    # Sidebar Parameter Kapal (tersimpan)
     # ==============================
-    st.sidebar.header("⚙️ Parameter")
-
-    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
-    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
-    consumption = st.sidebar.number_input("Consumption (liter/jam)", value=kapal_data["consumption"] if kapal_data else 120)
-    harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
-    harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
-    port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
-    asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
-    premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
+    st.sidebar.header("📦 Data Kapal (Tersimpan)")
 
     mode = st.radio("Pilih Mode Biaya:", ["Owner", "Charter"])
+
+    consumption = st.sidebar.number_input(
+        "Consumption (liter/jam)", 
+        value=kapal_data["consumption"] if kapal_data else 120
+    )
 
     if mode == "Owner":
         angsuran = st.sidebar.number_input("Angsuran (Rp/bulan)", value=kapal_data["angsuran"] if kapal_data else 750000000)
@@ -171,45 +156,46 @@ else:
         perawatan = st.sidebar.number_input("Perawatan (Rp/bulan)", value=kapal_data["perawatan"] if kapal_data else 50000000)
         sertifikat = st.sidebar.number_input("Sertifikat (Rp/bulan)", value=kapal_data["sertifikat"] if kapal_data else 50000000)
         depresiasi = st.sidebar.number_input("Depresiasi (Rp/Beli)", value=kapal_data["depresiasi"] if kapal_data else 45000000000)
-        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
     else:
         charter_hire = st.sidebar.number_input("Charter Hire (Rp/bulan)", value=kapal_data["charter_hire"] if kapal_data else 750000000)
-        other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
 
+    # ==============================
+    # Sidebar Parameter Voyage (sementara)
+    # ==============================
+    st.sidebar.header("⚓ Parameter Voyage (Sementara)")
+
+    speed_kosong = st.sidebar.number_input("Speed Kosong (knot)", value=3.0)
+    speed_isi = st.sidebar.number_input("Speed Isi (knot)", value=4.0)
+    harga_bunker = st.sidebar.number_input("Harga Bunker (Rp/liter)", value=12500)
+    harga_air_tawar = st.sidebar.number_input("Harga Air Tawar (Rp/Ton)", value=120000)
+    port_cost = st.sidebar.number_input("Port cost/call (Rp)", value=50000000)
+    asist_tug = st.sidebar.number_input("Asist Tug (Rp)", value=35000000)
+    premi_nm = st.sidebar.number_input("Premi (Rp/NM)", value=50000)
+    other_cost = st.sidebar.number_input("Other Cost (Rp)", value=50000000)
     port_stay = st.sidebar.number_input("Port Stay (Hari)", value=10)
 
     # ==============================
-    # Simpan / Update / Hapus Kapal
+    # Simpan Kapal
     # ==============================
-    with st.sidebar.expander("💾 Kelola Data Kapal"):
+    with st.sidebar.expander("💾 Simpan/Update Kapal"):
         nama_kapal_input = st.text_input("Nama Kapal", value=kapal_data["nama"] if kapal_data else "")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("Simpan / Update"):
-                data = (
-                    nama_kapal_input,
-                    total_cargo,
-                    consumption,
-                    angsuran if mode=="Owner" else None,
-                    crew_cost if mode=="Owner" else None,
-                    asuransi if mode=="Owner" else None,
-                    docking if mode=="Owner" else None,
-                    perawatan if mode=="Owner" else None,
-                    sertifikat if mode=="Owner" else None,
-                    depresiasi if mode=="Owner" else None,
-                    charter_hire if mode=="Charter" else None
-                )
-                tambah_kapal(data)
-                st.success("✅ Data kapal berhasil disimpan / diupdate!")
-                st.rerun()
-        with col2:
-            if kapal_data and st.button("❌ Hapus"):
-                hapus_kapal(nama_kapal_input)
-                st.warning(f"Data kapal '{nama_kapal_input}' sudah dihapus.")
-                st.rerun()
-        with col3:
-            if st.button("🔄 Refresh"):
-                st.rerun()
+        if st.button("Simpan Kapal"):
+            data = (
+                nama_kapal_input,
+                total_cargo,
+                consumption,
+                angsuran if mode=="Owner" else None,
+                crew_cost if mode=="Owner" else None,
+                asuransi if mode=="Owner" else None,
+                docking if mode=="Owner" else None,
+                perawatan if mode=="Owner" else None,
+                sertifikat if mode=="Owner" else None,
+                depresiasi if mode=="Owner" else None,
+                charter_hire if mode=="Charter" else None
+            )
+            tambah_kapal(data)
+            st.success("Data kapal berhasil disimpan/diupdate!")
+            st.rerun()
 
     # ==============================
     # Perhitungan
@@ -346,7 +332,6 @@ else:
                        file_name=f"Freight_Report_{pol or 'POL'}_{pod or 'POD'}.pdf",
                        mime="application/pdf")
 
-    # Logout
     st.sidebar.markdown("---")
     if st.sidebar.button("Logout"):
         st.session_state.logged_in = False
