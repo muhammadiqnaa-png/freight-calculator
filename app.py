@@ -226,18 +226,18 @@ with st.sidebar.expander("💾 Kelola Data Kapal"):
                 )
                 tambah_kapal(data)
                 st.sidebar.success("✅ Data kapal berhasil disimpan / diupdate!")
-                st.experimental_rerun()
+                st.rerun()
     with col2:
         if pilihan_kapal != "-- Kapal Baru --" and st.button("❌ Hapus"):
             if nama_kapal_input.strip():
                 hapus_kapal(nama_kapal_input.strip())
                 st.sidebar.warning(f"Data kapal '{nama_kapal_input.strip()}' sudah dihapus.")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.sidebar.error("Nama kapal tidak ditemukan untuk dihapus.")
     with col3:
         if st.button("🔄 Refresh"):
-            st.experimental_rerun()
+            st.rerun()
 
 # ==============================
 # Main content: Input Voyage & Results
