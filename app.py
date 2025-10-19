@@ -162,12 +162,6 @@ if st.button("Calculate Freight 💸"):
         # ===== DISPLAY RESULTS =====
         st.subheader("📋 Calculation Results")
         st.markdown(f"""
-**Port Of Loading:** {port_pol}  
-**Port Of Discharge:** {port_pod}  
-**Next Port:** {next_port}  
-**Type Cargo:** {type_cargo}  
-**Cargo Quantity:** {qyt_cargo:,.0f} {type_cargo.split()[1]}  
-**Distance (NM):** {distance_pol_pod:,.0f}  
 **Total Voyage (Days):** {total_voyage_days:.2f}  
 **Total Sailing Time (Hour):** {sailing_time:.2f}  
 **Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
