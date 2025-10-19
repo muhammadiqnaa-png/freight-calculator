@@ -159,15 +159,7 @@ if st.button("Calculate Freight 💸"):
         # ===== CALCULATION RESULTS =====
 st.subheader("📋 Calculation Results")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown(f"**Port Of Loading:** {port_pol}")
-    st.markdown(f"**Port Of Discharge:** {port_pod}")
-    st.markdown(f"**Next Port:** {next_port}")
-    st.markdown(f"**Type Cargo:** {type_cargo}")
-    st.markdown(f"**Cargo Quantity:** {qyt_cargo:,.0f} (MT)")
-
+col2 = st.columns(1)
 with col2:
     st.markdown(f"**Distance (NM):** {distance_pol_pod:,.0f}")
     st.markdown(f"**Total Voyage (Days):** {total_voyage_days:.2f}")
@@ -185,8 +177,7 @@ for k, v in owner_data.items():
 
 st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
 st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
-
-        
+  
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
             owner_data = {
