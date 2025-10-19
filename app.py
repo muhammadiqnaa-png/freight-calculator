@@ -156,23 +156,37 @@ if st.button("Calculate Freight 💸"):
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
-        # ===== DISPLAY RESULTS =====
-        st.subheader("📋 Calculation Results")
-        st.markdown(f"""
-        **Port Of Loading:** {port_pol}  
-        **Port Of Discharge:** {port_pod}  
-        **Next Port:** {next_port}  
-        **Type Cargo:** {type_cargo}  
-        **Cargo Quantity:** {qyt_cargo:,.0f} {type_cargo.split()[1]}  
-        **Distance (NM):** {distance_pol_pod:,.0f}  
-        **Total Voyage (Days):** {total_voyage_days:.2f}  
-        **Total Sailing Time (Hour):** {sailing_time:.2f}  
-        **Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
-        **Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}  
-        **Fuel Cost (Rp):** Rp {cost_fuel:,.0f}  
-        **Freshwater Cost (Rp):** Rp {cost_fw:,.0f}
-        """)
+        # ===== CALCULATION RESULTS =====
+st.subheader("📋 Calculation Results")
 
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown(f"**Port Of Loading:** {port_pol}")
+    st.markdown(f"**Port Of Discharge:** {port_pod}")
+    st.markdown(f"**Next Port:** {next_port}")
+    st.markdown(f"**Type Cargo:** {type_cargo}")
+    st.markdown(f"**Cargo Quantity:** {qyt_cargo:,.0f} (MT)")
+
+with col2:
+    st.markdown(f"**Distance (NM):** {distance_pol_pod:,.0f}")
+    st.markdown(f"**Total Voyage (Days):** {total_voyage_days:.2f}")
+    st.markdown(f"**Total Sailing Time (Hour):** {sailing_time:.2f}")
+    st.markdown(f"**Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}")
+    st.markdown(f"**Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}")
+
+st.markdown(f"**Fuel Cost (Rp):** Rp {cost_fuel:,.0f}")
+st.markdown(f"**Freshwater Cost (Rp):** Rp {cost_fw:,.0f}")
+
+# Owner cost breakdown
+st.markdown("### 💼 Owner Cost Details")
+for k, v in owner_data.items():
+    st.markdown(f"- {k}: Rp {v:,.0f}")
+
+st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
+st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
+
+        
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
             owner_data = {
