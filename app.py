@@ -125,24 +125,21 @@ freight_price_input = st.number_input("Freight Price (Rp/MT)", 0)
 # ===== PERHITUNGAN =====
 if st.button("Calculate Freight 💸"):
     try:
-        # Sailing Time
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
         total_voyage_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
-        total_voyage_days_round = int(total_voyage_days) if total_voyage_days %1 <0.5 else int(total_voyage_days)+1
+        total_voyage_days_round = int(total_voyage_days) if total_voyage_days % 1 < 0.5 else int(total_voyage_days) + 1
 
-        # Fuel & Freshwater
         total_consumption_fuel = (sailing_time * consumption) + ((port_stay_pol + port_stay_pod) * 120)
         total_consumption_fw = consumption_fw * total_voyage_days_round
         cost_fw = total_consumption_fw * price_fw
         cost_fuel = total_consumption_fuel * price_fuel
 
-        # Costs
         charter_cost = (charter / 30) * total_voyage_days
-        crew_cost = (crew /30) * total_voyage_days if mode=="Owner" else 0
-        insurance_cost = (insurance /30)* total_voyage_days if mode=="Owner" else 0
-        docking_cost = (docking /30)* total_voyage_days if mode=="Owner" else 0
-        maintenance_cost = (maintenance /30)* total_voyage_days if mode=="Owner" else 0
-        certificate_cost = (certificate /30)* total_voyage_days if mode=="Owner" else 0
+        crew_cost = (crew / 30) * total_voyage_days if mode == "Owner" else 0
+        insurance_cost = (insurance / 30) * total_voyage_days if mode == "Owner" else 0
+        docking_cost = (docking / 30) * total_voyage_days if mode == "Owner" else 0
+        maintenance_cost = (maintenance / 30) * total_voyage_days if mode == "Owner" else 0
+        certificate_cost = (certificate / 30) * total_voyage_days if mode == "Owner" else 0
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
@@ -151,26 +148,31 @@ if st.button("Calculate Freight 💸"):
             premi_cost, port_cost, cost_fuel, cost_fw, other_cost
         ])
 
-        freight_cost_mt = total_cost / qyt_cargo if qyt_cargo>0 else 0
+        freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
-        # ===== FREIGHT PRICE CALCULATION =====
+        # Freight Price Calculation
         revenue_user = freight_price_input * qyt_cargo
         pph_user = revenue_user * 0.012
         profit_user = revenue_user - total_cost - pph_user
-        profit_percent_user = (profit_user / total_cost * 100) if total_cost>0 else 0
+        profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
         # ===== DISPLAY RESULTS =====
         st.subheader("📋 Calculation Results")
         st.markdown(f"""
-**Total Voyage (Days):** {total_voyage_days:.2f}  
-**Total Sailing Time (Hour):** {sailing_time:.2f}  
-**Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
-**Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}  
-**Fuel Cost (Rp):** Rp {cost_fuel:,.0f}  
-**Freshwater Cost (Rp):** Rp {cost_fw:,.0f}  
-""")
+        **Port Of Loading:** {port_pol}  
+        **Port Of Discharge:** {port_pod}  
+        **Next Port:** {next_port}  
+        **Type Cargo:** {type_cargo}  
+        **Cargo Quantity:** {qyt_cargo:,.0f} {type_cargo.split()[1]}  
+        **Distance (NM):** {distance_pol_pod:,.0f}  
+        **Total Voyage (Days):** {total_voyage_days:.2f}  
+        **Total Sailing Time (Hour):** {sailing_time:.2f}  
+        **Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
+        **Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}  
+        **Fuel Cost (Rp):** Rp {cost_fuel:,.0f}  
+        **Freshwater Cost (Rp):** Rp {cost_fw:,.0f}
+        """)
 
-        # Costs summary
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
             owner_data = {
@@ -199,41 +201,42 @@ if st.button("Calculate Freight 💸"):
         st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
         st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
 
-        # ===== FREIGHT PRICE CALCULATION DISPLAY =====
+        # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
         st.subheader("💰 Freight Price Calculation User")
-        st.markdown(f"""
-**Freight Price (Rp/MT):** Rp {freight_price_input:,.0f}  
-**Revenue:** Rp {revenue_user:,.0f}  
-**PPH 1.2%:** Rp {pph_user:,.0f}  
-**Profit:** Rp {profit_user:,.0f}  
-**Profit %:** {profit_percent_user:.2f} %
-""")
+        if freight_price_input > 0:
+            st.markdown(f"""
+            **Freight Price (Rp/MT):** Rp {freight_price_input:,.0f}  
+            **Revenue:** Rp {revenue_user:,.0f}  
+            **PPH 1.2%:** Rp {pph_user:,.0f}  
+            **Profit:** Rp {profit_user:,.0f}  
+            **Profit %:** {profit_percent_user:.2f} %
+            """)
+        else:
+            st.info("Masukkan Freight Price untuk melihat hasil perhitungan profit user.")
 
-        # ===== PROFIT SCENARIO =====
+        # ===== PROFIT SCENARIO (SELALU MUNCUL) =====
         data = []
-        for p in range(0,55,5):
-            freight_persen = freight_cost_mt*(1+p/100)
-            revenue = freight_persen*qyt_cargo
-            pph = revenue*0.012
+        for p in range(0, 55, 5):
+            freight_persen = freight_cost_mt * (1 + p / 100)
+            revenue = freight_persen * qyt_cargo
+            pph = revenue * 0.012
             profit = revenue - total_cost - pph
             data.append([f"{p}%", f"Rp {freight_persen:,.0f}", f"Rp {revenue:,.0f}", f"Rp {pph:,.0f}", f"Rp {profit:,.0f}"])
-        df_profit = pd.DataFrame(data, columns=["Profit %","Freight (Rp)","Revenue (Rp)","PPH 1.2% (Rp)","Profit (Rp)"])
-        st.subheader("💹 Profit Scenario 0-50%")
+        df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Profit (Rp)"])
+
+        st.subheader("💹 Profit Scenario 0–50%")
         st.dataframe(df_profit, use_container_width=True)
 
         # ===== PDF GENERATOR =====
         def create_pdf():
             buffer = BytesIO()
-            doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10,leftMargin=10,topMargin=0,bottomMargin=0)
+            doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=0, bottomMargin=0)
             styles = getSampleStyleSheet()
             elements = []
 
-            # Title
             elements.append(Paragraph("<b>Freight Calculator Report</b>", styles['Title']))
-            elements.append(Spacer(0,0))
+            elements.append(Spacer(0, 5))
 
-            # Voyage Information
-            elements.append(Paragraph("<b>Voyage Information</b>", styles['Heading3']))
             voyage_data = [
                 ["Port Of Loading", port_pol],
                 ["Port Of Discharge", port_pod],
@@ -243,12 +246,10 @@ if st.button("Calculate Freight 💸"):
                 ["Total Voyage (Days)", f"{total_voyage_days:.2f}"]
             ]
             t_voyage = Table(voyage_data, hAlign='LEFT')
-            t_voyage.setStyle(TableStyle([("GRID",(0,0),(-1,-1),0.25,colors.black)]))
+            t_voyage.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_voyage)
-            elements.append(Spacer(0,0))
+            elements.append(Spacer(0, 5))
 
-            # Calculation Results
-            elements.append(Paragraph("<b>Calculation Results</b>", styles['Heading3']))
             calc_data = [
                 ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
                 ["Total Consumption Fuel (Ltr)", f"{total_consumption_fuel:,.0f} Ltr"],
@@ -260,34 +261,34 @@ if st.button("Calculate Freight 💸"):
                 calc_data.append([k, f"Rp {v:,.0f}"])
             calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
             calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
-            t_calc = Table(calc_data, hAlign='LEFT', colWidths=[180,120])
-            t_calc.setStyle(TableStyle([("GRID",(0,0),(-1,-1),0.25,colors.black)]))
+            t_calc = Table(calc_data, hAlign='LEFT', colWidths=[180, 120])
+            t_calc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_calc)
-            elements.append(Spacer(0,0))
+            elements.append(Spacer(0, 5))
 
-            # Freight Price Calculation User
-            elements.append(Paragraph("<b>Freight Price Calculation User</b>", styles['Heading3']))
-            fpc_data = [
-                ["Freight Price (Rp/MT)", f"Rp {freight_price_input:,.0f}"],
-                ["Revenue", f"Rp {revenue_user:,.0f}"],
-                ["PPH 1.2%", f"Rp {pph_user:,.0f}"],
-                ["Profit", f"Rp {profit_user:,.0f}"],
-                ["Profit %", f"{profit_percent_user:.2f} %"]
-            ]
-            t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[180,120])
-            t_fpc.setStyle(TableStyle([("GRID",(0,0),(-1,-1),0.25,colors.black)]))
-            elements.append(t_fpc)
-            elements.append(Spacer(0,0))
+            # Tampilkan Freight Price Calculation hanya kalau diisi
+            if freight_price_input > 0:
+                elements.append(Paragraph("<b>Freight Price Calculation User</b>", styles['Heading3']))
+                fpc_data = [
+                    ["Freight Price (Rp/MT)", f"Rp {freight_price_input:,.0f}"],
+                    ["Revenue", f"Rp {revenue_user:,.0f}"],
+                    ["PPH 1.2%", f"Rp {pph_user:,.0f}"],
+                    ["Profit", f"Rp {profit_user:,.0f}"],
+                    ["Profit %", f"{profit_percent_user:.2f} %"]
+                ]
+                t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[180, 120])
+                t_fpc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
+                elements.append(t_fpc)
+                elements.append(Spacer(0, 5))
 
-            # Profit Scenario
-            elements.append(Paragraph("<b>Profit Scenario 0-50%</b>", styles['Heading3']))
+            # Profit Scenario selalu muncul
+            elements.append(Paragraph("<b>Profit Scenario 0–50%</b>", styles['Heading3']))
             profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
-            t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60,100,100,100,100])
-            t_profit.setStyle(TableStyle([("GRID",(0,0),(-1,-1),0.25,colors.black)]))
+            t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 100, 100, 100, 100])
+            t_profit.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_profit)
-            elements.append(Spacer(0,0))
+            elements.append(Spacer(0, 5))
 
-            # Footer
             elements.append(Paragraph("<i>Generated By: https://freight-calculatordemo2.streamlit.app/</i>", styles['Normal']))
 
             doc.build(elements)
@@ -295,11 +296,7 @@ if st.button("Calculate Freight 💸"):
             return buffer
 
         pdf_buffer = create_pdf()
-
-        # ===== Nama file otomatis: POL_POD_Tanggal =====
-        safe_pol = port_pol.replace(" ", "_") if port_pol else "POL"
-        safe_pod = port_pod.replace(" ", "_") if port_pod else "POD"
-        file_name = f"Freight_Report_{safe_pol}_{safe_pod}_{datetime.now():%Y%m%d}.pdf"
+        file_name = f"Freight_Report_{port_pol}_{port_pod}_{datetime.now():%Y%m%d}.pdf"
 
         st.download_button(
             label="📥 Download PDF Report",
