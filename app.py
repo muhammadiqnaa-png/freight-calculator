@@ -13,12 +13,11 @@ st.set_page_config(page_title="Freight Calculator Barge", layout="wide")
 
 # ====== FIREBASE CONFIG & AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
-# Add this secret to your secrets.toml:
-# FIREBASE_DB_URL = "https://<your-db-name>.firebaseio.com"
-FIREBASE_DB_URL = st.secrets.get("FIREBASE_DB_URL", "")
+# Jika ingin override di kode: set FIREBASE_DB_URL = "https://your-db.firebaseio.com"
+FIREBASE_DB_URL = st.secrets.get("FIREBASE_DB_URL", "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app")
 
 AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
-REGISTER_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
+REGISTER_URL = f"https://identitytool.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
 
 def login_user(email, password):
     res = requests.post(AUTH_URL, json={"email": email, "password": password, "returnSecureToken": True})
@@ -30,15 +29,14 @@ def register_user(email, password):
 
 # ----- helpers for realtime DB (REST) -----
 def _safe_key(email_or_name: str):
-    """Make a safe key for Firebase path from email / preset name (replace . and @)."""
     if email_or_name is None:
         return ""
     return str(email_or_name).replace(".", "_").replace("@", "_").replace(" ", "_")
 
 def save_parameters_to_fb(email, id_token, preset_name, data: dict):
-    """Save parameter dict to /users/{safe_email}/parameters/{preset_name}.json"""
+    """Simpan ke /users/{safe_email}/parameters/{safe_name}.json"""
     if not FIREBASE_DB_URL:
-        return False, "FIREBASE_DB_URL not configured in secrets."
+        return False, "FIREBASE_DB_URL tidak dikonfigurasi."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -46,9 +44,8 @@ def save_parameters_to_fb(email, id_token, preset_name, data: dict):
     return res.ok, res.text
 
 def list_presets_from_fb(email, id_token):
-    """Return dict of presets (names -> payload) or None on error."""
     if not FIREBASE_DB_URL:
-        return None, "FIREBASE_DB_URL not configured in secrets."
+        return None, "FIREBASE_DB_URL tidak dikonfigurasi."
     safe_email = _safe_key(email)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters.json?auth={id_token}"
     res = requests.get(url)
@@ -58,7 +55,7 @@ def list_presets_from_fb(email, id_token):
 
 def load_preset_from_fb(email, id_token, preset_name):
     if not FIREBASE_DB_URL:
-        return None, "FIREBASE_DB_URL not configured in secrets."
+        return None, "FIREBASE_DB_URL tidak dikonfigurasi."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -69,7 +66,7 @@ def load_preset_from_fb(email, id_token, preset_name):
 
 def delete_preset_from_fb(email, id_token, preset_name):
     if not FIREBASE_DB_URL:
-        return False, "FIREBASE_DB_URL not configured in secrets."
+        return False, "FIREBASE_DB_URL tidak dikonfigurasi."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -80,7 +77,7 @@ def delete_preset_from_fb(email, id_token, preset_name):
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-# store idToken and localId on login
+# show login/register if not logged in
 if not st.session_state.logged_in:
     st.markdown("<h2 style='text-align:center;'>🔐 Login Freight Calculator</h2>", unsafe_allow_html=True)
     tab_login, tab_register = st.tabs(["Login", "Register"])
@@ -93,14 +90,13 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
-                # save tokens
                 st.session_state.idToken = data.get("idToken")
                 st.session_state.localId = data.get("localId")
                 st.success("Login successful!")
                 st.rerun()
             else:
                 err = data.get("error", {}).get("message", "") if isinstance(data, dict) else data
-                st.error(f"Email or password incorrect! {err}")
+                st.error(f"Email atau password salah! {err}")
 
     with tab_register:
         r_email = st.text_input("Email Register")
@@ -108,17 +104,16 @@ if not st.session_state.logged_in:
         if st.button("Register 📝"):
             ok, data = register_user(r_email, r_password)
             if ok:
-                st.success("Registration successful! Please login.")
+                st.success("Registrasi berhasil! Silakan login.")
             else:
                 err = data.get("error", {}).get("message", "") if isinstance(data, dict) else data
-                st.error(f"Failed to register. {err}")
+                st.error(f"Gagal registrasi. {err}")
     st.stop()
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### 👤 Account")
 st.sidebar.write(f"Logged in as: **{st.session_state.get('email','-')}**")
 if st.sidebar.button("🚪 Log Out"):
-    # clear session tokens too
     st.session_state.logged_in = False
     st.session_state.pop("idToken", None)
     st.session_state.pop("localId", None)
@@ -129,7 +124,7 @@ if st.sidebar.button("🚪 Log Out"):
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
 # ===== SIDEBAR PARAMETERS =====
-# Initialize owner-only vars so we don't get NameError when mode == "Charter"
+# default inits untuk menghindari NameError jika mode lain dipilih
 charter = 0
 crew = 0
 insurance = 0
@@ -193,78 +188,72 @@ distance_pol_pod = st.number_input("Distance POL - POD (NM)", 0.0, key="distance
 distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0, key="distance_pod_pol")
 freight_price_input = st.number_input("Freight Price (Rp/MT) (optional)", 0, key="freight_price_input")
 
-# --- Save / Load UI (only if firebase DB configured and user logged in) ---
+# ---------------------------
+# Save / Load Preset (sidebar)
+# ---------------------------
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 💾 Presets (save / load your parameters)")
 
-preset_name = st.sidebar.text_input("Preset name", key="preset_name")
-
-# Define lists of keys to use when loading/clearing
+# define key groups
 COMMON_KEYS = [
-    "speed_laden","speed_ballast","consumption","price_fuel",
-    "consumption_fw","price_fw","port_cost_pol","port_cost_pod","asist_tug",
-    "port_stay_pol","port_stay_pod","port_pol","port_pod","next_port",
-    "type_cargo","qyt_cargo","distance_pol_pod","distance_pod_pol","freight_price_input"
+    "speed_laden","speed_ballast",
+    "consumption","price_fuel",
+    "consumption_fw","price_fw",
+    "port_cost_pol","port_cost_pod","asist_tug",
+    "port_stay_pol","port_stay_pod",
+    "port_pol","port_pod","next_port"
 ]
 OWNER_KEYS = ["charter","crew","insurance","docking","maintenance","certificate","premi_nm","other_cost"]
-CHARTER_KEYS = ["charter","premi_nm","other_cost"]  # when in Charter mode we save these fields
+CHARTER_KEYS = ["charter","premi_nm","other_cost"]
+MAIN_INPUT_KEYS = ["type_cargo","qyt_cargo","distance_pol_pod","distance_pod_pol","freight_price_input"]
 
-def _clear_sidebar_keys(keys):
-    """Set given keys to empty/default values in session_state (affects widgets with same keys)."""
+def _defaults_for_keys(keys):
+    """Return sensible default for given widget key (string -> default)"""
+    defaults = {}
     for k in keys:
-        if k in st.session_state:
-            # choose default by key type
-            if isinstance(st.session_state[k], (int, float)):
-                st.session_state[k] = 0
-            else:
-                st.session_state[k] = ""
-
-if st.sidebar.button("🔁 Clear Parameters"):
-    # clear ALL known keys (common + owner + charter)
-    _clear_sidebar_keys(COMMON_KEYS + list(set(OWNER_KEYS + CHARTER_KEYS)))
-    st.sidebar.success("Parameters cleared.")
-    st.rerun()
-
-if st.sidebar.button("💾 Save Parameter"):
-    # Build payload — always include mode so loader knows which mode the preset was created for
-    payload = {"mode": mode, "saved_at": datetime.utcnow().isoformat()}
-    # save common keys
-    for k in COMMON_KEYS:
-        payload[k] = st.session_state.get(k, "")
-
-    # save only mode-specific keys
-    if mode == "Owner":
-        for k in OWNER_KEYS:
-            payload[k] = st.session_state.get(k, 0)
-    else:  # Charter
-        for k in CHARTER_KEYS:
-            payload[k] = st.session_state.get(k, 0)
-
-    if not preset_name:
-        st.sidebar.error("Please provide a preset name before saving.")
-    else:
-        if not FIREBASE_DB_URL:
-            st.sidebar.error("FIREBASE_DB_URL is not configured in secrets. Cannot save.")
+        if k in ["port_pol","port_pod","next_port","type_cargo"]:
+            defaults[k] = ""
+        elif k in ["qyt_cargo","distance_pol_pod","distance_pod_pol","speed_laden","speed_ballast","consumption","price_fuel","consumption_fw","price_fw","port_cost_pol","port_cost_pod","asist_tug","port_stay_pol","port_stay_pod","charter","crew","insurance","docking","maintenance","certificate","premi_nm","other_cost","freight_price_input"]:
+            # numeric defaults
+            defaults[k] = 0
         else:
-            idt = st.session_state.get("idToken")
-            email = st.session_state.get("email")
-            if not idt or not email:
-                st.sidebar.error("Auth token missing. Please log out and log in again.")
-            else:
-                ok, msg = save_parameters_to_fb(email, idt, preset_name, payload)
-                if ok:
-                    st.sidebar.success(f"Preset '{preset_name}' saved.")
-                else:
-                    st.sidebar.error(f"Failed to save preset: {msg}")
+            defaults[k] = 0
+    return defaults
 
-# list existing presets
+preset_name = st.sidebar.text_input("Preset name", key="preset_name")
+
+# Save button: save common + mode-specific + main input
+if st.sidebar.button("💾 Save Parameter"):
+    if not preset_name:
+        st.sidebar.error("Masukkan nama preset terlebih dahulu.")
+    else:
+        idt = st.session_state.get("idToken")
+        email = st.session_state.get("email")
+        if not idt or not email:
+            st.sidebar.error("Auth token tidak ada. Silakan logout & login ulang.")
+        else:
+            # choose which mode-specific keys to save
+            mode_keys = OWNER_KEYS if mode == "Owner" else CHARTER_KEYS
+            keys_to_save = COMMON_KEYS + mode_keys + MAIN_INPUT_KEYS
+            payload = {}
+            for k in keys_to_save:
+                payload[k] = st.session_state.get(k, _defaults_for_keys([k])[k])
+            payload["mode"] = mode
+            payload["saved_at"] = datetime.utcnow().isoformat()
+            ok, msg = save_parameters_to_fb(email, idt, preset_name, payload)
+            if ok:
+                st.sidebar.success(f"Preset '{preset_name}' tersimpan.")
+            else:
+                st.sidebar.error(f"Gagal menyimpan preset: {msg}")
+
+# fetch presets for this user (if logged)
 presets = {}
 idt = st.session_state.get("idToken")
 email = st.session_state.get("email")
 if idt and email and FIREBASE_DB_URL:
     presets_dict, err = list_presets_from_fb(email, idt)
     if presets_dict is None:
-        st.sidebar.warning("Could not fetch presets.")
+        st.sidebar.warning("Tidak dapat mengambil presets.")
     else:
         presets = presets_dict
 else:
@@ -274,84 +263,72 @@ preset_list = ["-- Select preset --"] + sorted(list(presets.keys()))
 sel_preset = st.sidebar.selectbox("Saved presets", preset_list, key="sel_preset")
 
 colL, colR = st.sidebar.columns([1,1])
+
 with colL:
     if st.button("📂 Load Parameter"):
         if sel_preset == "-- Select preset --":
-            st.sidebar.error("Select a preset first.")
+            st.sidebar.error("Pilih preset terlebih dahulu.")
         else:
             idt = st.session_state.get("idToken")
             email = st.session_state.get("email")
             if not idt or not email:
-                st.sidebar.error("Auth token missing. Please log out and login again.")
+                st.sidebar.error("Auth token tidak ada. Silakan logout & login ulang.")
             else:
                 data_json, err = load_preset_from_fb(email, idt, sel_preset)
                 if data_json is None:
-                    st.sidebar.error(f"Failed to load preset: {err}")
+                    st.sidebar.error(f"Gagal load preset: {err}")
                 else:
-                    # When we load:
-                    # - always set COMMON_KEYS to stored values if present
-                    # - if preset.mode == Owner: set OWNER_KEYS and clear CHARTER_KEYS
-                    # - if preset.mode == Charter: set CHARTER_KEYS and clear OWNER_KEYS
-                    preset_mode = data_json.get("mode", None)
-                    # load common
-                    for k in COMMON_KEYS:
-                        if k in data_json and k in st.session_state:
-                            try:
-                                st.session_state[k] = data_json[k]
-                            except Exception:
-                                pass
-                        else:
-                            # if not present in saved data, clear
-                            if k in st.session_state:
-                                st.session_state[k] = 0 if isinstance(st.session_state[k], (int, float)) else ""
-                    # handle mode-specific
-                    if preset_mode == "Owner":
-                        # set owner fields from saved
-                        for k in OWNER_KEYS:
-                            if k in data_json and k in st.session_state:
-                                st.session_state[k] = data_json[k]
-                            else:
-                                if k in st.session_state:
-                                    st.session_state[k] = 0
-                        # clear charter-only keys (if exist)
-                        for k in CHARTER_KEYS:
-                            if k in st.session_state and k not in OWNER_KEYS:
-                                st.session_state[k] = 0
-                    elif preset_mode == "Charter":
-                        for k in CHARTER_KEYS:
-                            if k in data_json and k in st.session_state:
-                                st.session_state[k] = data_json[k]
-                            else:
-                                if k in st.session_state:
-                                    st.session_state[k] = 0
-                        # clear owner-only keys
-                        for k in OWNER_KEYS:
-                            if k in st.session_state and k not in CHARTER_KEYS:
-                                st.session_state[k] = 0
-                    else:
-                        # unknown mode, conservative: set only keys that exist in data_json
-                        for k, v in data_json.items():
-                            if k in st.session_state:
-                                st.session_state[k] = v
-                    st.sidebar.success(f"Preset '{sel_preset}' loaded.")
+                    # when loading: fill COMMON + mode-specific keys only, set others to default
+                    # We respect the mode stored in preset if present, but user must keep current app mode as desired.
+                    # We'll load keys matching current *app* mode (not forcing mode change).
+                    mode_keys = OWNER_KEYS if mode == "Owner" else CHARTER_KEYS
+                    keys_to_apply = COMMON_KEYS + mode_keys + MAIN_INPUT_KEYS
+                    defaults = _defaults_for_keys(keys_to_apply)
+                    for k in keys_to_apply:
+                        dv = data_json.get(k, defaults[k])
+                        try:
+                            st.session_state[k] = dv
+                        except Exception:
+                            # ignore problematic keys
+                            pass
+                    # ensure keys that are NOT in keys_to_apply are reset to defaults (so only selected group shows)
+                    other_keys = set(OWNER_KEYS + CHARTER_KEYS) - set(mode_keys)
+                    for k in other_keys:
+                        try:
+                            st.session_state[k] = _defaults_for_keys([k])[k]
+                        except Exception:
+                            pass
+                    st.success(f"Preset '{sel_preset}' dimuat. (Mode saat ini: {mode})")
                     st.rerun()
 
 with colR:
     if st.button("🗑️ Delete Parameter"):
         if sel_preset == "-- Select preset --":
-            st.sidebar.error("Select a preset to delete.")
+            st.sidebar.error("Pilih preset untuk dihapus.")
         else:
             idt = st.session_state.get("idToken")
             email = st.session_state.get("email")
             if not idt or not email:
-                st.sidebar.error("Auth token missing. Please log out and login again.")
+                st.sidebar.error("Auth token tidak ada. Silakan logout & login ulang.")
             else:
                 ok, msg = delete_preset_from_fb(email, idt, sel_preset)
                 if ok:
-                    st.sidebar.success(f"Preset '{sel_preset}' deleted.")
+                    st.sidebar.success(f"Preset '{sel_preset}' dihapus.")
                     st.rerun()
                 else:
-                    st.sidebar.error(f"Failed to delete preset: {msg}")
+                    st.sidebar.error(f"Gagal menghapus preset: {msg}")
+
+# Reset button: kosongkan semua sidebar parameter (ke default)
+if st.sidebar.button("🔄 Reset Parameter (kosongkan)"):
+    all_keys = COMMON_KEYS + OWNER_KEYS + CHARTER_KEYS + MAIN_INPUT_KEYS + ["port_pol","port_pod","next_port"]
+    defaults = _defaults_for_keys(all_keys)
+    for k in all_keys:
+        try:
+            st.session_state[k] = defaults[k]
+        except Exception:
+            pass
+    st.sidebar.success("Parameter sidebar dikosongkan.")
+    st.rerun()
 
 # ===== PERHITUNGAN =====
 if st.button("Calculate Freight 💸"):
@@ -403,7 +380,7 @@ if st.button("Calculate Freight 💸"):
 **Freshwater Cost (Rp):** Rp {cost_fw:,.0f}  
 """)
 
-        # Costs summary (same style as requested)
+        # Costs summary
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
             owner_data = {
@@ -455,7 +432,7 @@ if st.button("Calculate Freight 💸"):
         st.subheader("💹 Profit Scenario 0–50%")
         st.dataframe(df_profit, use_container_width=True)
 
-        # ===== PDF GENERATOR (1 page A4) =====
+        # ===== PDF GENERATOR (tidak diubah fungsinya) =====
         def create_pdf():
             buffer = BytesIO()
             doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=10, bottomMargin=10)
@@ -498,6 +475,7 @@ if st.button("Calculate Freight 💸"):
             elements.append(t_calc)
             elements.append(Spacer(1, 6))
 
+            # Freight Price Calculation User (only if provided)
             if freight_price_input > 0:
                 elements.append(Paragraph("<b>Freight Price Calculation User</b>", styles['Heading3']))
                 fpc_data = [
@@ -512,6 +490,7 @@ if st.button("Calculate Freight 💸"):
                 elements.append(t_fpc)
                 elements.append(Spacer(1, 6))
 
+            # Profit Scenario (always)
             elements.append(Paragraph("<b>Profit Scenario 0–50%</b>", styles['Heading3']))
             profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
             t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 110, 110, 110, 110])
