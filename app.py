@@ -228,7 +228,7 @@ if st.sidebar.button("💾 Save Parameter"):
                 st.sidebar.error(f"Gagal simpan preset: {msg}")
 
 # Reset button: kosongkan sidebar parameters (set 0)
-if st.sidebar.button("🔄 Reset Parameter")::
+if st.sidebar.button("🔄 Reset Parameter")
     # kosongkan only sidebar parameter keys (common + owner + charter)
     for k in COMMON_KEYS + list(set(OWNER_KEYS + CHARTER_KEYS)):
         # only set session_state keys that correspond to existing widgets keys
