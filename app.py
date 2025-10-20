@@ -13,9 +13,10 @@ st.set_page_config(page_title="Freight Calculator Barge", layout="wide")
 
 # ====== FIREBASE CONFIG & AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
+# Gunakan URL Realtime DB yang sudah kamu berikan
 FIREBASE_DB_URL = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app"
 AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
-REGISTER_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
+REGISTER_URL = f"https://identitytool.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
 
 def login_user(email, password):
     res = requests.post(AUTH_URL, json={"email": email, "password": password, "returnSecureToken": True})
@@ -66,6 +67,7 @@ def delete_preset_from_fb(email, id_token, preset_name):
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
+# store idToken and localId on login
 if not st.session_state.logged_in:
     st.markdown("<h2 style='text-align:center;'>🔐 Login Freight Calculator</h2>", unsafe_allow_html=True)
     tab_login, tab_register = st.tabs(["Login", "Register"])
@@ -78,13 +80,14 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
+                # save tokens
                 st.session_state.idToken = data.get("idToken")
                 st.session_state.localId = data.get("localId")
                 st.success("Login successful!")
                 st.rerun()
             else:
                 err = data.get("error", {}).get("message", "") if isinstance(data, dict) else data
-                st.error(f"Email or password incorrect! {err}")
+                st.error(f"Email atau password salah! {err}")
 
     with tab_register:
         r_email = st.text_input("Email Register")
@@ -102,6 +105,7 @@ if not st.session_state.logged_in:
 st.sidebar.markdown("### 👤 Account")
 st.sidebar.write(f"Logged in as: **{st.session_state.get('email','-')}**")
 if st.sidebar.button("🚪 Log Out"):
+    # clear session tokens too
     st.session_state.logged_in = False
     st.session_state.pop("idToken", None)
     st.session_state.pop("localId", None)
@@ -109,9 +113,11 @@ if st.sidebar.button("🚪 Log Out"):
     st.rerun()
 
 # ===== MODE =====
-mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
+# pakai key agar bisa di-set lewat session_state saat load preset
+mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"], key="mode")
 
 # ===== SIDEBAR PARAMETERS =====
+# inisialisasi default agar tidak muncul NameError
 charter = 0
 crew = 0
 insurance = 0
@@ -175,41 +181,64 @@ distance_pol_pod = st.number_input("Distance POL - POD (NM)", 0.0, key="distance
 distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0, key="distance_pod_pol")
 freight_price_input = st.number_input("Freight Price (Rp/MT) (optional)", 0, key="freight_price_input")
 
-# --- Save / Load UI --- 
+# --- Save / Load UI ---
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 💾 Presets (save / load your parameters)")
 
 preset_name = st.sidebar.text_input("Preset name", key="preset_name")
+
+# keys sidebar yang akan di-reset / disetting saat load
+SIDEBAR_KEYS_DEFAULTS = {
+    # speed
+    "speed_laden": 0.0, "speed_ballast": 0.0,
+    # fuel
+    "consumption": 0, "price_fuel": 0,
+    # freshwater
+    "consumption_fw": 0, "price_fw": 0,
+    # owner/charter common
+    "charter": 0, "premi_nm": 0, "other_cost": 0,
+    # owner-only
+    "crew": 0, "insurance": 0, "docking": 0, "maintenance": 0, "certificate": 0,
+    # port
+    "port_cost_pol": 0, "port_cost_pod": 0, "asist_tug": 0,
+    # port stay
+    "port_stay_pol": 0, "port_stay_pod": 0,
+    # top inputs (we save them but they are main inputs, you requested only sidebar to persist — still safe to save)
+    "port_pol": "", "port_pod": "", "next_port": "", "type_cargo": "Coal (MT)",
+    "qyt_cargo": 0.0, "distance_pol_pod": 0.0, "distance_pod_pol": 0.0,
+    "freight_price_input": 0
+}
+
 if st.sidebar.button("💾 Save Parameter"):
     payload = {
-        "mode": mode,
-        "speed_laden": speed_laden,
-        "speed_ballast": speed_ballast,
-        "consumption": consumption,
-        "price_fuel": price_fuel,
-        "consumption_fw": consumption_fw,
-        "price_fw": price_fw,
-        "charter": charter,
-        "crew": crew,
-        "insurance": insurance,
-        "docking": docking,
-        "maintenance": maintenance,
-        "certificate": certificate if mode == "Owner" else 0,
-        "premi_nm": premi_nm,
-        "other_cost": other_cost,
-        "port_cost_pol": port_cost_pol,
-        "port_cost_pod": port_cost_pod,
-        "asist_tug": asist_tug,
-        "port_stay_pol": port_stay_pol,
-        "port_stay_pod": port_stay_pod,
-        "port_pol": port_pol,
-        "port_pod": port_pod,
-        "next_port": next_port,
-        "type_cargo": type_cargo,
-        "qyt_cargo": qyt_cargo,
-        "distance_pol_pod": distance_pol_pod,
-        "distance_pod_pol": distance_pod_pol,
-        "freight_price_input": freight_price_input,
+        "mode": st.session_state.get("mode", "Owner"),
+        "speed_laden": st.session_state.get("speed_laden", 0.0),
+        "speed_ballast": st.session_state.get("speed_ballast", 0.0),
+        "consumption": st.session_state.get("consumption", 0),
+        "price_fuel": st.session_state.get("price_fuel", 0),
+        "consumption_fw": st.session_state.get("consumption_fw", 0),
+        "price_fw": st.session_state.get("price_fw", 0),
+        "charter": st.session_state.get("charter", 0),
+        "crew": st.session_state.get("crew", 0),
+        "insurance": st.session_state.get("insurance", 0),
+        "docking": st.session_state.get("docking", 0),
+        "maintenance": st.session_state.get("maintenance", 0),
+        "certificate": st.session_state.get("certificate", 0),
+        "premi_nm": st.session_state.get("premi_nm", 0),
+        "other_cost": st.session_state.get("other_cost", 0),
+        "port_cost_pol": st.session_state.get("port_cost_pol", 0),
+        "port_cost_pod": st.session_state.get("port_cost_pod", 0),
+        "asist_tug": st.session_state.get("asist_tug", 0),
+        "port_stay_pol": st.session_state.get("port_stay_pol", 0),
+        "port_stay_pod": st.session_state.get("port_stay_pod", 0),
+        "port_pol": st.session_state.get("port_pol", ""),
+        "port_pod": st.session_state.get("port_pod", ""),
+        "next_port": st.session_state.get("next_port", ""),
+        "type_cargo": st.session_state.get("type_cargo", "Coal (MT)"),
+        "qyt_cargo": st.session_state.get("qyt_cargo", 0.0),
+        "distance_pol_pod": st.session_state.get("distance_pol_pod", 0.0),
+        "distance_pod_pol": st.session_state.get("distance_pod_pol", 0.0),
+        "freight_price_input": st.session_state.get("freight_price_input", 0),
         "saved_at": datetime.utcnow().isoformat()
     }
     if not preset_name:
@@ -226,6 +255,7 @@ if st.sidebar.button("💾 Save Parameter"):
             else:
                 st.sidebar.error(f"Failed to save preset: {msg}")
 
+# load list of presets for user (if logged in)
 presets = {}
 idt = st.session_state.get("idToken")
 email = st.session_state.get("email")
@@ -256,11 +286,40 @@ with colL:
                 if data_json is None:
                     st.sidebar.error(f"Failed to load preset: {err}")
                 else:
-                    for k, v in data_json.items():
-                        try:
-                            st.session_state[k] = v
-                        except Exception:
-                            pass
+                    # reset all sidebar keys to defaults first
+                    for k, dv in SIDEBAR_KEYS_DEFAULTS.items():
+                        st.session_state[k] = dv
+
+                    # apply common fields (always allowed)
+                    common_keys = [
+                        "speed_laden","speed_ballast","consumption","price_fuel",
+                        "consumption_fw","price_fw","port_cost_pol","port_cost_pod","asist_tug",
+                        "port_stay_pol","port_stay_pod","port_pol","port_pod","next_port",
+                        "type_cargo","qyt_cargo","distance_pol_pod","distance_pod_pol","freight_price_input",
+                        "charter","premi_nm","other_cost"
+                    ]
+                    for k in common_keys:
+                        if k in data_json:
+                            st.session_state[k] = data_json[k]
+
+                    # apply owner vs charter specific fields
+                    loaded_mode = data_json.get("mode", "Owner")
+                    st.session_state["mode"] = loaded_mode  # set mode so UI switches
+                    if loaded_mode == "Owner":
+                        owner_only_keys = ["crew","insurance","docking","maintenance","certificate"]
+                        for k in owner_only_keys:
+                            if k in data_json:
+                                st.session_state[k] = data_json[k]
+                            else:
+                                st.session_state[k] = 0
+                        # charter fields already set via common_keys (charter,premi_nm,other_cost)
+                    else:  # Charter mode
+                        # keep owner-only fields zero
+                        for k in ["crew","insurance","docking","maintenance","certificate"]:
+                            st.session_state[k] = 0
+                        # charter-related values already set via common_keys
+
+                    st.sidebar.success(f"Preset '{sel_preset}' loaded.")
                     st.rerun()
 
 with colR:
@@ -271,7 +330,7 @@ with colR:
             idt = st.session_state.get("idToken")
             email = st.session_state.get("email")
             if not idt or not email:
-                st.sidebar.error("Auth token missing. Please log out and log in again.")
+                st.sidebar.error("Auth token missing. Please log out and login again.")
             else:
                 ok, msg = delete_preset_from_fb(email, idt, sel_preset)
                 if ok:
@@ -314,6 +373,7 @@ if st.button("Calculate Freight 💸"):
         profit_percent_user = (profit_user / revenue_user * 100) if revenue_user > 0 else 0
 
         st.subheader("📋 Calculation Results")
+        # show in single column, neat bullets (no duplication of top input fields)
         st.markdown(f"""
 **Type Cargo:** {type_cargo}  
 **Cargo Quantity:** {qyt_cargo:,.0f} {type_cargo.split()[1]}  
@@ -366,6 +426,7 @@ if st.button("Calculate Freight 💸"):
 **Profit %:** {profit_percent_user:.2f} %
 """)
 
+        # Profit scenario (always shown)
         data = []
         for p in range(0, 55, 5):
             freight_persen = freight_cost_mt * (1 + p / 100)
@@ -377,6 +438,7 @@ if st.button("Calculate Freight 💸"):
         st.subheader("💹 Profit Scenario 0–50%")
         st.dataframe(df_profit, use_container_width=True)
 
+        # ===== PDF GENERATOR (1 page A4) =====
         def create_pdf():
             buffer = BytesIO()
             doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=10, bottomMargin=10)
@@ -386,6 +448,7 @@ if st.button("Calculate Freight 💸"):
             elements.append(Paragraph("<b>Freight Calculator Report</b>", styles['Title']))
             elements.append(Spacer(1, 6))
 
+            # Voyage Information
             elements.append(Paragraph("<b>Voyage Information</b>", styles['Heading3']))
             voyage_data = [
                 ["Port Of Loading", port_pol],
