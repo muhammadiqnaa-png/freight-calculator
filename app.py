@@ -13,10 +13,7 @@ st.set_page_config(page_title="Freight Calculator Barge", layout="wide")
 
 # ====== FIREBASE CONFIG & AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
-# Add this secret to your secrets.toml:
-# FIREBASE_DB_URL = "https://<your-db-name>.firebaseio.com"
-FIREBASE_DB_URL = st.secrets.get("FIREBASE_DB_URL", "")
-
+FIREBASE_DB_URL = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app"
 AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
 REGISTER_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
 
@@ -30,15 +27,11 @@ def register_user(email, password):
 
 # ----- helpers for realtime DB (REST) -----
 def _safe_key(email_or_name: str):
-    """Make a safe key for Firebase path from email / preset name (replace . and @)."""
     if email_or_name is None:
         return ""
     return str(email_or_name).replace(".", "_").replace("@", "_").replace(" ", "_")
 
 def save_parameters_to_fb(email, id_token, preset_name, data: dict):
-    """Save parameter dict to /users/{safe_email}/parameters/{preset_name}.json"""
-    if not FIREBASE_DB_URL:
-        return False, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -46,9 +39,6 @@ def save_parameters_to_fb(email, id_token, preset_name, data: dict):
     return res.ok, res.text
 
 def list_presets_from_fb(email, id_token):
-    """Return dict of presets (names -> payload) or None on error."""
-    if not FIREBASE_DB_URL:
-        return None, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters.json?auth={id_token}"
     res = requests.get(url)
@@ -57,8 +47,6 @@ def list_presets_from_fb(email, id_token):
     return None, res.text
 
 def load_preset_from_fb(email, id_token, preset_name):
-    if not FIREBASE_DB_URL:
-        return None, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -68,8 +56,6 @@ def load_preset_from_fb(email, id_token, preset_name):
     return None, res.text
 
 def delete_preset_from_fb(email, id_token, preset_name):
-    if not FIREBASE_DB_URL:
-        return False, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -80,7 +66,6 @@ def delete_preset_from_fb(email, id_token, preset_name):
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-# store idToken and localId on login
 if not st.session_state.logged_in:
     st.markdown("<h2 style='text-align:center;'>🔐 Login Freight Calculator</h2>", unsafe_allow_html=True)
     tab_login, tab_register = st.tabs(["Login", "Register"])
@@ -93,7 +78,6 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
-                # save tokens
                 st.session_state.idToken = data.get("idToken")
                 st.session_state.localId = data.get("localId")
                 st.success("Login successful!")
@@ -118,7 +102,6 @@ if not st.session_state.logged_in:
 st.sidebar.markdown("### 👤 Account")
 st.sidebar.write(f"Logged in as: **{st.session_state.get('email','-')}**")
 if st.sidebar.button("🚪 Log Out"):
-    # clear session tokens too
     st.session_state.logged_in = False
     st.session_state.pop("idToken", None)
     st.session_state.pop("localId", None)
@@ -129,8 +112,6 @@ if st.sidebar.button("🚪 Log Out"):
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
 # ===== SIDEBAR PARAMETERS =====
-# ---- IMPORTANT FIX: initialize owner-only variables to avoid NameError when mode == "Charter" ----
-# These default initializations are the only change. Everything else kept exactly the same.
 charter = 0
 crew = 0
 insurance = 0
@@ -194,13 +175,12 @@ distance_pol_pod = st.number_input("Distance POL - POD (NM)", 0.0, key="distance
 distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0, key="distance_pod_pol")
 freight_price_input = st.number_input("Freight Price (Rp/MT) (optional)", 0, key="freight_price_input")
 
-# --- Save / Load UI (only if firebase DB configured and user logged in) ---
+# --- Save / Load UI --- 
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 💾 Presets (save / load your parameters)")
 
 preset_name = st.sidebar.text_input("Preset name", key="preset_name")
 if st.sidebar.button("💾 Save Parameter"):
-    # assemble parameter dict (all fields that we want to store)
     payload = {
         "mode": mode,
         "speed_laden": speed_laden,
@@ -235,33 +215,27 @@ if st.sidebar.button("💾 Save Parameter"):
     if not preset_name:
         st.sidebar.error("Please provide a preset name before saving.")
     else:
-        if not FIREBASE_DB_URL:
-            st.sidebar.error("FIREBASE_DB_URL is not configured in secrets. Cannot save.")
+        idt = st.session_state.get("idToken")
+        email = st.session_state.get("email")
+        if not idt or not email:
+            st.sidebar.error("Auth token missing. Please log out and log in again.")
         else:
-            idt = st.session_state.get("idToken")
-            email = st.session_state.get("email")
-            if not idt or not email:
-                st.sidebar.error("Auth token missing. Please log out and log in again.")
+            ok, msg = save_parameters_to_fb(email, idt, preset_name, payload)
+            if ok:
+                st.sidebar.success(f"Preset '{preset_name}' saved.")
             else:
-                ok, msg = save_parameters_to_fb(email, idt, preset_name, payload)
-                if ok:
-                    st.sidebar.success(f"Preset '{preset_name}' saved.")
-                else:
-                    st.sidebar.error(f"Failed to save preset: {msg}")
+                st.sidebar.error(f"Failed to save preset: {msg}")
 
-# list existing presets
 presets = {}
-if FIREBASE_DB_URL:
-    idt = st.session_state.get("idToken")
-    email = st.session_state.get("email")
-    if idt and email:
-        presets_dict, err = list_presets_from_fb(email, idt)
-        if presets_dict is None:
-            st.sidebar.warning("Could not fetch presets.")
-        else:
-            presets = presets_dict
+idt = st.session_state.get("idToken")
+email = st.session_state.get("email")
+if idt and email:
+    presets_dict, err = list_presets_from_fb(email, idt)
+    if presets_dict is None:
+        st.sidebar.warning("Could not fetch presets.")
+    else:
+        presets = presets_dict
 else:
-    # firebase not configured: presets stays empty
     presets = {}
 
 preset_list = ["-- Select preset --"] + sorted(list(presets.keys()))
@@ -282,13 +256,10 @@ with colL:
                 if data_json is None:
                     st.sidebar.error(f"Failed to load preset: {err}")
                 else:
-                    # set values into session_state so inputs reflect them
-                    # only set keys that exist in payload
                     for k, v in data_json.items():
                         try:
                             st.session_state[k] = v
                         except Exception:
-                            # ignore keys that don't map to inputs
                             pass
                     st.rerun()
 
@@ -300,7 +271,7 @@ with colR:
             idt = st.session_state.get("idToken")
             email = st.session_state.get("email")
             if not idt or not email:
-                st.sidebar.error("Auth token missing. Please log out and login again.")
+                st.sidebar.error("Auth token missing. Please log out and log in again.")
             else:
                 ok, msg = delete_preset_from_fb(email, idt, sel_preset)
                 if ok:
@@ -337,15 +308,12 @@ if st.button("Calculate Freight 💸"):
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
-        # Freight Price Calculation
         revenue_user = freight_price_input * qyt_cargo
         pph_user = revenue_user * 0.012
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / revenue_user * 100) if revenue_user > 0 else 0
 
-        # ===== DISPLAY RESULTS =====
         st.subheader("📋 Calculation Results")
-        # show in single column, neat bullets (no duplication of top input fields)
         st.markdown(f"""
 **Type Cargo:** {type_cargo}  
 **Cargo Quantity:** {qyt_cargo:,.0f} {type_cargo.split()[1]}  
@@ -360,7 +328,6 @@ if st.button("Calculate Freight 💸"):
 **Freshwater Cost:** {total_consumption_fw:,.0f} Ton
 """)
 
-        # Costs summary (same style as requested)
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
             owner_data = {
@@ -389,7 +356,6 @@ if st.button("Calculate Freight 💸"):
         st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
         st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
 
-        # Freight price section (only show if filled)
         if freight_price_input > 0:
             st.subheader("💰 Freight Price Calculation User")
             st.markdown(f"""
@@ -400,7 +366,6 @@ if st.button("Calculate Freight 💸"):
 **Profit %:** {profit_percent_user:.2f} %
 """)
 
-        # Profit scenario (always shown)
         data = []
         for p in range(0, 55, 5):
             freight_persen = freight_cost_mt * (1 + p / 100)
@@ -412,7 +377,6 @@ if st.button("Calculate Freight 💸"):
         st.subheader("💹 Profit Scenario 0–50%")
         st.dataframe(df_profit, use_container_width=True)
 
-        # ===== PDF GENERATOR (1 page A4) =====
         def create_pdf():
             buffer = BytesIO()
             doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=10, bottomMargin=10)
@@ -422,7 +386,6 @@ if st.button("Calculate Freight 💸"):
             elements.append(Paragraph("<b>Freight Calculator Report</b>", styles['Title']))
             elements.append(Spacer(1, 6))
 
-            # Voyage Information
             elements.append(Paragraph("<b>Voyage Information</b>", styles['Heading3']))
             voyage_data = [
                 ["Port Of Loading", port_pol],
@@ -437,7 +400,6 @@ if st.button("Calculate Freight 💸"):
             elements.append(t_voyage)
             elements.append(Spacer(1, 6))
 
-            # Calculation Results
             elements.append(Paragraph("<b>Calculation Results</b>", styles['Heading3']))
             calc_data = [
                 ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
@@ -455,7 +417,6 @@ if st.button("Calculate Freight 💸"):
             elements.append(t_calc)
             elements.append(Spacer(1, 6))
 
-            # Freight Price Calculation User (only if provided)
             if freight_price_input > 0:
                 elements.append(Paragraph("<b>Freight Price Calculation User</b>", styles['Heading3']))
                 fpc_data = [
@@ -465,15 +426,14 @@ if st.button("Calculate Freight 💸"):
                     ["Profit", f"Rp {profit_user:,.0f}"],
                     ["Profit %", f"{profit_percent_user:.2f} %"]
                 ]
-                t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[200, 200])
+                t_fpc = Table(fpc_data, colWidths=[200, 200], hAlign='LEFT')
                 t_fpc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
                 elements.append(t_fpc)
                 elements.append(Spacer(1, 6))
 
-            # Profit Scenario (always)
             elements.append(Paragraph("<b>Profit Scenario 0–50%</b>", styles['Heading3']))
             profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
-            t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 110, 110, 110, 110])
+            t_profit = Table(profit_table, colWidths=[60, 110, 110, 110, 110], hAlign='LEFT')
             t_profit.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_profit)
             elements.append(Spacer(1, 6))
