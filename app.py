@@ -235,7 +235,7 @@ if st.button("Calculate Freight 💸"):
             elements = []
 
             elements.append(Paragraph("<b>Freight Calculator Report</b>", styles['Title']))
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 1))
 
             voyage_data = [
                 ["Port Of Loading", port_pol],
@@ -248,7 +248,7 @@ if st.button("Calculate Freight 💸"):
             t_voyage = Table(voyage_data, hAlign='LEFT')
             t_voyage.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_voyage)
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 1))
 
             calc_data = [
                 ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
@@ -264,7 +264,7 @@ if st.button("Calculate Freight 💸"):
             t_calc = Table(calc_data, hAlign='LEFT', colWidths=[180, 120])
             t_calc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_calc)
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 1))
 
             # Tampilkan Freight Price Calculation hanya kalau diisi
             if freight_price_input > 0:
