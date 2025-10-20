@@ -13,10 +13,12 @@ st.set_page_config(page_title="Freight Calculator Barge", layout="wide")
 
 # ====== FIREBASE CONFIG & AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
-# Gunakan URL Realtime DB yang sudah kamu berikan
-FIREBASE_DB_URL = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app"
+# Add this secret to your secrets.toml:
+# FIREBASE_DB_URL = "https://<your-db-name>.firebaseio.com"
+FIREBASE_DB_URL = st.secrets.get("FIREBASE_DB_URL", "")
+
 AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
-REGISTER_URL = f"https://identitytool.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
+REGISTER_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
 
 def login_user(email, password):
     res = requests.post(AUTH_URL, json={"email": email, "password": password, "returnSecureToken": True})
@@ -28,11 +30,15 @@ def register_user(email, password):
 
 # ----- helpers for realtime DB (REST) -----
 def _safe_key(email_or_name: str):
+    """Make a safe key for Firebase path from email / preset name (replace . and @)."""
     if email_or_name is None:
         return ""
     return str(email_or_name).replace(".", "_").replace("@", "_").replace(" ", "_")
 
 def save_parameters_to_fb(email, id_token, preset_name, data: dict):
+    """Save parameter dict to /users/{safe_email}/parameters/{preset_name}.json"""
+    if not FIREBASE_DB_URL:
+        return False, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -40,6 +46,9 @@ def save_parameters_to_fb(email, id_token, preset_name, data: dict):
     return res.ok, res.text
 
 def list_presets_from_fb(email, id_token):
+    """Return dict of presets (names -> payload) or None on error."""
+    if not FIREBASE_DB_URL:
+        return None, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters.json?auth={id_token}"
     res = requests.get(url)
@@ -48,6 +57,8 @@ def list_presets_from_fb(email, id_token):
     return None, res.text
 
 def load_preset_from_fb(email, id_token, preset_name):
+    if not FIREBASE_DB_URL:
+        return None, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -57,6 +68,8 @@ def load_preset_from_fb(email, id_token, preset_name):
     return None, res.text
 
 def delete_preset_from_fb(email, id_token, preset_name):
+    if not FIREBASE_DB_URL:
+        return False, "FIREBASE_DB_URL not configured in secrets."
     safe_email = _safe_key(email)
     safe_name = _safe_key(preset_name)
     url = f"{FIREBASE_DB_URL}/users/{safe_email}/parameters/{safe_name}.json?auth={id_token}"
@@ -87,7 +100,7 @@ if not st.session_state.logged_in:
                 st.rerun()
             else:
                 err = data.get("error", {}).get("message", "") if isinstance(data, dict) else data
-                st.error(f"Email atau password salah! {err}")
+                st.error(f"Email or password incorrect! {err}")
 
     with tab_register:
         r_email = st.text_input("Email Register")
@@ -113,11 +126,10 @@ if st.sidebar.button("🚪 Log Out"):
     st.rerun()
 
 # ===== MODE =====
-# pakai key agar bisa di-set lewat session_state saat load preset
-mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"], key="mode")
+mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
 # ===== SIDEBAR PARAMETERS =====
-# inisialisasi default agar tidak muncul NameError
+# Initialize owner-only vars so we don't get NameError when mode == "Charter"
 charter = 0
 crew = 0
 insurance = 0
@@ -181,85 +193,75 @@ distance_pol_pod = st.number_input("Distance POL - POD (NM)", 0.0, key="distance
 distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0, key="distance_pod_pol")
 freight_price_input = st.number_input("Freight Price (Rp/MT) (optional)", 0, key="freight_price_input")
 
-# --- Save / Load UI ---
+# --- Save / Load UI (only if firebase DB configured and user logged in) ---
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 💾 Presets (save / load your parameters)")
 
 preset_name = st.sidebar.text_input("Preset name", key="preset_name")
 
-# keys sidebar yang akan di-reset / disetting saat load
-SIDEBAR_KEYS_DEFAULTS = {
-    # speed
-    "speed_laden": 0.0, "speed_ballast": 0.0,
-    # fuel
-    "consumption": 0, "price_fuel": 0,
-    # freshwater
-    "consumption_fw": 0, "price_fw": 0,
-    # owner/charter common
-    "charter": 0, "premi_nm": 0, "other_cost": 0,
-    # owner-only
-    "crew": 0, "insurance": 0, "docking": 0, "maintenance": 0, "certificate": 0,
-    # port
-    "port_cost_pol": 0, "port_cost_pod": 0, "asist_tug": 0,
-    # port stay
-    "port_stay_pol": 0, "port_stay_pod": 0,
-    # top inputs (we save them but they are main inputs, you requested only sidebar to persist — still safe to save)
-    "port_pol": "", "port_pod": "", "next_port": "", "type_cargo": "Coal (MT)",
-    "qyt_cargo": 0.0, "distance_pol_pod": 0.0, "distance_pod_pol": 0.0,
-    "freight_price_input": 0
-}
+# Define lists of keys to use when loading/clearing
+COMMON_KEYS = [
+    "speed_laden","speed_ballast","consumption","price_fuel",
+    "consumption_fw","price_fw","port_cost_pol","port_cost_pod","asist_tug",
+    "port_stay_pol","port_stay_pod","port_pol","port_pod","next_port",
+    "type_cargo","qyt_cargo","distance_pol_pod","distance_pod_pol","freight_price_input"
+]
+OWNER_KEYS = ["charter","crew","insurance","docking","maintenance","certificate","premi_nm","other_cost"]
+CHARTER_KEYS = ["charter","premi_nm","other_cost"]  # when in Charter mode we save these fields
+
+def _clear_sidebar_keys(keys):
+    """Set given keys to empty/default values in session_state (affects widgets with same keys)."""
+    for k in keys:
+        if k in st.session_state:
+            # choose default by key type
+            if isinstance(st.session_state[k], (int, float)):
+                st.session_state[k] = 0
+            else:
+                st.session_state[k] = ""
+
+if st.sidebar.button("🔁 Clear Parameters"):
+    # clear ALL known keys (common + owner + charter)
+    _clear_sidebar_keys(COMMON_KEYS + list(set(OWNER_KEYS + CHARTER_KEYS)))
+    st.sidebar.success("Parameters cleared.")
+    st.rerun()
 
 if st.sidebar.button("💾 Save Parameter"):
-    payload = {
-        "mode": st.session_state.get("mode", "Owner"),
-        "speed_laden": st.session_state.get("speed_laden", 0.0),
-        "speed_ballast": st.session_state.get("speed_ballast", 0.0),
-        "consumption": st.session_state.get("consumption", 0),
-        "price_fuel": st.session_state.get("price_fuel", 0),
-        "consumption_fw": st.session_state.get("consumption_fw", 0),
-        "price_fw": st.session_state.get("price_fw", 0),
-        "charter": st.session_state.get("charter", 0),
-        "crew": st.session_state.get("crew", 0),
-        "insurance": st.session_state.get("insurance", 0),
-        "docking": st.session_state.get("docking", 0),
-        "maintenance": st.session_state.get("maintenance", 0),
-        "certificate": st.session_state.get("certificate", 0),
-        "premi_nm": st.session_state.get("premi_nm", 0),
-        "other_cost": st.session_state.get("other_cost", 0),
-        "port_cost_pol": st.session_state.get("port_cost_pol", 0),
-        "port_cost_pod": st.session_state.get("port_cost_pod", 0),
-        "asist_tug": st.session_state.get("asist_tug", 0),
-        "port_stay_pol": st.session_state.get("port_stay_pol", 0),
-        "port_stay_pod": st.session_state.get("port_stay_pod", 0),
-        "port_pol": st.session_state.get("port_pol", ""),
-        "port_pod": st.session_state.get("port_pod", ""),
-        "next_port": st.session_state.get("next_port", ""),
-        "type_cargo": st.session_state.get("type_cargo", "Coal (MT)"),
-        "qyt_cargo": st.session_state.get("qyt_cargo", 0.0),
-        "distance_pol_pod": st.session_state.get("distance_pol_pod", 0.0),
-        "distance_pod_pol": st.session_state.get("distance_pod_pol", 0.0),
-        "freight_price_input": st.session_state.get("freight_price_input", 0),
-        "saved_at": datetime.utcnow().isoformat()
-    }
+    # Build payload — always include mode so loader knows which mode the preset was created for
+    payload = {"mode": mode, "saved_at": datetime.utcnow().isoformat()}
+    # save common keys
+    for k in COMMON_KEYS:
+        payload[k] = st.session_state.get(k, "")
+
+    # save only mode-specific keys
+    if mode == "Owner":
+        for k in OWNER_KEYS:
+            payload[k] = st.session_state.get(k, 0)
+    else:  # Charter
+        for k in CHARTER_KEYS:
+            payload[k] = st.session_state.get(k, 0)
+
     if not preset_name:
         st.sidebar.error("Please provide a preset name before saving.")
     else:
-        idt = st.session_state.get("idToken")
-        email = st.session_state.get("email")
-        if not idt or not email:
-            st.sidebar.error("Auth token missing. Please log out and log in again.")
+        if not FIREBASE_DB_URL:
+            st.sidebar.error("FIREBASE_DB_URL is not configured in secrets. Cannot save.")
         else:
-            ok, msg = save_parameters_to_fb(email, idt, preset_name, payload)
-            if ok:
-                st.sidebar.success(f"Preset '{preset_name}' saved.")
+            idt = st.session_state.get("idToken")
+            email = st.session_state.get("email")
+            if not idt or not email:
+                st.sidebar.error("Auth token missing. Please log out and log in again.")
             else:
-                st.sidebar.error(f"Failed to save preset: {msg}")
+                ok, msg = save_parameters_to_fb(email, idt, preset_name, payload)
+                if ok:
+                    st.sidebar.success(f"Preset '{preset_name}' saved.")
+                else:
+                    st.sidebar.error(f"Failed to save preset: {msg}")
 
-# load list of presets for user (if logged in)
+# list existing presets
 presets = {}
 idt = st.session_state.get("idToken")
 email = st.session_state.get("email")
-if idt and email:
+if idt and email and FIREBASE_DB_URL:
     presets_dict, err = list_presets_from_fb(email, idt)
     if presets_dict is None:
         st.sidebar.warning("Could not fetch presets.")
@@ -286,39 +288,51 @@ with colL:
                 if data_json is None:
                     st.sidebar.error(f"Failed to load preset: {err}")
                 else:
-                    # reset all sidebar keys to defaults first
-                    for k, dv in SIDEBAR_KEYS_DEFAULTS.items():
-                        st.session_state[k] = dv
-
-                    # apply common fields (always allowed)
-                    common_keys = [
-                        "speed_laden","speed_ballast","consumption","price_fuel",
-                        "consumption_fw","price_fw","port_cost_pol","port_cost_pod","asist_tug",
-                        "port_stay_pol","port_stay_pod","port_pol","port_pod","next_port",
-                        "type_cargo","qyt_cargo","distance_pol_pod","distance_pod_pol","freight_price_input",
-                        "charter","premi_nm","other_cost"
-                    ]
-                    for k in common_keys:
-                        if k in data_json:
-                            st.session_state[k] = data_json[k]
-
-                    # apply owner vs charter specific fields
-                    loaded_mode = data_json.get("mode", "Owner")
-                    st.session_state["mode"] = loaded_mode  # set mode so UI switches
-                    if loaded_mode == "Owner":
-                        owner_only_keys = ["crew","insurance","docking","maintenance","certificate"]
-                        for k in owner_only_keys:
-                            if k in data_json:
+                    # When we load:
+                    # - always set COMMON_KEYS to stored values if present
+                    # - if preset.mode == Owner: set OWNER_KEYS and clear CHARTER_KEYS
+                    # - if preset.mode == Charter: set CHARTER_KEYS and clear OWNER_KEYS
+                    preset_mode = data_json.get("mode", None)
+                    # load common
+                    for k in COMMON_KEYS:
+                        if k in data_json and k in st.session_state:
+                            try:
+                                st.session_state[k] = data_json[k]
+                            except Exception:
+                                pass
+                        else:
+                            # if not present in saved data, clear
+                            if k in st.session_state:
+                                st.session_state[k] = 0 if isinstance(st.session_state[k], (int, float)) else ""
+                    # handle mode-specific
+                    if preset_mode == "Owner":
+                        # set owner fields from saved
+                        for k in OWNER_KEYS:
+                            if k in data_json and k in st.session_state:
                                 st.session_state[k] = data_json[k]
                             else:
+                                if k in st.session_state:
+                                    st.session_state[k] = 0
+                        # clear charter-only keys (if exist)
+                        for k in CHARTER_KEYS:
+                            if k in st.session_state and k not in OWNER_KEYS:
                                 st.session_state[k] = 0
-                        # charter fields already set via common_keys (charter,premi_nm,other_cost)
-                    else:  # Charter mode
-                        # keep owner-only fields zero
-                        for k in ["crew","insurance","docking","maintenance","certificate"]:
-                            st.session_state[k] = 0
-                        # charter-related values already set via common_keys
-
+                    elif preset_mode == "Charter":
+                        for k in CHARTER_KEYS:
+                            if k in data_json and k in st.session_state:
+                                st.session_state[k] = data_json[k]
+                            else:
+                                if k in st.session_state:
+                                    st.session_state[k] = 0
+                        # clear owner-only keys
+                        for k in OWNER_KEYS:
+                            if k in st.session_state and k not in CHARTER_KEYS:
+                                st.session_state[k] = 0
+                    else:
+                        # unknown mode, conservative: set only keys that exist in data_json
+                        for k, v in data_json.items():
+                            if k in st.session_state:
+                                st.session_state[k] = v
                     st.sidebar.success(f"Preset '{sel_preset}' loaded.")
                     st.rerun()
 
@@ -367,13 +381,14 @@ if st.button("Calculate Freight 💸"):
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
+        # Freight Price Calculation
         revenue_user = freight_price_input * qyt_cargo
         pph_user = revenue_user * 0.012
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / revenue_user * 100) if revenue_user > 0 else 0
 
+        # ===== DISPLAY RESULTS =====
         st.subheader("📋 Calculation Results")
-        # show in single column, neat bullets (no duplication of top input fields)
         st.markdown(f"""
 **Type Cargo:** {type_cargo}  
 **Cargo Quantity:** {qyt_cargo:,.0f} {type_cargo.split()[1]}  
@@ -384,10 +399,11 @@ if st.button("Calculate Freight 💸"):
 **Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
 **Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}  
 
-**Fuel Cost:** {total_consumption_fuel:,.0f} Ltr  
-**Freshwater Cost:** {total_consumption_fw:,.0f} Ton
+**Fuel Cost (Rp):** Rp {cost_fuel:,.0f}  
+**Freshwater Cost (Rp):** Rp {cost_fw:,.0f}  
 """)
 
+        # Costs summary (same style as requested)
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
             owner_data = {
@@ -416,6 +432,7 @@ if st.button("Calculate Freight 💸"):
         st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
         st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
 
+        # Freight price section (only show if filled)
         if freight_price_input > 0:
             st.subheader("💰 Freight Price Calculation User")
             st.markdown(f"""
@@ -463,6 +480,7 @@ if st.button("Calculate Freight 💸"):
             elements.append(t_voyage)
             elements.append(Spacer(1, 6))
 
+            # Calculation Results
             elements.append(Paragraph("<b>Calculation Results</b>", styles['Heading3']))
             calc_data = [
                 ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
@@ -489,14 +507,14 @@ if st.button("Calculate Freight 💸"):
                     ["Profit", f"Rp {profit_user:,.0f}"],
                     ["Profit %", f"{profit_percent_user:.2f} %"]
                 ]
-                t_fpc = Table(fpc_data, colWidths=[200, 200], hAlign='LEFT')
+                t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[200, 200])
                 t_fpc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
                 elements.append(t_fpc)
                 elements.append(Spacer(1, 6))
 
             elements.append(Paragraph("<b>Profit Scenario 0–50%</b>", styles['Heading3']))
             profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
-            t_profit = Table(profit_table, colWidths=[60, 110, 110, 110, 110], hAlign='LEFT')
+            t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 110, 110, 110, 110])
             t_profit.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_profit)
             elements.append(Spacer(1, 6))
