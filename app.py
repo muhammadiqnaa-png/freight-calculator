@@ -189,7 +189,7 @@ if st.sidebar.button("🔄 Refresh / Load Selected"):
         else:
             load_preset_safe(data_json)
             st.sidebar.success(f"Preset '{sel_preset}' dimuat.")
-            st.experimental_rerun()
+            st.rerun()
 
 # =================== Main Input ===================
 st.title("🚢 Freight Calculator Barge")
