@@ -105,6 +105,67 @@ with st.sidebar.expander("🕓 Port Stay"):
     port_stay_pol = st.number_input("POL (Days)", 0)
     port_stay_pod = st.number_input("POD (Days)", 0)
 
+# ===== ADDITIONAL COST =====
+with st.sidebar.expander("➕ Additional Cost"):
+    if "additional_costs" not in st.session_state:
+        st.session_state.additional_costs = []
+
+    # Button untuk tambah baris baru
+    add_new = st.button("➕ Add Additional Cost")
+
+    if add_new:
+        st.session_state.additional_costs.append({
+            "name": "",
+            "price": 0,
+            "unit": "Ltr",
+            "subtype": "Day",
+            "consumption": 0
+        })
+
+    updated_costs = []
+    # daftar unit sekarang termasuk "Day"
+    unit_options = ["Ltr", "Ton", "Month", "Voyage", "MT", "M3", "Day"]
+
+    for i, cost in enumerate(st.session_state.additional_costs):
+        st.markdown(f"**Additional Cost {i+1}**")
+        col1, col2 = st.columns(2)
+        with col1:
+            name = st.text_input(f"Name {i+1}", cost.get("name", ""), key=f"name_{i}")
+            price = st.number_input(f"Price {i+1} (Rp)", cost.get("price", 0), key=f"price_{i}")
+        with col2:
+            # update selectbox options to include "Day"
+            unit = st.selectbox(
+                f"Unit {i+1}",
+                unit_options,
+                index=unit_options.index(cost.get("unit", "Ltr")) if cost.get("unit", "Ltr") in unit_options else 0,
+                key=f"unit_{i}"
+            )
+            subtype = "Day"
+            if unit in ["Ltr", "Ton"]:
+                subtype = st.selectbox(
+                    f"Type {i+1}",
+                    ["Day", "Hour"],
+                    index=["Day", "Hour"].index(cost.get("subtype", "Day")),
+                    key=f"subtype_{i}"
+                )
+            consumption = 0
+            if unit in ["Ltr", "Ton"]:
+                consumption = st.number_input(
+                    f"Consumption {i+1} ({unit}/{subtype})",
+                    cost.get("consumption", 0),
+                    key=f"consumption_{i}"
+                )
+        remove = st.button(f"❌ Remove {i+1}", key=f"remove_{i}")
+        if not remove:
+            updated_costs.append({
+                "name": name,
+                "price": price,
+                "unit": unit,
+                "subtype": subtype,
+                "consumption": consumption
+            })
+    st.session_state.additional_costs = updated_costs
+
 # ===== MAIN INPUT =====
 st.title("🚢 Freight Calculator Barge")
 
@@ -125,15 +186,19 @@ freight_price_input = st.number_input("Freight Price (Rp/MT)", 0)
 # ===== PERHITUNGAN =====
 if st.button("Calculate Freight 💸"):
     try:
+        # Waktu sailing (hour) based on speed inputs (hours)
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
+        # total voyage in days (sailing hours converted to days + port stays)
         total_voyage_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
         total_voyage_days_round = int(total_voyage_days) if total_voyage_days % 1 < 0.5 else int(total_voyage_days) + 1
 
+        # consumptions
         total_consumption_fuel = (sailing_time * consumption) + ((port_stay_pol + port_stay_pod) * 120)
         total_consumption_fw = consumption_fw * total_voyage_days_round
         cost_fw = total_consumption_fw * price_fw
         cost_fuel = total_consumption_fuel * price_fuel
 
+        # core costs
         charter_cost = (charter / 30) * total_voyage_days
         crew_cost = (crew / 30) * total_voyage_days if mode == "Owner" else 0
         insurance_cost = (insurance / 30) * total_voyage_days if mode == "Owner" else 0
@@ -143,14 +208,62 @@ if st.button("Calculate Freight 💸"):
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
+        # ===== ADDITIONAL COST CALCULATION =====
+        additional_total = 0
+        additional_breakdown = {}
+
+        for cost in st.session_state.get("additional_costs", []):
+            name = cost.get("name", "")
+            unit = cost.get("unit", "")
+            subtype = cost.get("subtype", "Day")
+            price = cost.get("price", 0)
+            cons = cost.get("consumption", 0)
+
+            val = 0
+            # Ltr: bisa per Day atau per Hour (Hour uses total_voyage_days * 24)
+            if unit == "Ltr":
+                if subtype == "Day":
+                    val = cons * total_voyage_days * price
+                elif subtype == "Hour":
+                    val = cons * (total_voyage_days * 24) * price
+            # Ton: per Day atau per Hour (Hour uses total_voyage_days * 24)
+            elif unit == "Ton":
+                if subtype == "Day":
+                    val = cons * total_voyage_days * price
+                elif subtype == "Hour":
+                    val = cons * (total_voyage_days * 24) * price
+            # Month: dibagi 30 lalu dikali total_voyage_days
+            elif unit == "Month":
+                val = (price / 30) * total_voyage_days
+            # Voyage: flat per voyage
+            elif unit == "Voyage":
+                val = price
+            # MT / M3: dikalikan total cargo
+            elif unit in ["MT", "M3"]:
+                val = price * qyt_cargo
+            # Day: baru — flat per day (harga x total_voyage_days)
+            elif unit == "Day":
+                val = price * total_voyage_days
+
+            # kalau nilai > 0, masukkan ke breakdown
+            if val and val > 0:
+                key_name = name if name else f"{unit} cost"
+                # jika nama sama, tambahkan nilainya
+                if key_name in additional_breakdown:
+                    additional_breakdown[key_name] += val
+                else:
+                    additional_breakdown[key_name] = val
+                additional_total += val
+
+        # ===== TOTAL COST FINAL =====
         total_cost = sum([
             charter_cost, crew_cost, insurance_cost, docking_cost, maintenance_cost, certificate_cost,
-            premi_cost, port_cost, cost_fuel, cost_fw, other_cost
+            premi_cost, port_cost, cost_fuel, cost_fw, other_cost, additional_total
         ])
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
-        # Freight Price Calculation
+        # ===== REVENUE CALC =====
         revenue_user = freight_price_input * qyt_cargo
         pph_user = revenue_user * 0.012
         profit_user = revenue_user - total_cost - pph_user
@@ -198,6 +311,11 @@ if st.button("Calculate Freight 💸"):
         for k, v in owner_data.items():
             st.markdown(f"- {k}: Rp {v:,.0f}")
 
+        if additional_breakdown:
+            st.markdown("### ➕ Additional Costs")
+            for k, v in additional_breakdown.items():
+                st.markdown(f"- {k}: Rp {v:,.0f}")
+
         st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
         st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
 
@@ -214,7 +332,7 @@ if st.button("Calculate Freight 💸"):
         else:
             st.info("Masukkan Freight Price untuk melihat hasil perhitungan profit user.")
 
-        # ===== PROFIT SCENARIO (SELALU MUNCUL) =====
+        # ===== PROFIT SCENARIO =====
         data = []
         for p in range(0, 55, 5):
             freight_persen = freight_cost_mt * (1 + p / 100)
@@ -230,12 +348,12 @@ if st.button("Calculate Freight 💸"):
         # ===== PDF GENERATOR =====
         def create_pdf():
             buffer = BytesIO()
-            doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=0, bottomMargin=0)
+            doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=10, bottomMargin=10)
             styles = getSampleStyleSheet()
             elements = []
 
             elements.append(Paragraph("<b>Freight Calculator Report</b>", styles['Title']))
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 6))
 
             voyage_data = [
                 ["Port Of Loading", port_pol],
@@ -248,7 +366,7 @@ if st.button("Calculate Freight 💸"):
             t_voyage = Table(voyage_data, hAlign='LEFT')
             t_voyage.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_voyage)
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 6))
 
             calc_data = [
                 ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
@@ -257,14 +375,22 @@ if st.button("Calculate Freight 💸"):
                 ["Fuel Cost (Rp)", f"Rp {cost_fuel:,.0f}"],
                 ["Freshwater Cost (Rp)", f"Rp {cost_fw:,.0f}"]
             ]
+
             for k, v in owner_data.items():
                 calc_data.append([k, f"Rp {v:,.0f}"])
+
+            # Tambahkan additional breakdown ke PDF kalau ada
+            if additional_breakdown:
+                calc_data.append(["--- Additional Costs ---", ""])
+                for k, v in additional_breakdown.items():
+                    calc_data.append([k, f"Rp {v:,.0f}"])
+
             calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
             calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
-            t_calc = Table(calc_data, hAlign='LEFT', colWidths=[180, 120])
+            t_calc = Table(calc_data, hAlign='LEFT', colWidths=[220, 140])
             t_calc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_calc)
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 6))
 
             # Tampilkan Freight Price Calculation hanya kalau diisi
             if freight_price_input > 0:
@@ -276,18 +402,18 @@ if st.button("Calculate Freight 💸"):
                     ["Profit", f"Rp {profit_user:,.0f}"],
                     ["Profit %", f"{profit_percent_user:.2f} %"]
                 ]
-                t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[180, 120])
+                t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[220, 140])
                 t_fpc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
                 elements.append(t_fpc)
-                elements.append(Spacer(0, 5))
+                elements.append(Spacer(0, 6))
 
-            # Profit Scenario selalu muncul
+            # Profit Scenario
             elements.append(Paragraph("<b>Profit Scenario 0–50%</b>", styles['Heading3']))
             profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
             t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 100, 100, 100, 100])
             t_profit.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
             elements.append(t_profit)
-            elements.append(Spacer(0, 5))
+            elements.append(Spacer(0, 6))
 
             elements.append(Paragraph("<i>Generated By: https://freight-calculatordemo2.streamlit.app/</i>", styles['Normal']))
 
