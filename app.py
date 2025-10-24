@@ -9,6 +9,21 @@ from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import requests
 
+# ==========================================================
+# 🔧 PWA Support — biar bisa di-install di HP
+# ==========================================================
+st.markdown("""
+<link rel="manifest" href="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/manifest.json">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/service-worker.js')
+    .then(reg => console.log("Service worker registered:", reg))
+    .catch(err => console.log("Service worker failed:", err));
+}
+</script>
+""", unsafe_allow_html=True)
+# ==========================================================
+
 st.set_page_config(page_title="Freight Calculator Barge", layout="wide")
 
 # ====== FIREBASE AUTH ======
@@ -110,9 +125,7 @@ with st.sidebar.expander("➕ Additional Cost"):
     if "additional_costs" not in st.session_state:
         st.session_state.additional_costs = []
 
-    # Button untuk tambah baris baru
     add_new = st.button("➕ Add Additional Cost")
-
     if add_new:
         st.session_state.additional_costs.append({
             "name": "",
@@ -123,7 +136,6 @@ with st.sidebar.expander("➕ Additional Cost"):
         })
 
     updated_costs = []
-    # daftar unit sekarang termasuk "Day"
     unit_options = ["Ltr", "Ton", "Month", "Voyage", "MT", "M3", "Day"]
 
     for i, cost in enumerate(st.session_state.additional_costs):
@@ -133,7 +145,6 @@ with st.sidebar.expander("➕ Additional Cost"):
             name = st.text_input(f"Name {i+1}", cost.get("name", ""), key=f"name_{i}")
             price = st.number_input(f"Price {i+1} (Rp)", cost.get("price", 0), key=f"price_{i}")
         with col2:
-            # update selectbox options to include "Day"
             unit = st.selectbox(
                 f"Unit {i+1}",
                 unit_options,
