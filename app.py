@@ -9,17 +9,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import requests
 
-import streamlit as st
-import math
-import pandas as pd
-from io import BytesIO
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from datetime import datetime
-import requests
-
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
