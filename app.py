@@ -9,6 +9,17 @@ from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import requests
 
+import streamlit as st
+
+# ==========================================================
+# ⚙️ Page Config (WAJIB paling atas!)
+# ==========================================================
+st.set_page_config(
+    page_title="Freight Calculator Barge",
+    page_icon="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png",
+    layout="wide"
+)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
@@ -24,29 +35,14 @@ if ('serviceWorker' in navigator) {
 """, unsafe_allow_html=True)
 
 # ==========================================================
-# ⚙️ Tambahkan page_config dengan icon (Safari bisa baca ini)
-# ==========================================================
-st.set_page_config(
-    page_title="Freight Calculator Barge",
-    page_icon="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png",
-    layout="wide"
-)
-
-# ==========================================================
-# 🍎 iPhone (Safari) Support — tambahan meta (optional)
+# 🍎 iPhone (Safari) Support — tambahan meta
 # ==========================================================
 st.markdown("""
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
-# ==========================================================
-# ==========================================================
-# 🌐 Web Favicon (Logo di Tab Browser)
-# ==========================================================
-st.markdown("""
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png">
-""", unsafe_allow_html=True)
+
 
 # ====== FIREBASE AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
