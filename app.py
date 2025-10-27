@@ -24,17 +24,23 @@ if ('serviceWorker' in navigator) {
 """, unsafe_allow_html=True)
 
 # ==========================================================
-# 🍎 iPhone (Safari) Support — biar logo & mode fullscreen aktif
+# ⚙️ Tambahkan page_config dengan icon (Safari bisa baca ini)
+# ==========================================================
+st.set_page_config(
+    page_title="Freight Calculator Barge",
+    page_icon="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png",
+    layout="wide"
+)
+
+# ==========================================================
+# 🍎 iPhone (Safari) Support — tambahan meta (optional)
 # ==========================================================
 st.markdown("""
-    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FreightCalc">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
 # ==========================================================
-
-st.set_page_config(page_title="Freight Calculator Barge", layout="wide")
 
 # ====== FIREBASE AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
