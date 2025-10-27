@@ -41,6 +41,12 @@ st.markdown("""
 <meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
 # ==========================================================
+# ==========================================================
+# 🌐 Web Favicon (Logo di Tab Browser)
+# ==========================================================
+st.markdown("""
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png">
+""", unsafe_allow_html=True)
 
 # ====== FIREBASE AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
