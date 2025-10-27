@@ -9,6 +9,17 @@ from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import requests
 
+import streamlit as st
+import math
+import pandas as pd
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from datetime import datetime
+import requests
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
@@ -21,6 +32,16 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.log("Service worker failed:", err));
 }
 </script>
+""", unsafe_allow_html=True)
+
+# ==========================================================
+# 🍎 iPhone (Safari) Support — biar logo & mode fullscreen aktif
+# ==========================================================
+st.markdown("""
+    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
 # ==========================================================
 
