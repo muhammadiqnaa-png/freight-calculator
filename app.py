@@ -357,7 +357,7 @@ if st.button("Calculate Freight 💸"):
 
         # ===== PROFIT SCENARIO =====
         data = []
-        for p in range(0, 55, 5):
+        for p in range(0, 80, 5):
             freight_persen = freight_cost_mt * (1 + p / 100)
             revenue = freight_persen * qyt_cargo
             pph = revenue * 0.012
@@ -365,7 +365,7 @@ if st.button("Calculate Freight 💸"):
             data.append([f"{p}%", f"Rp {freight_persen:,.0f}", f"Rp {revenue:,.0f}", f"Rp {pph:,.0f}", f"Rp {profit:,.0f}"])
         df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Profit (Rp)"])
 
-        st.subheader("💹 Profit Scenario 0–50%")
+        st.subheader("💹 Profit Scenario 0–75%")
         st.dataframe(df_profit, use_container_width=True)
 
         # ===== PDF GENERATOR =====
@@ -431,7 +431,7 @@ if st.button("Calculate Freight 💸"):
                 elements.append(Spacer(0, 6))
 
             # Profit Scenario
-            elements.append(Paragraph("<b>Profit Scenario 0–50%</b>", styles['Heading3']))
+            elements.append(Paragraph("<b>Profit Scenario 0–75%</b>", styles['Heading3']))
             profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
             t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 100, 100, 100, 100])
             t_profit.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
