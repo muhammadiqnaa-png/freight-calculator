@@ -369,80 +369,122 @@ if st.button("Calculate Freight 💸"):
         st.dataframe(df_profit, use_container_width=True)
 
         # ===== PDF GENERATOR =====
-        def create_pdf():
-            buffer = BytesIO()
-            doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=10, leftMargin=10, topMargin=10, bottomMargin=10)
-            styles = getSampleStyleSheet()
-            elements = []
+        def create_pdf(username):
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=20,
+        leftMargin=20,
+        topMargin=20,
+        bottomMargin=20
+    )
+    styles = getSampleStyleSheet()
+    elements = []
 
-            elements.append(Paragraph("<b>Freight Calculator Report</b>", styles['Title']))
-            elements.append(Spacer(0, 6))
+    # ===== CUSTOM STYLES =====
+    styles.add(ParagraphStyle(name='HeaderBlue', fontSize=16, textColor=colors.HexColor("#0d47a1"), alignment=1, spaceAfter=6))
+    styles.add(ParagraphStyle(name='SubHeader', fontSize=10, textColor=colors.HexColor("#0d47a1"), spaceAfter=4))
+    styles.add(ParagraphStyle(name='Bold', fontSize=9, fontName='Helvetica-Bold'))
+    styles.add(ParagraphStyle(name='NormalSmall', fontSize=9, leading=11))
 
-            voyage_data = [
-                ["Port Of Loading", port_pol],
-                ["Port Of Discharge", port_pod],
-                ["Next Port", next_port],
-                ["Cargo Quantity", f"{qyt_cargo:,.0f} {type_cargo.split()[1]}"],
-                ["Distance (NM)", f"{distance_pol_pod:,.0f}"],
-                ["Total Voyage (Days)", f"{total_voyage_days:.2f}"]
-            ]
-            t_voyage = Table(voyage_data, hAlign='LEFT')
-            t_voyage.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
-            elements.append(t_voyage)
-            elements.append(Spacer(0, 6))
+    # ===== HEADER DENGAN ICON =====
+    logo_path = "icon-512x512.png"  # gunakan icon tunggal
+    logo = Image(logo_path, width=2.8*cm, height=2.8*cm)
 
-            calc_data = [
-                ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
-                ["Total Consumption Fuel (Ltr)", f"{total_consumption_fuel:,.0f} Ltr"],
-                ["Total Consumption Freshwater (Ton)", f"{total_consumption_fw:,.0f} Ton"],
-                ["Fuel Cost (Rp)", f"Rp {cost_fuel:,.0f}"],
-                ["Freshwater Cost (Rp)", f"Rp {cost_fw:,.0f}"]
-            ]
+    title = Paragraph("<b>Freight Calculation Report</b>", styles["HeaderBlue"])
+    date_text = Paragraph(f"Generated: {datetime.now().strftime('%d %B %Y')}", styles["NormalSmall"])
 
-            for k, v in owner_data.items():
-                calc_data.append([k, f"Rp {v:,.0f}"])
+    header_table = Table([[logo, title]], colWidths=[4*cm, 12*cm])
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (1, 0), (1, 0), 'CENTER'),
+    ]))
+    elements += [header_table, date_text, Spacer(1, 12)]
 
-            # Tambahkan additional breakdown ke PDF kalau ada
-            if additional_breakdown:
-                calc_data.append(["--- Additional Costs ---", ""])
-                for k, v in additional_breakdown.items():
-                    calc_data.append([k, f"Rp {v:,.0f}"])
+    # ===== VOYAGE INFO =====
+    elements.append(Paragraph("<b>Voyage Information</b>", styles['SubHeader']))
+    voyage_data = [
+        ["Port Of Loading", port_pol],
+        ["Port Of Discharge", port_pod],
+        ["Next Port", next_port],
+        ["Cargo Quantity", f"{qyt_cargo:,.0f} {type_cargo.split()[1]}"],
+        ["Distance (NM)", f"{distance_pol_pod:,.0f}"],
+        ["Total Voyage (Days)", f"{total_voyage_days:.2f}"]
+    ]
+    t_voyage = Table(voyage_data, colWidths=[7*cm, 8*cm])
+    t_voyage.setStyle(TableStyle([
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+    ]))
+    elements += [t_voyage, Spacer(1, 8)]
 
-            calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
-            calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
-            t_calc = Table(calc_data, hAlign='LEFT', colWidths=[220, 140])
-            t_calc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
-            elements.append(t_calc)
-            elements.append(Spacer(0, 6))
+    # ===== COST DATA =====
+    elements.append(Paragraph("<b>Operational & Cost Summary</b>", styles['SubHeader']))
+    calc_data = [
+        ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
+        ["Total Consumption Fuel (Ltr)", f"{total_consumption_fuel:,.0f} Ltr"],
+        ["Total Consumption Freshwater (Ton)", f"{total_consumption_fw:,.0f} Ton"],
+        ["Fuel Cost (Rp)", f"Rp {cost_fuel:,.0f}"],
+        ["Freshwater Cost (Rp)", f"Rp {cost_fw:,.0f}"],
+    ]
 
-            # Tampilkan Freight Price Calculation hanya kalau diisi
-            if freight_price_input > 0:
-                elements.append(Paragraph("<b>Freight Price Calculation User</b>", styles['Heading3']))
-                fpc_data = [
-                    ["Freight Price (Rp/MT)", f"Rp {freight_price_input:,.0f}"],
-                    ["Revenue", f"Rp {revenue_user:,.0f}"],
-                    ["PPH 1.2%", f"Rp {pph_user:,.0f}"],
-                    ["Profit", f"Rp {profit_user:,.0f}"],
-                    ["Profit %", f"{profit_percent_user:.2f} %"]
-                ]
-                t_fpc = Table(fpc_data, hAlign='LEFT', colWidths=[220, 140])
-                t_fpc.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
-                elements.append(t_fpc)
-                elements.append(Spacer(0, 6))
+    for k, v in owner_data.items():
+        calc_data.append([k, f"Rp {v:,.0f}"])
 
-            # Profit Scenario
-            elements.append(Paragraph("<b>Profit Scenario 0–75%</b>", styles['Heading3']))
-            profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
-            t_profit = Table(profit_table, hAlign='LEFT', colWidths=[60, 100, 100, 100, 100])
-            t_profit.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.25, colors.black)]))
-            elements.append(t_profit)
-            elements.append(Spacer(0, 6))
+    if additional_breakdown:
+        calc_data.append(["--- Additional Costs ---", ""])
+        for k, v in additional_breakdown.items():
+            calc_data.append([k, f"Rp {v:,.0f}"])
 
-            elements.append(Paragraph("Generated By: https://freight-calculator-barge-byiqna.streamlit.app/", styles['Normal']))
+    calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
+    calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
 
-            doc.build(elements)
-            buffer.seek(0)
-            return buffer
+    t_calc = Table(calc_data, colWidths=[8*cm, 7*cm])
+    t_calc.setStyle(TableStyle([
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
+        ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+        ('BACKGROUND', (0, -2), (-1, -1), colors.whitesmoke),
+    ]))
+    elements += [t_calc, Spacer(1, 8)]
+
+    # ===== FREIGHT PRICE =====
+    if freight_price_input > 0:
+        elements.append(Paragraph("<b>Freight Price Calculation User</b>", styles['SubHeader']))
+        fpc_data = [
+            ["Freight Price (Rp/MT)", f"Rp {freight_price_input:,.0f}"],
+            ["Revenue", f"Rp {revenue_user:,.0f}"],
+            ["PPH 1.2%", f"Rp {pph_user:,.0f}"],
+            ["Profit", f"Rp {profit_user:,.0f}"],
+            ["Profit %", f"{profit_percent_user:.2f} %"],
+        ]
+        t_fpc = Table(fpc_data, colWidths=[8*cm, 7*cm])
+        t_fpc.setStyle(TableStyle([
+            ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
+            ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+        ]))
+        elements += [t_fpc, Spacer(1, 8)]
+
+    # ===== PROFIT SCENARIO =====
+    elements.append(Paragraph("<b>Profit Scenario 0–75%</b>", styles['SubHeader']))
+    profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
+    t_profit = Table(profit_table, colWidths=[60, 90, 90, 90, 90])
+    t_profit.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#0d47a1")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
+        ('ALIGN', (1, 1), (-1, -1), 'RIGHT')
+    ]))
+    elements += [t_profit, Spacer(1, 8)]
+
+    # ===== FOOTER =====
+    footer_text = f"Generated by {username} | https://freight-calculator-barge-byiqna.streamlit.app/"
+    elements.append(Paragraph(footer_text, styles['NormalSmall']))
+
+    doc.build(elements)
+    buffer.seek(0)
+    return buffer
 
         pdf_buffer = create_pdf()
         file_name = f"Freight_Report_{port_pol}_{port_pod}_{datetime.now():%Y%m%d}.pdf"
