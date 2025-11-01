@@ -390,9 +390,6 @@ if st.button("Calculate Freight 💸"):
             elements = []
 
             # ===== HEADER =====
-            logo_path = "icon-512x512.png"
-            logo = Image(logo_path, width=2.5*cm, height=2.5*cm)
-
             title = Paragraph("<b>Freight Calculation Report</b>", styles['HeaderBlue'])
             header_table = Table([[logo, title]], colWidths=[4*cm, 12*cm])
             header_table.setStyle(TableStyle([
