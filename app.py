@@ -391,7 +391,6 @@ if st.button("Calculate Freight 💸"):
 
             # ===== HEADER =====
             title = Paragraph("<b>Freight Calculation Report</b>", styles['HeaderBlue'])
-            header_table = Table([[logo, title]], colWidths=[4*cm, 12*cm])
             header_table.setStyle(TableStyle([
                 ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                 ('ALIGN', (1, 0), (1, 0), 'CENTER'),
