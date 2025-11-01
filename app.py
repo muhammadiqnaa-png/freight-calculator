@@ -497,7 +497,6 @@ if st.button("Calculate Freight 💸"):
             doc.build(elements)
             buffer.seek(0)
             return buffer
-
         # ===== GENERATE PDF & DOWNLOAD BUTTON =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         file_name = f"Freight_Report_{port_pol}_{port_pod}_{datetime.now():%Y%m%d}.pdf"
@@ -508,3 +507,7 @@ if st.button("Calculate Freight 💸"):
             file_name=file_name,
             mime="application/pdf"
         )
+
+    except Exception as e:
+        st.error(f"Error: {e}")
+
