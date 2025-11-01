@@ -371,14 +371,14 @@ if st.button("Calculate Freight 💸"):
 
         # ===== PDF GENERATOR =====
         def create_pdf(username):
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(
-        buffer,
-        pagesize=A4,
-        rightMargin=20,
-        leftMargin=20,
-        topMargin=25,
-        bottomMargin=25
+            buffer = BytesIO()
+            doc = SimpleDocTemplate(
+                buffer,
+                pagesize=A4,
+                rightMargin=20,
+                leftMargin=20,
+                topMargin=25,
+                bottomMargin=25
     )
 
     styles = getSampleStyleSheet()
@@ -497,7 +497,7 @@ if st.button("Calculate Freight 💸"):
     doc.build(elements)
     buffer.seek(0)
     return buffer
-
+        
         # ===== GENERATE PDF & DOWNLOAD BUTTON =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         file_name = f"Freight_Report_{port_pol}_{port_pod}_{datetime.now():%Y%m%d}.pdf"
