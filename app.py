@@ -367,8 +367,8 @@ if st.button("Calculate Freight 💸"):
             doc = SimpleDocTemplate(
                 buffer,
                 pagesize=A4,
-                rightMargin=20,
-                leftMargin=20,
+                rightMargin=25,
+                leftMargin=25,
                 topMargin=0,
                 bottomMargin=0
             )
