@@ -396,7 +396,7 @@ if st.button("Calculate Freight 💸"):
                 ["Distance (NM)", f"{distance_pol_pod:,.0f}"],
                 ["Total Voyage (Days)", f"{total_voyage_days:.2f}"],
             ]
-            t_voyage = Table(voyage_data, colWidths=[8*cm, 8*cm])
+            t_voyage = Table(voyage_data, colWidths=[10*cm, 10*cm])
             t_voyage.setStyle(TableStyle([
                 ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
                 ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
@@ -427,7 +427,7 @@ if st.button("Calculate Freight 💸"):
             calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
             calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
 
-            t_calc = Table(calc_data, colWidths=[8*cm, 8*cm])
+            t_calc = Table(calc_data, colWidths=[10*cm, 10*cm])
             t_calc.setStyle(TableStyle([
                 ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
                 ('BACKGROUND', (0, -2), (-1, -1), colors.lightgrey),
@@ -447,7 +447,7 @@ if st.button("Calculate Freight 💸"):
                     ["Profit", f"Rp {profit_user:,.0f}"],
                     ["Profit %", f"{profit_percent_user:.2f} %"],
                 ]
-                t_fpc = Table(fpc_data, colWidths=[8*cm, 8*cm])
+                t_fpc = Table(fpc_data, colWidths=[10*cm, 10*cm])
                 t_fpc.setStyle(TableStyle([
                     ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
                     ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
