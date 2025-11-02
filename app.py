@@ -376,7 +376,7 @@ if st.button("Calculate Freight 💸"):
             styles = getSampleStyleSheet()
             styles.add(ParagraphStyle(name='HeaderBlue', fontSize=12, textColor=colors.HexColor("#0d47a1"), alignment=1, spaceAfter=4))
             styles.add(ParagraphStyle(name='SubHeader', fontSize=10, textColor=colors.HexColor("#0d47a1"), spaceAfter=4, fontName='Helvetica-Bold'))
-            styles.add(ParagraphStyle(name='NormalSmall', fontSize=8, leading=11))
+            styles.add(ParagraphStyle(name='NormalSmall', fontSize=8, leading=9))
             styles.add(ParagraphStyle(name='Bold', fontSize=8, fontName='Helvetica-Bold'))
 
             elements = []
