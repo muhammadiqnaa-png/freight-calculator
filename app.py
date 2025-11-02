@@ -467,7 +467,7 @@ if st.button("Calculate Freight 💸"):
                 ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
                 ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('FONTSIZE', (0, 0), (-1, -1), 6),
             ]))
             elements += [t_profit, Spacer(1, 4)]
 
