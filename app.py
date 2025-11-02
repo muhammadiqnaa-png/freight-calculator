@@ -402,7 +402,7 @@ if st.button("Calculate Freight 💸"):
                 ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
                 ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                 ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
             ]))
             elements += [t_voyage, Spacer(1, 4)]
 
@@ -433,7 +433,7 @@ if st.button("Calculate Freight 💸"):
                 ('BACKGROUND', (0, -2), (-1, -1), colors.lightgrey),
                 ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                 ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
             ]))
             elements += [t_calc, Spacer(1, 4)]
 
@@ -453,7 +453,7 @@ if st.button("Calculate Freight 💸"):
                     ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
                     ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                     ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                    ('FONTSIZE', (0, 0), (-1, -1), 9),
+                    ('FONTSIZE', (0, 0), (-1, -1), 8),
                 ]))
                 elements += [t_fpc, Spacer(1, 4)]
 
@@ -467,7 +467,7 @@ if st.button("Calculate Freight 💸"):
                 ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
                 ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, -1), 6),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
             ]))
             elements += [t_profit, Spacer(1, 4)]
 
