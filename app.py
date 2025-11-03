@@ -98,46 +98,104 @@ if st.sidebar.button("🚪 Log Out"):
     st.success("Successfully logged out.")
     st.rerun()
 
+# ==========================================================
+# ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
+# - ditaruh di expander sidebar yang default tertutup
+# - tidak mengubah layout main / posisi expander lain
+# ==========================================================
+preset_params = {
+    "270 ft": {
+        "speed_laden": 3, "speed_ballast": 4,
+        "consumption": 85, "price_fuel": 13500,
+        "consumption_fw": 2, "price_fw": 120000,
+        "charter": 0, "crew": 60000000, "insurance": 40000000,
+        "docking": 40000000, "maintenance": 40000000,
+        "certificate": 40000000, "premi_nm": 50000, "other_cost": 10000000,
+        "port_cost_pol": 35000000, "port_cost_pod": 35000000, "asist_tug": 0,
+        "port_stay_pol": 4, "port_stay_pod": 4
+    },
+    "300 ft": {
+        "speed_laden": 3, "speed_ballast": 4,
+        "consumption": 115, "price_fuel": 13500,
+        "consumption_fw": 2, "price_fw": 120000,
+        "charter": 0, "crew": 60000000, "insurance": 50000000,
+        "docking": 50000000, "maintenance": 50000000,
+        "certificate": 45000000, "premi_nm": 50000, "other_cost": 15000000,
+        "port_cost_pol": 35000000, "port_cost_pod": 35000000, "asist_tug": 0,
+        "port_stay_pol": 5, "port_stay_pod": 5
+    },
+    "330 ft": {
+        "speed_laden": 3, "speed_ballast": 4,
+        "consumption": 130, "price_fuel": 13500,
+        "consumption_fw": 2, "price_fw": 120000,
+        "charter": 0, "crew": 60000000, "insurance": 60000000,
+        "docking": 60000000, "maintenance": 60000000,
+        "certificate": 50000000, "premi_nm": 50000, "other_cost": 20000000,
+        "port_cost_pol": 35000000, "port_cost_pod": 35000000, "asist_tug": 0,
+        "port_stay_pol": 5, "port_stay_pod": 5
+    }
+}
+
+# Expander kecil (default collapsed) — ini yang nggak ganggu tampilan kecuali user buka
+with st.sidebar.expander("⚙️ Preset Kapal (optional)", expanded=False):
+    kapal_option = st.selectbox("Pilih preset ukuran (biarkan Manual kalau mau input manual)", ["Manual", "270 ft", "300 ft", "330 ft"])
+    if kapal_option != "Manual":
+        # Apply preset into session_state so the number_inputs later pick them up as defaults
+        chosen = preset_params[kapal_option]
+        for k, v in chosen.items():
+            st.session_state[k] = v
+
+    # Optional: quick local apply button (ke session_state) — tetap inside expander
+    if st.button("Apply Preset"):
+        if kapal_option != "Manual":
+            chosen = preset_params[kapal_option]
+            for k, v in chosen.items():
+                st.session_state[k] = v
+            st.success(f"Preset {kapal_option} applied.")
+        else:
+            st.info("Pilih preset selain 'Manual' untuk apply.")
+
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("🚢 Speed"):
-    speed_laden = st.number_input("Speed Laden (knot)", 0.0)
-    speed_ballast = st.number_input("Speed Ballast (knot)", 0.0)
+    # set default values from session_state if exist, else 0.0
+    speed_laden = st.number_input("Speed Laden (knot)", value=st.session_state.get("speed_laden", 0.0))
+    speed_ballast = st.number_input("Speed Ballast (knot)", value=st.session_state.get("speed_ballast", 0.0))
 
 with st.sidebar.expander("⛽ Fuel"):
-    consumption = st.number_input("Consumption Fuel (liter/hour)", 0)
-    price_fuel = st.number_input("Price Fuel (Rp/Ltr)", 0)
+    consumption = st.number_input("Consumption Fuel (liter/hour)", value=st.session_state.get("consumption", 0))
+    price_fuel = st.number_input("Price Fuel (Rp/Ltr)", value=st.session_state.get("price_fuel", 0))
 
 with st.sidebar.expander("💧 Freshwater"):
-    consumption_fw = st.number_input("Consumption Freshwater (Ton/Day)", 0)
-    price_fw = st.number_input("Price Freshwater (Rp/Ton)", 0)
+    consumption_fw = st.number_input("Consumption Freshwater (Ton/Day)", value=st.session_state.get("consumption_fw", 0))
+    price_fw = st.number_input("Price Freshwater (Rp/Ton)", value=st.session_state.get("price_fw", 0))
 
 if mode == "Owner":
     with st.sidebar.expander("🏗️ Owner Cost"):
-        charter = st.number_input("Angsuran (Rp/Month)", 0)
-        crew = st.number_input("Crew (Rp/Month)", 0)
-        insurance = st.number_input("Insurance (Rp/Month)", 0)
-        docking = st.number_input("Docking (Rp/Month)", 0)
-        maintenance = st.number_input("Maintenance (Rp/Month)", 0)
-        certificate = st.number_input("Certificate (Rp/Month)", 0)
-        premi_nm = st.number_input("Premi (Rp/NM)", 0)
-        other_cost = st.number_input("Other Cost (Rp)", 0)
+        charter = st.number_input("Angsuran (Rp/Month)", value=st.session_state.get("charter", 0))
+        crew = st.number_input("Crew (Rp/Month)", value=st.session_state.get("crew", 0))
+        insurance = st.number_input("Insurance (Rp/Month)", value=st.session_state.get("insurance", 0))
+        docking = st.number_input("Docking (Rp/Month)", value=st.session_state.get("docking", 0))
+        maintenance = st.number_input("Maintenance (Rp/Month)", value=st.session_state.get("maintenance", 0))
+        certificate = st.number_input("Certificate (Rp/Month)", value=st.session_state.get("certificate", 0))
+        premi_nm = st.number_input("Premi (Rp/NM)", value=st.session_state.get("premi_nm", 0))
+        other_cost = st.number_input("Other Cost (Rp)", value=st.session_state.get("other_cost", 0))
 else:
     with st.sidebar.expander("🏗️ Charter Cost"):
-        charter = st.number_input("Charter Hire (Rp/Month)", 0)
-        premi_nm = st.number_input("Premi (Rp/NM)", 0)
-        other_cost = st.number_input("Other Cost (Rp)", 0)
+        charter = st.number_input("Charter Hire (Rp/Month)", value=st.session_state.get("charter", 0))
+        premi_nm = st.number_input("Premi (Rp/NM)", value=st.session_state.get("premi_nm", 0))
+        other_cost = st.number_input("Other Cost (Rp)", value=st.session_state.get("other_cost", 0))
 
 with st.sidebar.expander("⚓ Port Cost"):
-    port_cost_pol = st.number_input("Port Cost POL (Rp)", 0)
-    port_cost_pod = st.number_input("Port Cost POD (Rp)", 0)
-    asist_tug = st.number_input("Asist Tug (Rp)", 0)
+    port_cost_pol = st.number_input("Port Cost POL (Rp)", value=st.session_state.get("port_cost_pol", 0))
+    port_cost_pod = st.number_input("Port Cost POD (Rp)", value=st.session_state.get("port_cost_pod", 0))
+    asist_tug = st.number_input("Asist Tug (Rp)", value=st.session_state.get("asist_tug", 0))
 
 with st.sidebar.expander("🕓 Port Stay"):
-    port_stay_pol = st.number_input("POL (Days)", 0)
-    port_stay_pod = st.number_input("POD (Days)", 0)
+    port_stay_pol = st.number_input("POL (Days)", value=st.session_state.get("port_stay_pol", 0))
+    port_stay_pod = st.number_input("POD (Days)", value=st.session_state.get("port_stay_pod", 0))
 
 # ===== ADDITIONAL COST =====
 with st.sidebar.expander("➕ Additional Cost"):
