@@ -147,7 +147,7 @@ def update_preset():
     st.session_state.preset_selected = st.session_state.preset_control
 
 preset = st.sidebar.segmented_control(
-    "Preset Kapal",
+    "Size Barge",
     ["270 ft", "300 ft", "330 ft", "Custom"],
     default=st.session_state.preset_selected,
     key="preset_control",
