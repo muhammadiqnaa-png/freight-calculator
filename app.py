@@ -90,14 +90,6 @@ if not st.session_state.logged_in:
                 st.error("Failed to register. Email may already exist.")
     st.stop()
 
-# ===== LOGOUT =====
-st.sidebar.markdown("### 👤 Account")
-st.sidebar.write(f"Logged in as: **{st.session_state.email}**")
-if st.sidebar.button("🚪 Log Out"):
-    st.session_state.logged_in = False
-    st.success("Successfully logged out.")
-    st.rerun()
-
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
 # - ditaruh di expander sidebar yang default tertutup
@@ -259,6 +251,14 @@ with st.sidebar.expander("➕ Additional Cost"):
                 "consumption": consumption
             })
     st.session_state.additional_costs = updated_costs
+
+# ===== LOGOUT =====
+st.sidebar.markdown("### 👤 Account")
+st.sidebar.write(f"Logged in as: **{st.session_state.email}**")
+if st.sidebar.button("🚪 Log Out"):
+    st.session_state.logged_in = False
+    st.success("Successfully logged out.")
+    st.rerun()
 
 # ===== MAIN INPUT =====
 st.title("🚢 Freight Calculator Barge")
