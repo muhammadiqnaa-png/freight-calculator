@@ -446,9 +446,9 @@ if st.button("Calculate Freight 💸"):
                     if total_cost and total_cost > 0:
                         return f" ({int(round((x / total_cost) * 100))}%)"
                     else:
-                        return " (0%)"
+                        return " (0.0%)"
                 except Exception:
-                    return " (0%)"
+                    return " (0.0%)"
 
             # ===== HEADER =====
             title = Paragraph("<b>Freight Calculation Report</b>", styles['HeaderBlue'])
