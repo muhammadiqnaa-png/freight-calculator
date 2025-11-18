@@ -136,24 +136,25 @@ preset_params = {
     }
 }
 
-# Expander kecil (default collapsed) — ini yang nggak ganggu tampilan kecuali user buka
-with st.sidebar.expander("⚙️ Preset Kapal (optional)", expanded=False):
-    kapal_option = st.selectbox("Pilih preset ukuran (biarkan Manual kalau mau input manual)", ["Manual", "270 ft", "300 ft", "330 ft"])
-    if kapal_option != "Manual":
-        # Apply preset into session_state so the number_inputs later pick them up as defaults
-        chosen = preset_params[kapal_option]
-        for k, v in chosen.items():
-            st.session_state[k] = v
+# ==== PRESET SEGMEN ====
 
-    # Optional: quick local apply button (ke session_state) — tetap inside expander
-    if st.button("Apply Preset"):
-        if kapal_option != "Manual":
-            chosen = preset_params[kapal_option]
-            for k, v in chosen.items():
-                st.session_state[k] = v
-            st.success(f"Preset {kapal_option} applied.")
-        else:
-            st.info("Pilih preset selain 'Manual' untuk apply.")
+if "preset_selected" not in st.session_state:
+    st.session_state.preset_selected = "Custom"
+
+preset = st.sidebar.segmented_control(
+    "Size Barge",
+    ["270 ft", "300 ft", "330 ft", "Custom"],
+    default=st.session_state.preset_selected,
+    key="preset_control"     # <==== WAJIB
+)
+
+st.session_state.preset_selected = preset
+
+# ==== APPLY PRESET ====
+if preset != "Custom":
+    chosen = preset_params[preset]
+    for k, v in chosen.items():
+        st.session_state[k] = v
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
