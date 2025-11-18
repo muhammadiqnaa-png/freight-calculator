@@ -444,7 +444,7 @@ if st.button("Calculate Freight 💸"):
             def pct_of_total(x):
                 try:
                     if total_cost and total_cost > 0:
-                        return f" ({int(round((x / total_cost) * 100))}%)"
+                        return f" ({(x / total_cost) * 100:.1f}%)"
                     else:
                         return " (0.0%)"
                 except Exception:
