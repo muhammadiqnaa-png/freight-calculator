@@ -475,7 +475,7 @@ if st.button("Calculate Freight 💸"):
             ]
 
             for k, v in owner_data.items():
-                calc_data.append([k, f"Rp {v:,.0f}"])
+                calc_data.append([k, f"{fmt_rp(v)}{pct_of_total(v)}"])
 
             if additional_breakdown:
                 calc_data.append(["--- Additional Costs ---", ""])
