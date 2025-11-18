@@ -438,6 +438,17 @@ if st.button("Calculate Freight 💸"):
             styles.add(ParagraphStyle(name='Bold', fontSize=11, fontName='Helvetica-Bold'))
 
             elements = []
+            def fmt_rp(x):
+                return f"Rp {x:,.0f}"
+
+            def pct_of_total(x):
+                try:
+                    if total_cost and total_cost > 0:
+                        return f" ({int(round((x / total_cost) * 100))}%)"
+                    else:
+                        return " (0%)"
+                except Exception:
+                    return " (0%)"
 
             # ===== HEADER =====
             title = Paragraph("<b>Freight Calculation Report</b>", styles['HeaderBlue'])
