@@ -491,7 +491,7 @@ if st.button("Calculate Freight 💸"):
             if additional_breakdown:
                 calc_data.append(["--- Additional Costs ---", ""])
                 for k, v in additional_breakdown.items():
-                    calc_data.append([k, f"Rp {v:,.0f}"])
+                    calc_data.append([k, f"{fmt_rp(v)}{pct_of_total(v)}"])
 
             calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
             calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
