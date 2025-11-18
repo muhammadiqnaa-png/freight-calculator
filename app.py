@@ -255,7 +255,7 @@ with st.sidebar.expander("➕ Additional Cost"):
 # ===== LOGOUT =====
 st.sidebar.markdown("### 👤 Account")
 st.sidebar.write(f"Logged in as: **{st.session_state.email}**")
-if st.sidebar.button("🚪 Log Out"):
+if st.sidebar.button("Log Out"):
     st.session_state.logged_in = False
     st.success("Successfully logged out.")
     st.rerun()
