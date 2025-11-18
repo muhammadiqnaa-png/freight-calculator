@@ -138,21 +138,25 @@ preset_params = {
 
 # ==== PRESET SEGMEN ====
 
+# Default state
 if "preset_selected" not in st.session_state:
     st.session_state.preset_selected = "Custom"
+
+# Handler untuk update state
+def update_preset():
+    st.session_state.preset_selected = st.session_state.preset_control
 
 preset = st.sidebar.segmented_control(
     "Preset Kapal",
     ["270 ft", "300 ft", "330 ft", "Custom"],
     default=st.session_state.preset_selected,
-    key="preset_control"     # <==== WAJIB
+    key="preset_control",
+    on_change=update_preset
 )
 
-st.session_state.preset_selected = preset
-
 # ==== APPLY PRESET ====
-if preset != "Custom":
-    chosen = preset_params[preset]
+if st.session_state.preset_selected != "Custom":
+    chosen = preset_params[st.session_state.preset_selected]
     for k, v in chosen.items():
         st.session_state[k] = v
 
