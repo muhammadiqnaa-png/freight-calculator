@@ -142,7 +142,7 @@ if "preset_selected" not in st.session_state:
     st.session_state.preset_selected = "Custom"
 
 preset = st.sidebar.segmented_control(
-    "Size Barge",
+    "Preset Kapal",
     ["270 ft", "300 ft", "330 ft", "Custom"],
     default=st.session_state.preset_selected,
     key="preset_control"     # <==== WAJIB
@@ -155,6 +155,7 @@ if preset != "Custom":
     chosen = preset_params[preset]
     for k, v in chosen.items():
         st.session_state[k] = v
+
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
