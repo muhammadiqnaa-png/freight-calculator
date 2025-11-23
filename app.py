@@ -249,7 +249,7 @@ with st.sidebar.expander("➕ Additional Cost"):
                 "price": price,
                 "unit": unit,
                 "subtype": subtype,
-                "consumption": consumption
+                "consumption": additional_consumption
             })
     st.session_state.additional_costs = updated_costs
 
