@@ -234,13 +234,14 @@ with st.sidebar.expander("➕ Additional Cost"):
                     index=["Day", "Hour"].index(cost.get("subtype", "Day")),
                     key=f"subtype_{i}"
                 )
-            consumption = 0
+            additional_consumption = 0
             if unit in ["Ltr", "Ton"]:
-                consumption = st.number_input(
+                additional_consumption = st.number_input(
                     f"Consumption {i+1} ({unit}/{subtype})",
                     cost.get("consumption", 0),
-                    key=f"consumption_{i}"
+                    key=f"additional_consumption_{i}"
                 )
+
         remove = st.button(f"❌ Remove {i+1}", key=f"remove_{i}")
         if not remove:
             updated_costs.append({
