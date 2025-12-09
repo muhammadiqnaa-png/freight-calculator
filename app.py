@@ -191,6 +191,16 @@ with st.sidebar.expander("⚓ Port Cost"):
     port_cost_pod = st.number_input("Port Cost POD (Rp)", value=st.session_state.get("port_cost_pod", 0))
     asist_tug = st.number_input("Asist Tug (Rp)", value=st.session_state.get("asist_tug", 0))
 
+with st.sidebar.expander("🏢 General Overhead"):
+    opex_office = st.number_input(
+        "Opex (Rp/Month)",
+        value=st.session_state.get("opex_office", 0)
+    )
+    depreciation_kapal = st.number_input(
+        "Depreciation Kapal (Rp/Month)",
+        value=st.session_state.get("depreciation_kapal", 0)
+    )
+
 with st.sidebar.expander("🕓 Port Stay"):
     port_stay_pol = st.number_input("POL (Days)", value=st.session_state.get("port_stay_pol", 0))
     port_stay_pod = st.number_input("POD (Days)", value=st.session_state.get("port_stay_pod", 0))
