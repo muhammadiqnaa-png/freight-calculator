@@ -430,7 +430,7 @@ if st.button("Calculate Freight 💸"):
             revenue = freight_persen * qyt_cargo
             pph = revenue * 0.012
             gross_profit = revenue - total_cost - pph
-            data.append([f"{p}%", f"Rp {freight_persen:,.0f}", f"Rp {revenue:,.0f}", f"Rp {pph:,.0f}", f"Rp {profit:,.0f}"])
+            data.append([f"{p}%", f"Rp {freight_persen:,.0f}", f"Rp {revenue:,.0f}", f"Rp {pph:,.0f}", f"Rp {gross_profit:,.0f}"])
         df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Profit (Rp)"])
 
         st.subheader("💹 Profit Scenario 0–75%")
