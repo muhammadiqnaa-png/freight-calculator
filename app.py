@@ -310,6 +310,7 @@ if st.button("Calculate Freight 💸"):
         docking_cost = (docking / 30) * total_voyage_days if mode == "Owner" else 0
         maintenance_cost = (maintenance / 30) * total_voyage_days if mode == "Owner" else 0
         certificate_cost = (certificate / 30) * total_voyage_days if mode == "Owner" else 0
+        total_general_overhead = ((general_opex + general_depreciation) / 30) * total_voyage_days
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
@@ -354,7 +355,7 @@ if st.button("Calculate Freight 💸"):
 
         # ===== TOTAL COST FINAL =====
         total_cost = sum([
-            charter_cost, crew_cost, insurance_cost, docking_cost, maintenance_cost, certificate_cost,
+            charter_cost, crew_cost, insurance_cost, docking_cost, maintenance_cost, certificate_cost,total_general_overhead, 
             premi_cost, port_cost, cost_fuel, cost_fw, other_cost, additional_total
         ])
 
@@ -406,7 +407,7 @@ if st.button("Calculate Freight 💸"):
             st.markdown("### ➕ Additional Costs")
             for k, v in additional_breakdown.items():
                 st.markdown(f"- {k}: Rp {v:,.0f}")
-
+        st.markdown(f"- General Overhead: Rp {total_general_overhead:,.0f}")
         st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
         st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
 
