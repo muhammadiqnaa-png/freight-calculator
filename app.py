@@ -429,7 +429,7 @@ if st.button("Calculate Freight 💸"):
             freight_persen = freight_cost_mt * (1 + p / 100)
             revenue = freight_persen * qyt_cargo
             pph = revenue * 0.012
-            profit = revenue - total_cost - pph
+            gross profit = revenue - total_cost - pph
             data.append([f"{p}%", f"Rp {freight_persen:,.0f}", f"Rp {revenue:,.0f}", f"Rp {pph:,.0f}", f"Rp {profit:,.0f}"])
         df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Profit (Rp)"])
 
@@ -500,6 +500,7 @@ if st.button("Calculate Freight 💸"):
                 ["Total Consumption Freshwater (Ton)", f"{total_consumption_fw:,.0f}"],
                 ["Fuel Cost (Rp)", f"{fmt_rp(cost_fuel)}{pct_of_total(cost_fuel)}"],
                 ["Freshwater Cost (Rp)", f"{fmt_rp(cost_fw)}{pct_of_total(cost_fw)}"],
+                ["Total General Overhead (Voyage)", fmt_rp(total_general_overhead) + pct_of_total(total_general_overhead)],
             ]
 
             for k, v in owner_data.items():
