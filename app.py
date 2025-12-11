@@ -9,7 +9,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
 import requests
-
 import streamlit as st
 
 # ==========================================================
@@ -310,7 +309,7 @@ if st.button("Calculate Freight 💸"):
         docking_cost = (docking / 30) * total_voyage_days if mode == "Owner" else 0
         maintenance_cost = (maintenance / 30) * total_voyage_days if mode == "Owner" else 0
         certificate_cost = (certificate / 30) * total_voyage_days if mode == "Owner" else 0
-        total_general_overhead = ((general_opex + general_depreciation) / 30) * total_voyage_days
+        total_general_overhead = ((opex_office + depreciation_kapal) / 30) * total_voyage_days
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
