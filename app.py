@@ -366,6 +366,17 @@ if st.button("Calculate Freight 💸"):
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
+        # ===== TCE CALCULATION =====
+        tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
+
+        tce_per_day = (
+            tce_base_cost / total_voyage_days
+            if total_voyage_days > 0 else 0
+        )
+
+        tce_per_month = tce_per_day * 30
+
+
         # ===== DISPLAY RESULTS =====
         st.subheader("📋 Calculation Results")
         st.markdown(f""" 
@@ -422,6 +433,14 @@ if st.button("Calculate Freight 💸"):
             """)
         else:
             st.info("Masukkan Freight Price untuk melihat hasil perhitungan profit user.")
+
+        st.subheader("⏱️ Time Charter Equivalent (TCE)")
+            st.markdown(f"""
+            **Base Cost (Fuel + FW + Port + Premi):** Rp {tce_base_cost:,.0f}  
+            **TCE Per Day:** Rp {tce_per_day:,.0f} / Day  
+            **TCE Per Month:** Rp {tce_per_month:,.0f} / Month
+            """)
+
 
         # ===== PROFIT SCENARIO =====
         data = []
@@ -543,6 +562,27 @@ if st.button("Calculate Freight 💸"):
                     ('FONTSIZE', (0, 0), (-1, -1), 8),
                 ]))
                 elements += [t_fpc, Spacer(1, 4)]
+
+            # ===== TCE =====
+            elements.append(Paragraph("Time Charter Equivalent (TCE)", styles['SubHeader']))
+
+            tce_data = [
+                ["Base Cost (Fuel + FW + Port + Premi)", fmt_rp(tce_base_cost)],
+                ["TCE Per Day", f"{fmt_rp(tce_per_day)} / Day"],
+                ["TCE Per Month", f"{fmt_rp(tce_per_month)} / Month"],
+            ]
+
+            t_tce = Table(tce_data, colWidths=[9*cm, 9*cm])
+            t_tce.setStyle(TableStyle([
+                ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
+                ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ]))
+
+            elements += [t_tce, Spacer(1, 4)]
+
 
             # ===== PROFIT SCENARIO =====
             elements.append(Paragraph("Profit Scenario 0–75%", styles['SubHeader']))
