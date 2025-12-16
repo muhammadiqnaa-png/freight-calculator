@@ -435,11 +435,11 @@ if st.button("Calculate Freight 💸"):
             st.info("Masukkan Freight Price untuk melihat hasil perhitungan profit user.")
 
         st.subheader("⏱️ Time Charter Equivalent (TCE)")
-            st.markdown(f"""
-            **Base Cost (Fuel + FW + Port + Premi):** Rp {tce_base_cost:,.0f}  
-            **TCE Per Day:** Rp {tce_per_day:,.0f} / Day  
-            **TCE Per Month:** Rp {tce_per_month:,.0f} / Month
-            """)
+        st.markdown(f"""
+        **Base Cost (Fuel + FW + Port + Premi):** Rp {tce_base_cost:,.0f}  
+        **TCE Per Day:** Rp {tce_per_day:,.0f} / Day  
+        **TCE Per Month:** Rp {tce_per_month:,.0f} / Month
+        """)
 
 
         # ===== PROFIT SCENARIO =====
