@@ -174,7 +174,6 @@ menu = st.radio(
 if menu == "🧮 Calculator":
 
 
-tab1, tab2, tab3 = st.tabs(["⚙️ Parameter", "🚢 Input", "👤 Account"])
 
 with tab1:
     with st.expander("🚢 Speed"):
