@@ -173,8 +173,6 @@ menu = st.radio(
 
 if menu == "🧮 Calculator":
 
-# ===== MODE =====
-mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
 tab1, tab2, tab3 = st.tabs(["⚙️ Parameter", "🚢 Input", "👤 Account"])
 
