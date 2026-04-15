@@ -162,17 +162,22 @@ if st.session_state.preset_selected != "Custom":
     for k, v in chosen.items():
         st.session_state[k] = v
 
-
 st.subheader("📱 Menu")
 
-    menu = st.radio(
-        "",
-        ["🧮 Calculator", "⚙️ Parameter", "👤 Account"],
-        horizontal=True
-    )
+menu = st.radio(
+    "",
+    ["🧮 Calculator", "⚙️ Parameter", "👤 Account"],
+    horizontal=True
+)
 
-    if menu == "🧮 Calculator":
+if menu == "🧮 Calculator":
+    st.write("Calculator Page")
 
+elif menu == "⚙️ Parameter":
+    st.write("Parameter Page")
+
+elif menu == "👤 Account":
+    st.write("Account Page")
 
 
         # ===== PDF GENERATOR =====
