@@ -442,13 +442,18 @@ if calculate:
         </div>
         """, unsafe_allow_html=True) 
 
-        ⛽ Fuel & Water
-        --------------------
-        • Fuel Consumption : {total_consumption_fuel:,.0f} Ltr  
-        • FW Consumption   : {total_consumption_fw:,.0f} Ton  
-        • Fuel Cost        : Rp {cost_fuel:,.0f}  
-        • FW Cost          : Rp {cost_fw:,.0f}  
-        """)
+        st.markdown(f"""
+        <div style="
+            background:#fff3e0;
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+        ">
+        <h4>⛽ Fuel & Water</h4>
+        • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b><br>
+        • FW Cost: <b>Rp {cost_fw:,.0f}</b>
+        </div>
+        """, unsafe_allow_html=True)
 
         if mode == "Owner":
             st.subheader("🏗️ Cost Summary")
