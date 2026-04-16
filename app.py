@@ -9,7 +9,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
 import requests
-import streamlit as st
+from streamlit_cookies_manager import EncryptedCookieManager
 import json
 import os
 
