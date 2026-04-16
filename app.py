@@ -473,17 +473,20 @@ if calculate:
 
 
         # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
-        st.subheader("💰 Profit Summary")
-
         if freight_price_input > 0:
-            st.success(f"""
-        💵 Revenue   : Rp {revenue_user:,.0f}  
-        📉 PPH 1.2%  : Rp {pph_user:,.0f}  
-        📈 Profit    : Rp {profit_user:,.0f}  
-        📊 Margin    : {profit_percent_user:.2f}%  
-        """)
-        else:
-            st.info("Masukkan Freight Price untuk lihat profit calculation.")
+            st.markdown(f"""
+            <div style="
+                background:#e8f5e9;
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+            ">
+            <h4>💰 Profit</h4>
+            • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
+            • Profit: <b>Rp {profit_user:,.0f}</b><br>
+            • Margin: <b>{profit_percent_user:.2f}%</b>
+            </div>
+            """, unsafe_allow_html=True)
 
         st.subheader("⏱️ TCE Analysis")
 
