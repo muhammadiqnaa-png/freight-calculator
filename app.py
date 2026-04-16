@@ -272,7 +272,7 @@ if st.sidebar.button("Log Out"):
     st.rerun()
 
 # ===== MAIN INPUT =====
-st.title("🚢 Freight Calculator Barge")
+st.title("APP BY IQNA")
 st.markdown("""
 <div style="
     text-align:center;
