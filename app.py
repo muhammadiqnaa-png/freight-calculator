@@ -273,6 +273,19 @@ if st.sidebar.button("Log Out"):
 
 # ===== MAIN INPUT =====
 st.title("🚢 Freight Calculator Barge")
+st.markdown("""
+<div style="
+    text-align:center;
+    padding:10px;
+    border-radius:12px;
+    background:#0d47a1;
+    color:white;
+    margin-bottom:15px;
+">
+    <h3 style="margin:0;">🚢 Freight Calculator</h3>
+    <p style="margin:0; font-size:12px;">Mobile Shipping Cost & Profit Tool</p>
+</div>
+""", unsafe_allow_html=True)
 
 if st.session_state.get("is_mobile", False):
     port_pol = st.text_input("Port Of Loading")
