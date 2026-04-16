@@ -779,11 +779,15 @@ if calculate:
             margin-bottom:10px;
         ">
         <h4>🚢 Voyage Summary</h4>
+
+        • Route: <b>{port_pol} → {port_pod}</b><br>
+        • Distance POL → POD: <b>{distance_pol_pod:,.0f} NM</b><br>
+        • Total Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
         • Total Voyage: <b>{total_voyage_days:.2f} Days</b><br>
-        • Sailing Time: <b>{sailing_time:.2f} Hours</b><br>
-        • Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b>
+        • Freight Cost: <b>Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}</b>
+
         </div>
-        """, unsafe_allow_html=True) 
+        """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div style="
