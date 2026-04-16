@@ -353,11 +353,13 @@ with col2:
         if selected_cargo in cargo_qty_default[selected_barge]:
             default_qty = cargo_qty_default[selected_barge][selected_cargo]
 
-    qty_cargo = st.number_input(
+    qyt_cargo = st.number_input(
         "Cargo Quantity",
         value=float(default_qty),
         step=1.0
     )
+
+    st.caption(f"Suggested capacity for {selected_barge} - {selected_cargo}")
 
 
 st.markdown("### 💸 Freight Pricing")
