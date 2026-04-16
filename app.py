@@ -428,12 +428,19 @@ if calculate:
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         st.subheader("📋 Calculation Results")
 
-        st.info(f"""
-        🚢 Voyage Summary
-        --------------------
-        • Total Voyage : {total_voyage_days:.2f} Days  
-        • Sailing Time : {sailing_time:.2f} Hours  
-        • Cargo Qty    : {qyt_cargo:,.0f} {type_cargo.split()[1]}  
+        st.markdown(f"""
+        <div style="
+            background:#f5f7ff;
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+        ">
+        <h4>🚢 Voyage Summary</h4>
+        • Total Voyage: <b>{total_voyage_days:.2f} Days</b><br>
+        • Sailing Time: <b>{sailing_time:.2f} Hours</b><br>
+        • Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b>
+        </div>
+        """, unsafe_allow_html=True) 
 
         ⛽ Fuel & Water
         --------------------
