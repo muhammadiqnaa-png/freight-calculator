@@ -466,13 +466,13 @@ with col1:
 with col2:
     port_pod = st.selectbox("Discharge Port (POD)", ports)
 
-# NEXT PORT (ambil dari list yang sama)
-next_ports = get_next_ports(port_pod)
+next_port = st.selectbox(
+    "Next Port (Optional)",
+    ["-- None --"] + ports
+)
 
-if next_ports:
-    next_port = st.selectbox("Next Port", next_ports)
-else:
-    next_port = st.selectbox("Next Port", ports)
+if next_port == "-- None --":
+    next_port = None
 
 st.markdown("### 📏 Distance")
 
