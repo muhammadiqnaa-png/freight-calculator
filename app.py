@@ -604,10 +604,8 @@ with col1:
 with col2:
     # hanya hitung kalau NEXT PORT dipilih
     if port_pod and next_port:
-        auto_distance_return = find_distance(port_pod, next_port)
-        st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
-
-    st.text_input(label, value=str(auto_distance_return), disabled=True)
+    auto_distance_return = find_distance(port_pod, next_port)
+    st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
 
 st.markdown("### 📦 Cargo Information")
 
