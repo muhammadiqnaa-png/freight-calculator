@@ -4,3 +4,4 @@ pandas
 reportlab
 openpyxl
 numpy
+streamlit-cookies-manager
