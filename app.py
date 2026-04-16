@@ -11,6 +11,15 @@ from datetime import datetime
 import requests
 import json
 import os
+from streamlit_cookies_manager import EncryptedCookieManager
+
+cookies = EncryptedCookieManager(
+    prefix="freight_app",
+    password="abc123"
+)
+
+if not cookies.ready():
+    st.stop()
 
 DATA_FILE = "distance_data.json"
 
