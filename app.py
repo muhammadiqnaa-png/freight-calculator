@@ -9,7 +9,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
 import requests
-from streamlit_cookies_manager import EncryptedCookieManager
 import json
 import os
 
@@ -91,14 +90,6 @@ def get_next_ports(pod):
 
     return sorted(list(set(next_ports)))
 
-
-cookies = EncryptedCookieManager(
-    prefix="freight_app",
-    password="super_secret_key_123"
-)
-
-if not cookies.ready():
-    st.stop()
 
 # ==========================================================
 # ⚙️ Page Config (WAJIB paling atas!)
