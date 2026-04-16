@@ -488,13 +488,18 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        st.subheader("⏱️ TCE Analysis")
-
-        st.info(f"""
-        Base Cost : Rp {tce_base_cost:,.0f}  
-        Per Day   : Rp {tce_per_day:,.0f}  
-        Per Month : Rp {tce_per_month:,.0f}  
-        """)
+        st.markdown(f"""
+        <div style="
+            background:#e3f2fd;
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+        ">
+        <h4>⏱️ TCE</h4>
+        • Per Day: <b>Rp {tce_per_day:,.0f}</b><br>
+        • Per Month: <b>Rp {tce_per_month:,.0f}</b>
+        </div>
+        """, unsafe_allow_html=True)
 
 
         # ===== PROFIT SCENARIO =====
