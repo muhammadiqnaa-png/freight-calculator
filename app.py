@@ -17,7 +17,7 @@ import streamlit as st
 st.set_page_config(
     page_title="Freight Calculator Barge",
     page_icon="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png",
-    layout="wide"
+    layout="centered"
 )
 
 # ==========================================================
@@ -62,7 +62,11 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if not st.session_state.logged_in:
-    st.markdown("<h2 style='text-align:center;'>🔐 Login Freight Calculator</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align:center; padding:10px;">
+        <h3>🚢 Freight Calculator Login</h3>
+    </div>
+    """, unsafe_allow_html=True)
     tab_login, tab_register = st.tabs(["Login", "Register"])
 
     with tab_login:
@@ -156,21 +160,18 @@ if st.session_state.preset_selected != "Custom":
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
 # ===== SIDEBAR PARAMETERS =====
-with st.sidebar.expander("🚢 Speed"):
-    # set default values from session_state if exist, else 0.0
+with st.sidebar.expander("⚙️ Operational Input", expanded=False):
     speed_laden = st.number_input("Speed Laden (knot)", value=st.session_state.get("speed_laden", 0.0))
     speed_ballast = st.number_input("Speed Ballast (knot)", value=st.session_state.get("speed_ballast", 0.0))
 
-with st.sidebar.expander("⛽ Fuel"):
-    consumption = st.number_input("Consumption Fuel (liter/hour)", value=st.session_state.get("consumption", 0))
-    price_fuel = st.number_input("Price Fuel (Rp/Ltr)", value=st.session_state.get("price_fuel", 0))
+    consumption = st.number_input("Fuel Consumption (L/hr)", value=st.session_state.get("consumption", 0))
+    price_fuel = st.number_input("Fuel Price (Rp/L)", value=st.session_state.get("price_fuel", 0))
 
-with st.sidebar.expander("💧 Freshwater"):
-    consumption_fw = st.number_input("Consumption Freshwater (Ton/Day)", value=st.session_state.get("consumption_fw", 0))
-    price_fw = st.number_input("Price Freshwater (Rp/Ton)", value=st.session_state.get("price_fw", 0))
+    consumption_fw = st.number_input("FW Consumption (Ton/Day)", value=st.session_state.get("consumption_fw", 0))
+    price_fw = st.number_input("FW Price (Rp/Ton)", value=st.session_state.get("price_fw", 0))
 
 if mode == "Owner":
-    with st.sidebar.expander("🏗️ Owner Cost"):
+    with st.sidebar.expander("🏗️ Cost (Owner)", expanded=False):
         charter = st.number_input("Angsuran (Rp/Month)", value=st.session_state.get("charter", 0))
         crew = st.number_input("Crew (Rp/Month)", value=st.session_state.get("crew", 0))
         insurance = st.number_input("Insurance (Rp/Month)", value=st.session_state.get("insurance", 0))
@@ -180,7 +181,7 @@ if mode == "Owner":
         premi_nm = st.number_input("Premi (Rp/NM)", value=st.session_state.get("premi_nm", 0))
         other_cost = st.number_input("Other Cost (Rp)", value=st.session_state.get("other_cost", 0))
 else:
-    with st.sidebar.expander("🏗️ Charter Cost"):
+    with st.sidebar.expander("🏗️ Cost (Charter)", expanded=False):
         charter = st.number_input("Charter Hire (Rp/Month)", value=st.session_state.get("charter", 0))
         premi_nm = st.number_input("Premi (Rp/NM)", value=st.session_state.get("premi_nm", 0))
         other_cost = st.number_input("Other Cost (Rp)", value=st.session_state.get("other_cost", 0))
@@ -273,13 +274,18 @@ if st.sidebar.button("Log Out"):
 # ===== MAIN INPUT =====
 st.title("🚢 Freight Calculator Barge")
 
-col1, col2, col3 = st.columns(3)
-with col1:
+if st.session_state.get("is_mobile", False):
     port_pol = st.text_input("Port Of Loading")
-with col2:
     port_pod = st.text_input("Port Of Discharge")
-with col3:
     next_port = st.text_input("Next Port")
+else:
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        port_pol = st.text_input("Port Of Loading")
+    with col2:
+        port_pod = st.text_input("Port Of Discharge")
+    with col3:
+        next_port = st.text_input("Next Port")
 
 type_cargo = st.selectbox("Type Cargo", ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"])
 qyt_cargo = st.number_input("Cargo Quantity", 0.0)
@@ -377,68 +383,60 @@ if st.button("Calculate Freight 💸"):
         tce_per_month = tce_per_day * 30
 
 
-        # ===== DISPLAY RESULTS =====
+        # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         st.subheader("📋 Calculation Results")
-        st.markdown(f""" 
-        **Total Voyage (Days):** {total_voyage_days:.2f}  
-        **Total Sailing Time (Hour):** {sailing_time:.2f}  
-        **Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
-        **Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}  
-        **Fuel Cost (Rp):** Rp {cost_fuel:,.0f}  
-        **Freshwater Cost (Rp):** Rp {cost_fw:,.0f}
+
+        st.info(f"""
+        🚢 Voyage Summary
+        --------------------
+        • Total Voyage : {total_voyage_days:.2f} Days  
+        • Sailing Time : {sailing_time:.2f} Hours  
+        • Cargo Qty    : {qyt_cargo:,.0f} {type_cargo.split()[1]}  
+
+        ⛽ Fuel & Water
+        --------------------
+        • Fuel Consumption : {total_consumption_fuel:,.0f} Ltr  
+        • FW Consumption   : {total_consumption_fw:,.0f} Ton  
+        • Fuel Cost        : Rp {cost_fuel:,.0f}  
+        • FW Cost          : Rp {cost_fw:,.0f}  
         """)
 
         if mode == "Owner":
-            st.markdown("### 🏗️ Owner Costs Summary")
-            owner_data = {
-                "Angsuran": charter_cost,
-                "Crew": crew_cost,
-                "Insurance": insurance_cost,
-                "Docking": docking_cost,
-                "Maintenance": maintenance_cost,
-                "Certificate": certificate_cost,
-                "Premi": premi_cost,
-                "Port Costs": port_cost,
-                "Other Costs": other_cost
-            }
-        else:
-            st.markdown("### 🏗️ Charter Costs Summary")
-            owner_data = {
-                "Charter Hire": charter_cost,
-                "Premi": premi_cost,
-                "Port Costs": port_cost,
-                "Other Costs": other_cost
-            }
+            st.subheader("🏗️ Cost Summary")
 
-        for k, v in owner_data.items():
-            st.markdown(f"- {k}: Rp {v:,.0f}")
+            for k, v in owner_data.items():
+                st.write(f"• {k}: Rp {v:,.0f}")
 
-        if additional_breakdown:
-            st.markdown("### ➕ Additional Costs")
-            for k, v in additional_breakdown.items():
-                st.markdown(f"- {k}: Rp {v:,.0f}")
-        st.markdown(f"- General Overhead: Rp {total_general_overhead:,.0f}")
-        st.markdown(f"**🧮 Total Cost:** Rp {total_cost:,.0f}")
-        st.markdown(f"**🧮 Freight Cost ({type_cargo.split()[1]}):** Rp {freight_cost_mt:,.0f}")
+            if additional_breakdown:
+                st.markdown("➕ Additional Costs")
+                for k, v in additional_breakdown.items():
+                    st.write(f"• {k}: Rp {v:,.0f}")
+
+            st.write(f"• General Overhead: Rp {total_general_overhead:,.0f}")
+
+            st.success(f"💰 Total Cost: Rp {total_cost:,.0f}")
+            st.warning(f"📦 Freight Cost: Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}")
+
 
         # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
-        st.subheader("💰 Freight Price Calculation User")
-        if freight_price_input > 0:
-            st.markdown(f"""
-            **Freight Price (Rp/MT):** Rp {freight_price_input:,.0f}  
-            **Revenue:** Rp {revenue_user:,.0f}  
-            **PPH 1.2%:** Rp {pph_user:,.0f}  
-            **Profit:** Rp {profit_user:,.0f}  
-            **Profit %:** {profit_percent_user:.2f} %
-            """)
-        else:
-            st.info("Masukkan Freight Price untuk melihat hasil perhitungan profit user.")
+        st.subheader("💰 Profit Summary")
 
-        st.subheader("⏱️ Time Charter Equivalent (TCE)")
-        st.markdown(f"""
-        **Base Cost (Fuel + FW + Port + Premi):** Rp {tce_base_cost:,.0f}  
-        **TCE Per Day:** Rp {tce_per_day:,.0f} / Day  
-        **TCE Per Month:** Rp {tce_per_month:,.0f} / Month
+        if freight_price_input > 0:
+            st.success(f"""
+        💵 Revenue   : Rp {revenue_user:,.0f}  
+        📉 PPH 1.2%  : Rp {pph_user:,.0f}  
+        📈 Profit    : Rp {profit_user:,.0f}  
+        📊 Margin    : {profit_percent_user:.2f}%  
+        """)
+        else:
+            st.info("Masukkan Freight Price untuk lihat profit calculation.")
+
+        st.subheader("⏱️ TCE Analysis")
+
+        st.info(f"""
+        Base Cost : Rp {tce_base_cost:,.0f}  
+        Per Day   : Rp {tce_per_day:,.0f}  
+        Per Month : Rp {tce_per_month:,.0f}  
         """)
 
 
@@ -453,7 +451,7 @@ if st.button("Calculate Freight 💸"):
         df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Gross Profit (Rp)"])
 
         st.subheader("💹 Profit Scenario 0–75%")
-        st.dataframe(df_profit, use_container_width=True)
+        st.dataframe(df_profit, use_container_width=True, height=300)
 
         # ===== PDF GENERATOR =====
         def create_pdf(username):
