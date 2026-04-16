@@ -258,10 +258,13 @@ def get_pods_by_pol(pol):
 
     pods = set()
 
-    for d in data:
-        if isinstance(d, dict):
-            if d.get("pol", "").upper() == pol:
-                pods.add(d.get("pod", ""))
+    for route in data.keys():
+        try:
+            p, d = route.split(" - ")
+            if p.upper() == pol:
+                pods.add(d.upper())
+        except:
+            continue
 
     return sorted(list(pods))
 
