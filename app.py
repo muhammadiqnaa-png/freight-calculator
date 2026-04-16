@@ -251,6 +251,35 @@ preset = st.sidebar.segmented_control(
     on_change=update_preset
 )
 
+
+def get_pods_by_pol(pol):
+    data = load_distances()
+    pol = (pol or "").upper()
+
+    pods = set()
+
+    for d in data:
+        if isinstance(d, dict):
+            if d.get("pol", "").upper() == pol:
+                pods.add(d.get("pod", ""))
+
+    return sorted(list(pods))
+
+
+def get_next_by_pod(pod):
+    data = load_distances()
+    pod = (pod or "").upper()
+
+    next_ports = set()
+
+    for d in data:
+        if isinstance(d, dict):
+            if d.get("pol", "").upper() == pod:
+                next_ports.add(d.get("pod", ""))
+
+    return sorted(list(next_ports))
+
+
 # ==== APPLY PRESET ====
 if st.session_state.preset_selected != "Custom":
     chosen = preset_params[st.session_state.preset_selected]
@@ -459,47 +488,52 @@ st.title("🚢 Freight Calculator Barge")
 
 st.markdown("### 🚢 Voyage Input")
 
-ports = get_all_ports()
+# ===== POL =====
+all_ports = sorted(set(
+    [d["pol"] for d in load_distances() if isinstance(d, dict)]
+))
 
-col1, col2 = st.columns(2)
+port_pol = st.selectbox("Loading Port (POL)", [""] + all_ports)
 
-with col1:
-    port_pol = st.selectbox("Loading Port (POL)", ports)
+# ===== POD (muncul setelah POL dipilih) =====
+if port_pol:
+    pods = get_pods_by_pol(port_pol)
+    port_pod = st.selectbox("Discharge Port (POD)", [""] + pods)
+else:
+    port_pod = ""
 
-with col2:
-    port_pod = st.selectbox("Discharge Port (POD)", ports)
-
-next_port = st.selectbox(
-    "Next Port (Optional)",
-    ["-- None --"] + ports
-)
-
-if next_port == "-- None --":
-    next_port = None
+# ===== NEXT PORT (muncul setelah POD dipilih) =====
+if port_pod:
+    next_ports = get_next_by_pod(port_pod)
+    next_port = st.selectbox("Next Port (Optional)", [""] + next_ports)
+else:
+    next_port = ""
 
 st.markdown("### 📏 Distance")
 
 col1, col2 = st.columns(2)
-with col1:
-    auto_distance = find_distance(port_pol, port_pod)
 
-    distance_pol_pod = st.number_input(
-        "POL → POD (NM)",
-        value=float(auto_distance),
-        key=f"distance_pol_pod_{port_pol}_{port_pod}"
-    )
+with col1:
+    if port_pol and port_pod:
+        auto_distance = find_distance(port_pol, port_pod)
+    else:
+        auto_distance = 0
+
+    st.text_input("POL → POD (NM)", value=str(auto_distance), disabled=True)
 
 with col2:
-    if next_port:
-        auto_distance_return = find_distance(port_pod, next_port)
+    if port_pod:
+        if next_port == "":
+            auto_distance_return = find_distance(port_pod, port_pol)
+            label = "POD → POL"
+        else:
+            auto_distance_return = find_distance(port_pod, next_port)
+            label = "POD → NEXT"
     else:
         auto_distance_return = 0
+        label = "POD → NEXT"
 
-    distance_pod_pol = st.number_input(
-        "POD → NEXT (NM)",
-        value=float(auto_distance_return),
-        key=f"distance_pod_pol_{port_pod}_{next_port}"
-    )
+    st.text_input(label, value=str(auto_distance_return), disabled=True)
 
 st.markdown("### 📦 Cargo Information")
 
