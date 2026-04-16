@@ -10,6 +10,23 @@ from reportlab.lib.units import cm
 from datetime import datetime
 import requests
 import streamlit as st
+import json
+import os
+
+DATA_FILE = "distance_data.json"
+
+def load_distances():
+    if not os.path.exists(DATA_FILE):
+        return []
+    try:
+        with open(DATA_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return []
+
+def save_distances(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=2)
 
 # ==========================================================
 # ⚙️ Page Config (WAJIB paling atas!)
@@ -180,6 +197,63 @@ if st.session_state.preset_selected != "Custom":
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
+
+
+with st.sidebar.expander("➕ Add Distance"):
+
+    pol_new = st.text_input("POL", key="new_pol")
+    pod_new = st.text_input("POD", key="new_pod")
+    distance_new = st.number_input("Distance (NM)", min_value=0.0, key="new_distance")
+
+    if st.button("💾 Save Distance"):
+
+        if pol_new and pod_new and distance_new > 0:
+
+            data = load_distances()
+
+            # 🚫 prevent duplicate
+            exists = any(
+                d["pol"] == pol_new.upper() and d["pod"] == pod_new.upper()
+                for d in data
+            )
+
+            if exists:
+                st.warning("⚠️ Route sudah ada!")
+            else:
+                data.append({
+                    "pol": pol_new.upper(),
+                    "pod": pod_new.upper(),
+                    "distance": distance_new
+                })
+
+                save_distances(data)
+                st.success("✅ Distance berhasil disimpan!")
+        else:
+            st.error("❌ Semua field wajib diisi!")
+
+
+with st.sidebar.expander("📋 Saved Distance"):
+
+    data = load_distances()
+
+    if not data:
+        st.info("Belum ada data distance")
+    else:
+        for i, d in enumerate(data):
+
+            col1, col2 = st.columns([4,1])
+
+            with col1:
+                st.write(f"🚢 {d['pol']} → {d['pod']}")
+                st.caption(f"{d['distance']} NM")
+
+            with col2:
+                if st.button("❌", key=f"del_{i}"):
+                    data.pop(i)
+                    save_distances(data)
+                    st.success("Deleted!")
+                    st.rerun()
+            
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
