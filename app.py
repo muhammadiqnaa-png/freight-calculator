@@ -779,7 +779,8 @@ if calculate:
             margin-bottom:10px;
         ">
         <h4>🚢 Voyage Summary</h4>
-
+        
+        • Cargo Type: <b>{type_cargo}</b><br>
         • Route: <b>{port_pol} → {port_pod}</b><br>
         • Distance POL → POD: <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
