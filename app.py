@@ -206,7 +206,7 @@ if not st.session_state.logged_in:
 preset_params = {
     "270 ft": {
         "speed_laden": 3, "speed_ballast": 4,
-        "consumption": 85, "price_fuel": 13500,
+        "consumption": 85, "price_fuel": 25000,
         "consumption_fw": 2, "price_fw": 120000,
         "charter": 0, "crew": 60000000, "insurance": 40000000,
         "docking": 40000000, "maintenance": 40000000,
@@ -216,7 +216,7 @@ preset_params = {
     },
     "300 ft": {
         "speed_laden": 3, "speed_ballast": 4,
-        "consumption": 115, "price_fuel": 13500,
+        "consumption": 115, "price_fuel": 25000,
         "consumption_fw": 2, "price_fw": 120000,
         "charter": 0, "crew": 60000000, "insurance": 50000000,
         "docking": 50000000, "maintenance": 50000000,
@@ -226,7 +226,7 @@ preset_params = {
     },
     "330 ft": {
         "speed_laden": 3, "speed_ballast": 4,
-        "consumption": 130, "price_fuel": 13500,
+        "consumption": 130, "price_fuel": 25000,
         "consumption_fw": 2, "price_fw": 120000,
         "charter": 0, "crew": 60000000, "insurance": 60000000,
         "docking": 60000000, "maintenance": 60000000,
@@ -239,22 +239,25 @@ preset_params = {
 
 cargo_qty_default = {
     "270 ft": {
-        "Coal (MT)": 7500,
-        "Nickel (MT)": 8000,
-        "Bauxite (MT)": 7000,
-        "Sand (M3)": 6500
+        "Coal (MT)": 5500,
+        "Nickel (MT)": 5500,
+        "Bauxite (MT)": 5500,
+        "Sand (M3)": 3500,
+        "Split (M3)": 3500
     },
     "300 ft": {
-        "Coal (MT)": 9000,
-        "Nickel (MT)": 9500,
-        "Bauxite (MT)": 8500,
-        "Sand (M3)": 8000
+        "Coal (MT)": 7500,
+        "Nickel (MT)": 7500,
+        "Bauxite (MT)": 7500,
+        "Sand (M3)": 4700,
+        "Split (M3)": 5000
     },
     "330 ft": {
-        "Coal (MT)": 11000,
+        "Coal (MT)": 11500,
         "Nickel (MT)": 11500,
-        "Bauxite (MT)": 10500,
-        "Sand (M3)": 10000
+        "Bauxite (MT)": 11500,
+        "Sand (M3)": 6000,
+        "Split (M3)": 6500
     }
 }
 
