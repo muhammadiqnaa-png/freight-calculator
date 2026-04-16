@@ -10,6 +10,15 @@ from reportlab.lib.units import cm
 from datetime import datetime
 import requests
 import streamlit as st
+import json
+
+@st.cache_data
+def load_distance_data():
+    with open("distance_data.json", "r") as f:
+        return json.load(f)
+
+if "distance_data" not in st.session_state:
+    st.session_state.distance_data = load_distance_data()
 
 # ==========================================================
 # ⚙️ Page Config (WAJIB paling atas!)
@@ -180,6 +189,35 @@ if st.session_state.preset_selected != "Custom":
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
+
+with st.sidebar.expander("📍 Distance Manager", expanded=False):
+
+    st.markdown("### ➕ Add Distance")
+
+    new_pol = st.text_input("POL", key="new_pol")
+    new_pod = st.text_input("POD", key="new_pod")
+    new_distance = st.number_input("Distance (NM)", min_value=0, key="new_distance")
+
+    if st.button("Add Distance ➕"):
+        if new_pol and new_pod and new_distance:
+            new_item = {
+                "pol": new_pol,
+                "pod": new_pod,
+                "distance": new_distance
+            }
+
+            st.session_state.distance_data.append(new_item)
+
+            st.success("Distance added!")
+
+    st.markdown("---")
+    st.markdown("### 📋 Distance List")
+
+    if len(st.session_state.distance_data) == 0:
+        st.info("No data")
+    else:
+        for i, d in enumerate(st.session_state.distance_data):
+            st.write(f"{i+1}. {d['pol']} → {d['pod']} = {d['distance']} NM")
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
