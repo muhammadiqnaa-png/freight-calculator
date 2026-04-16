@@ -473,7 +473,7 @@ with col1:
     distance_pol_pod = st.number_input(
         "POL → POD (NM)",
         value=float(auto_distance),
-        key="distance_pol_pod"
+        key=f"distance_pol_pod_{port_pol}_{port_pod}"
     )
 
 with col2:
@@ -482,7 +482,7 @@ with col2:
     distance_pod_pol = st.number_input(
         "POD → NEXT (NM)",
         value=float(auto_distance_return),
-        key="distance_pod_pol"
+        key=f"distance_pod_pol_{port_pod}_{next_port}"
     )
 
 st.markdown("### 📦 Cargo Information")
