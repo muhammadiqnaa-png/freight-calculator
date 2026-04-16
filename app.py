@@ -359,7 +359,6 @@ def apply_preset():
 preset = st.sidebar.segmented_control(
     "Size Barge",
     ["270 ft", "300 ft", "330 ft", "Custom"],
-    default=st.session_state.preset_selected,
     key="preset_control",
     on_change=apply_preset
 )
