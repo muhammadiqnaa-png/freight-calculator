@@ -584,8 +584,8 @@ else:
 
 # ===== NEXT PORT (muncul setelah POD dipilih) =====
 if port_pod:
-    next_ports = get_next_by_pod(port_pod)
-    next_port = st.selectbox("Next Port (Optional)", [""] + next_ports)
+    next_ports = ["None"] + get_next_by_pod(port_pod)
+    next_port = st.selectbox("Next Port (Optional)", next_ports)
 else:
     next_port = ""
 
