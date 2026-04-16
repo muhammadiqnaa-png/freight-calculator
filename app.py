@@ -489,9 +489,7 @@ st.title("🚢 Freight Calculator Barge")
 st.markdown("### 🚢 Voyage Input")
 
 # ===== POL =====
-all_ports = sorted(set(
-    [d["pol"] for d in load_distances() if isinstance(d, dict)]
-))
+all_ports = get_all_ports()
 
 port_pol = st.selectbox("Loading Port (POL)", [""] + all_ports)
 
