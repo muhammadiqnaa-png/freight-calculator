@@ -289,31 +289,40 @@ with st.sidebar.expander("➕ Add Distance"):
 
 with st.sidebar.expander("📋 Saved Distance"):
 
-    data = load_distances()
+    raw_data = load_distances()
 
-    if not data:
+    clean = []
+
+    # 🔥 HANDLE 2 FORMAT (lama + baru)
+    if isinstance(raw_data, dict):
+        # format lama: "POL - POD": distance
+        for route, dist in raw_data.items():
+            try:
+                pol, pod = route.split(" - ")
+                clean.append({
+                    "POL": pol,
+                    "POD": pod,
+                    "Distance (NM)": dist
+                })
+            except:
+                continue
+
+    elif isinstance(raw_data, list):
+        # format baru: list of dict
+        for d in raw_data:
+            if isinstance(d, dict):
+                clean.append({
+                    "POL": d.get("pol", "-"),
+                    "POD": d.get("pod", "-"),
+                    "Distance (NM)": d.get("distance", 0)
+                })
+
+    # ===== TAMPILKAN =====
+    if not clean:
         st.info("Belum ada data distance")
     else:
-        # pastikan format aman
-        clean = []
-        for d in data:
-            if isinstance(d, dict) and "pol" in d and "pod" in d:
-                clean.append(d)
-
         df = pd.DataFrame(clean)
-
-        # rename biar rapih
-        df = df.rename(columns={
-            "pol": "POL",
-            "pod": "POD",
-            "distance": "Distance (NM)"
-        })
-
-        st.dataframe(
-            df,
-            use_container_width=True,
-            hide_index=True
-        )
+        st.dataframe(df, use_container_width=True, hide_index=True)
             
 
 # ===== SIDEBAR PARAMETERS =====
