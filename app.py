@@ -234,18 +234,31 @@ with st.sidebar.expander("➕ Add Distance"):
 
 with st.sidebar.expander("📋 Saved Distance"):
 
-    data = load_distances()
+    def clean_data(data):
+        clean = []
+        for d in data:
+            if isinstance(d, dict) and "pol" in d and "pod" in d:
+                clean.append(d)
+        return clean
+
+    data = clean_data(load_distances())
 
     if not data:
         st.info("Belum ada data distance")
     else:
         for i, d in enumerate(data):
 
+            # 🛡️ VALIDASI DATA (INI KUNCI FIX ERROR)
+            if not isinstance(d, dict):
+                continue
+            if "pol" not in d or "pod" not in d:
+                continue
+
             col1, col2 = st.columns([4,1])
 
             with col1:
-                st.write(f"🚢 {d['pol']} → {d['pod']}")
-                st.caption(f"{d['distance']} NM")
+                st.write(f"🚢 {d.get('pol','-')} → {d.get('pod','-')}")
+                st.caption(f"{d.get('distance',0)} NM")
 
             with col2:
                 if st.button("❌", key=f"del_{i}"):
