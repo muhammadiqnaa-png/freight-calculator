@@ -264,22 +264,14 @@ with st.sidebar.expander("➕ Add Distance"):
 
             data = load_distances()
 
-            # 🚫 prevent duplicate
-            exists = any(
-                d["pol"] == pol_new.upper() and d["pod"] == pod_new.upper()
-                for d in data
-            )
+            key = f"{pol_new.upper()} - {pod_new.upper()}"
 
-            if exists:
+            if key in data:
                 st.warning("⚠️ Route sudah ada!")
             else:
-                data.append({
-                    "pol": pol_new.upper(),
-                    "pod": pod_new.upper(),
-                    "distance": distance_new
-                })
-
+                data[key] = distance_new
                 save_distances(data)
+
                 st.success("✅ Distance berhasil disimpan!")
         else:
             st.error("❌ Semua field wajib diisi!")
@@ -294,28 +286,27 @@ with st.sidebar.expander("📋 Saved Distance"):
                 clean.append(d)
         return clean
 
-    data = clean_data(load_distances())
+    data = load_distances()
 
     if not data:
         st.info("Belum ada data distance")
     else:
-        for i, d in enumerate(data):
+        for i, (route, distance) in enumerate(data.items()):
 
-            # 🛡️ VALIDASI DATA (INI KUNCI FIX ERROR)
-            if not isinstance(d, dict):
-                continue
-            if "pol" not in d or "pod" not in d:
+            try:
+                pol, pod = route.split(" - ")
+            except:
                 continue
 
             col1, col2 = st.columns([4,1])
 
             with col1:
-                st.write(f"🚢 {d.get('pol','-')} → {d.get('pod','-')}")
-                st.caption(f"{d.get('distance',0)} NM")
+                st.write(f"🚢 {pol} → {pod}")
+                st.caption(f"{distance} NM")
 
             with col2:
                 if st.button("❌", key=f"del_{i}"):
-                    data.pop(i)
+                    del data[route]
                     save_distances(data)
                     st.success("Deleted!")
                     st.rerun()
@@ -466,7 +457,12 @@ with col2:
     port_pod = st.selectbox("Discharge Port (POD)", ports)
 
 # NEXT PORT (ambil dari list yang sama)
-next_port = st.selectbox("Next Port", ports)
+next_ports = get_next_ports(port_pod)
+
+if next_ports:
+    next_port = st.selectbox("Next Port", next_ports)
+else:
+    next_port = st.selectbox("Next Port", ports)
 
 st.markdown("### 📏 Distance")
 
