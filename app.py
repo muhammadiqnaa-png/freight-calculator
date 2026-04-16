@@ -350,11 +350,18 @@ def get_next_by_pod(pod):
     return sorted(list(next_ports))
 
 
-# ==== APPLY PRESET ====
-if st.session_state.preset_selected != "Custom":
+# ==== APPLY PRESET (ONLY ONCE) ====
+if "preset_applied" not in st.session_state:
+    st.session_state.preset_applied = False
+
+if st.session_state.preset_selected != "Custom" and not st.session_state.preset_applied:
     chosen = preset_params[st.session_state.preset_selected]
+
     for k, v in chosen.items():
-        st.session_state[k] = v
+        if k not in st.session_state:
+            st.session_state[k] = v
+
+    st.session_state.preset_applied = True
 
 
 # ===== MODE =====
