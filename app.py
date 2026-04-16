@@ -271,14 +271,6 @@ if "preset_selected" not in st.session_state:
 def update_preset():
     st.session_state.preset_selected = st.session_state.preset_control
 
-preset = st.sidebar.segmented_control(
-    "Size Barge",
-    ["270 ft", "300 ft", "330 ft", "Custom"],
-    default=st.session_state.preset_selected,
-    key="preset_control",
-    on_change=apply_preset
-)
-
 
 def get_pods_by_pol(pol):
     data = load_distances()
@@ -361,6 +353,15 @@ def apply_preset():
 
         for k, v in chosen.items():
             st.session_state[k] = v
+
+preset = st.sidebar.segmented_control(
+    "Size Barge",
+    ["270 ft", "300 ft", "330 ft", "Custom"],
+    default=st.session_state.preset_selected,
+    key="preset_control",
+    on_change=apply_preset
+)
+
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
