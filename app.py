@@ -319,6 +319,27 @@ if st.button("Calculate Freight 💸"):
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
+        # ===== COST DICTIONARY =====
+        if mode == "Owner":
+            owner_data = {
+                "Angsuran": charter_cost,
+                "Crew": crew_cost,
+                "Insurance": insurance_cost,
+                "Docking": docking_cost,
+                "Maintenance": maintenance_cost,
+                "Certificate": certificate_cost,
+                "Premi": premi_cost,
+                "Port Costs": port_cost,
+                "Other Cost": other_cost
+            }
+        else:
+            owner_data = {
+                "Charter Hire": charter_cost,
+                "Premi": premi_cost,
+                "Port Costs": port_cost,
+                "Other Cost": other_cost
+            }
+
         # ===== ADDITIONAL COST CALCULATION =====
         additional_total = 0
         additional_breakdown = {}
