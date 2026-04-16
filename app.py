@@ -18,14 +18,24 @@ DATA_FILE = "distance_data.json"
 def find_distance(pol, pod):
     data = load_distances()
 
-    pol = (pol or "").upper()
-    pod = (pod or "").upper()
+    pol = (pol or "").strip().upper()
+    pod = (pod or "").strip().upper()
 
     for route, distance in data.items():
         try:
             p, d = route.split(" - ")
-            if p.upper() == pol and d.upper() == pod:
+
+            p = p.strip().upper()
+            d = d.strip().upper()
+
+            # ✅ normal match
+            if p == pol and d == pod:
                 return distance
+
+            # 🔥 reverse match (INI KUNCI FIX LU)
+            if p == pod and d == pol:
+                return distance
+
         except:
             continue
 
