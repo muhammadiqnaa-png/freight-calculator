@@ -307,7 +307,15 @@ distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0)
 freight_price_input = st.number_input("Freight Price (Rp/MT)", 0)
 
 # ===== PERHITUNGAN =====
-if st.button("Calculate Freight 💸"):
+st.markdown("")
+
+calculate = st.button(
+    "🚀 CALCULATE NOW",
+    use_container_width=True
+)
+
+if calculate:
+    
     try:
         # Waktu sailing (hour) based on speed inputs (hours)
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
