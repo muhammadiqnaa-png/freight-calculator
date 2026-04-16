@@ -91,6 +91,15 @@ def get_next_ports(pod):
 
     return sorted(list(set(next_ports)))
 
+
+cookies = EncryptedCookieManager(
+    prefix="freight_app",
+    password="super_secret_key_123"
+)
+
+if not cookies.ready():
+    st.stop()
+
 # ==========================================================
 # ⚙️ Page Config (WAJIB paling atas!)
 # ==========================================================
