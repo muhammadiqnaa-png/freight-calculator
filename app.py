@@ -618,8 +618,15 @@ calculate = st.button(
 )
 
 if calculate:
-    
     try:
+        # ✅ WAJIB ADA INI
+        distance_pol_pod = find_distance(port_pol, port_pod)
+
+        if next_port == "":
+            distance_pod_pol = find_distance(port_pod, port_pol)
+        else:
+            distance_pod_pol = find_distance(port_pod, next_port)
+            
         # Waktu sailing (hour) based on speed inputs (hours)
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
         # total voyage in days (sailing hours converted to days + port stays)
