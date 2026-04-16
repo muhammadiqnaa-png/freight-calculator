@@ -661,6 +661,9 @@ if calculate:
             distance_pod_pol = find_distance(port_pod, next_port)
         else:
             distance_pod_pol = 0
+
+        pol_pod_day = distance_pol_pod / speed_laden if speed_laden else 0
+        pod_pol_day = distance_pod_pol / speed_ballast if speed_ballast else 0
             
         # Waktu sailing (hour) based on speed inputs (hours)
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
