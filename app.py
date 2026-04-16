@@ -287,24 +287,47 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-if st.session_state.get("is_mobile", False):
-    port_pol = st.text_input("Port Of Loading")
-    port_pod = st.text_input("Port Of Discharge")
-    next_port = st.text_input("Next Port")
-else:
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        port_pol = st.text_input("Port Of Loading")
-    with col2:
-        port_pod = st.text_input("Port Of Discharge")
-    with col3:
-        next_port = st.text_input("Next Port")
 
-type_cargo = st.selectbox("Type Cargo", ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"])
-qyt_cargo = st.number_input("Cargo Quantity", 0.0)
-distance_pol_pod = st.number_input("Distance POL - POD (NM)", 0.0)
-distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0)
-freight_price_input = st.number_input("Freight Price (Rp/MT)", 0)
+# ===== MAIN INPUT =====
+st.title("🚢 Freight Calculator Barge")
+
+st.markdown("### 🚢 Voyage Input")
+
+col1, col2 = st.columns(2)
+with col1:
+    port_pol = st.text_input("Loading Port")
+    next_port = st.text_input("Next Port")
+
+with col2:
+    port_pod = st.text_input("Discharge Port")
+
+
+st.markdown("### 📦 Cargo Information")
+
+col1, col2 = st.columns(2)
+with col1:
+    type_cargo = st.selectbox(
+        "Cargo Type",
+        ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"]
+    )
+
+with col2:
+    qyt_cargo = st.number_input("Cargo Quantity", 0.0)
+
+
+st.markdown("### 📏 Distance")
+
+col1, col2 = st.columns(2)
+with col1:
+    distance_pol_pod = st.number_input("POL → POD (NM)", 0.0)
+
+with col2:
+    distance_pod_pol = st.number_input("POD → POL (NM)", 0.0)
+
+
+st.markdown("### 💸 Freight Pricing")
+
+freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
 # ===== PERHITUNGAN =====
 st.markdown("")
