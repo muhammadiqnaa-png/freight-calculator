@@ -15,6 +15,13 @@ import os
 
 DATA_FILE = "distance_data.json"
 
+def find_distance(pol, pod):
+    data = load_distances()
+    for d in data:
+        if d.get("pol") == pol.upper() and d.get("pod") == pod.upper():
+            return d.get("distance", 0)
+    return 0
+
 def load_distances():
     if not os.path.exists(DATA_FILE):
         return []
@@ -414,10 +421,22 @@ st.markdown("### 📏 Distance")
 
 col1, col2 = st.columns(2)
 with col1:
-    distance_pol_pod = st.number_input("POL → POD (NM)", 0.0)
+    auto_distance = find_distance(port_pol, port_pod)
+
+    distance_pol_pod = st.number_input(
+        "POL → POD (NM)",
+        value=float(auto_distance),
+        key="distance_pol_pod"
+    )
 
 with col2:
-    distance_pod_pol = st.number_input("POD → POL (NM)", 0.0)
+    auto_distance_return = find_distance(port_pod, next_port)
+
+    distance_pod_pol = st.number_input(
+        "POD → NEXT (NM)",
+        value=float(auto_distance_return),
+        key="distance_pod_pol"
+    )
 
 st.markdown("### 📦 Cargo Information")
 
