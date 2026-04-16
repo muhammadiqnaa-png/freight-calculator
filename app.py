@@ -641,7 +641,7 @@ st.markdown("### 💸 Freight Pricing")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
-# ===== PERHITUNGAN =====
+
 st.markdown("")
 
 calculate = st.button(
@@ -649,15 +649,18 @@ calculate = st.button(
     use_container_width=True
 )
 
+# ===== PERHITUNGAN =====
+
+
 if calculate:
     try:
-        # ✅ WAJIB ADA INI
         distance_pol_pod = find_distance(port_pol, port_pod)
 
-        if next_port == "":
-            distance_pod_pol = find_distance(port_pod, port_pol)
-        else:
+        # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
+        if next_port and next_port.strip():
             distance_pod_pol = find_distance(port_pod, next_port)
+        else:
+            distance_pod_pol = 0
             
         # Waktu sailing (hour) based on speed inputs (hours)
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
