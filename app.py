@@ -272,7 +272,7 @@ if st.sidebar.button("Log Out"):
     st.rerun()
 
 # ===== MAIN INPUT =====
-st.title("APP BY IQNA")
+st.title("")
 st.markdown("""
 <div style="
     text-align:center;
