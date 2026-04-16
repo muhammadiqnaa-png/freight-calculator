@@ -785,6 +785,13 @@ if calculate:
         • Distance POL → POD: <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
         • Total Voyage: <b>{total_voyage_days:.2f} Days</b><br>
+        • Total Voyage: 
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <b>{total_voyage_days:.2f} Days</b>
+            <span style="font-size:12px; color:#555;">
+                (sailing time {pol_pod_day:.2f} Days POL→POD + {pod_pol_day:.2f} Days POD→POL)
+            </span>
+        </div><br>
         • Freight Cost: <b>Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}</b>
 
         </div>
