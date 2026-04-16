@@ -217,7 +217,10 @@ with st.sidebar.expander("📍 Distance Manager", expanded=False):
         st.info("No data")
     else:
         for i, d in enumerate(st.session_state.distance_data):
-            st.write(f"{i+1}. {d['pol']} → {d['pod']} = {d['distance']} NM")
+            if isinstance(d, dict):
+            st.write(f"{i+1}. {d.get('pol','-')} → {d.get('pod','-')} = {d.get('distance','-')} NM")
+        else:
+            st.write(f"{i+1}. INVALID DATA FORMAT: {d}")
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
