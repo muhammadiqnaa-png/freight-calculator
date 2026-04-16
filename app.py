@@ -513,7 +513,7 @@ if calculate:
         df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Gross Profit (Rp)"])
 
         st.subheader("💹 Profit Scenario 0–75%")
-        st.dataframe(df_profit, use_container_width=True, height=300)
+        st.dataframe(df_profit, use_container_width=True, height=250)
 
         # ===== PDF GENERATOR =====
         def create_pdf(username):
