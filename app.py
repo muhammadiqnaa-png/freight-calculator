@@ -769,10 +769,7 @@ if calculate:
 
         tce_per_month = tce_per_day * 30
 
-
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
-        st.subheader("📋 Calculation Results")
-
         st.markdown(f"""
         <div style="
             background:#f5f7ff;
