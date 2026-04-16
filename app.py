@@ -356,8 +356,6 @@ def apply_preset():
         for k, v in chosen.items():
             st.session_state[k] = v
 
-    st.rerun()
-
 preset = st.sidebar.segmented_control(
     "Size Barge",
     ["270 ft", "300 ft", "330 ft", "Custom"],
