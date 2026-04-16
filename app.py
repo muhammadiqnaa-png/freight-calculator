@@ -146,6 +146,14 @@ def register_user(email, password):
     res = requests.post(REGISTER_URL, json={"email": email, "password": password, "returnSecureToken": True})
     return res.ok, res.json()
 
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+# 🔥 AUTO LOGIN DARI COOKIE
+if cookies.get("logged_in") == "true":
+    st.session_state.logged_in = True
+    st.session_state.email = cookies.get("email")
+
 # ===== LOGIN =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
