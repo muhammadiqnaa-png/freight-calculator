@@ -431,13 +431,18 @@ st.title("🚢 Freight Calculator Barge")
 
 st.markdown("### 🚢 Voyage Input")
 
+ports = get_all_ports()
+
 col1, col2 = st.columns(2)
+
 with col1:
-    port_pol = st.text_input("Loading Port")
-    next_port = st.text_input("Next Port")
+    port_pol = st.selectbox("Loading Port (POL)", ports)
 
 with col2:
-    port_pod = st.text_input("Discharge Port")
+    port_pod = st.selectbox("Discharge Port (POD)", ports)
+
+# NEXT PORT (ambil dari list yang sama)
+next_port = st.selectbox("Next Port", ports)
 
 st.markdown("### 📏 Distance")
 
