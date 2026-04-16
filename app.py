@@ -301,6 +301,14 @@ with col1:
 with col2:
     port_pod = st.text_input("Discharge Port")
 
+st.markdown("### 📏 Distance")
+
+col1, col2 = st.columns(2)
+with col1:
+    distance_pol_pod = st.number_input("POL → POD (NM)", 0.0)
+
+with col2:
+    distance_pod_pol = st.number_input("POD → POL (NM)", 0.0)
 
 st.markdown("### 📦 Cargo Information")
 
@@ -313,16 +321,6 @@ with col1:
 
 with col2:
     qyt_cargo = st.number_input("Cargo Quantity", 0.0)
-
-
-st.markdown("### 📏 Distance")
-
-col1, col2 = st.columns(2)
-with col1:
-    distance_pol_pod = st.number_input("POL → POD (NM)", 0.0)
-
-with col2:
-    distance_pod_pol = st.number_input("POD → POL (NM)", 0.0)
 
 
 st.markdown("### 💸 Freight Pricing")
