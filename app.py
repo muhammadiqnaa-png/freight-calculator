@@ -487,7 +487,10 @@ with col1:
     )
 
 with col2:
-    auto_distance_return = find_distance(port_pod, next_port)
+    if next_port:
+        auto_distance_return = find_distance(port_pod, next_port)
+    else:
+        auto_distance_return = 0
 
     distance_pod_pol = st.number_input(
         "POD → NEXT (NM)",
