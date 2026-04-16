@@ -770,6 +770,7 @@ if calculate:
         tce_per_month = tce_per_day * 30
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
+        
         st.markdown(f"""
         <div style="
             background:#f5f7ff;
@@ -792,7 +793,10 @@ if calculate:
             margin-bottom:10px;
         ">
         <h4>⛽ Fuel & Water</h4>
+        • Fuel Consumption: <b>{total_consumption_fuel:,.0f} Ltr</b><br>
         • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b><br>
+        <br>
+        • Freshwater Consumption: <b>{total_consumption_fw:,.0f} Ton</b><br>
         • FW Cost: <b>Rp {cost_fw:,.0f}</b>
         </div>
         """, unsafe_allow_html=True)
