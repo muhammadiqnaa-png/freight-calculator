@@ -289,37 +289,31 @@ with st.sidebar.expander("➕ Add Distance"):
 
 with st.sidebar.expander("📋 Saved Distance"):
 
-    def clean_data(data):
-        clean = []
-        for d in data:
-            if isinstance(d, dict) and "pol" in d and "pod" in d:
-                clean.append(d)
-        return clean
-
     data = load_distances()
 
     if not data:
         st.info("Belum ada data distance")
     else:
-        for i, (route, distance) in enumerate(data.items()):
+        # pastikan format aman
+        clean = []
+        for d in data:
+            if isinstance(d, dict) and "pol" in d and "pod" in d:
+                clean.append(d)
 
-            try:
-                pol, pod = route.split(" - ")
-            except:
-                continue
+        df = pd.DataFrame(clean)
 
-            col1, col2 = st.columns([4,1])
+        # rename biar rapih
+        df = df.rename(columns={
+            "pol": "POL",
+            "pod": "POD",
+            "distance": "Distance (NM)"
+        })
 
-            with col1:
-                st.write(f"🚢 {pol} → {pod}")
-                st.caption(f"{distance} NM")
-
-            with col2:
-                if st.button("❌", key=f"del_{i}"):
-                    del data[route]
-                    save_distances(data)
-                    st.success("Deleted!")
-                    st.rerun()
+        st.dataframe(
+            df,
+            use_container_width=True,
+            hide_index=True
+        )
             
 
 # ===== SIDEBAR PARAMETERS =====
