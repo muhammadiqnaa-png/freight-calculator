@@ -276,7 +276,7 @@ preset = st.sidebar.segmented_control(
     ["270 ft", "300 ft", "330 ft", "Custom"],
     default=st.session_state.preset_selected,
     key="preset_control",
-    on_change=update_preset
+    on_change=apply_preset
 )
 
 
@@ -354,15 +354,13 @@ def get_next_by_pod(pod):
 if "preset_applied" not in st.session_state:
     st.session_state.preset_applied = False
 
-if st.session_state.preset_selected != "Custom" and not st.session_state.preset_applied:
-    chosen = preset_params[st.session_state.preset_selected]
 
-    for k, v in chosen.items():
-        if k not in st.session_state:
+def apply_preset():
+    if st.session_state.preset_selected != "Custom":
+        chosen = preset_params[st.session_state.preset_selected]
+
+        for k, v in chosen.items():
             st.session_state[k] = v
-
-    st.session_state.preset_applied = True
-
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
