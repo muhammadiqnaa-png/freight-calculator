@@ -169,6 +169,11 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
+
+                cookies["logged_in"] = "true"
+                cookies["email"] = email
+                cookies.save()
+
                 st.success("Login successful!")
                 st.rerun()
             else:
@@ -184,6 +189,14 @@ if not st.session_state.logged_in:
             else:
                 st.error("Failed to register. Email may already exist.")
     st.stop()
+    
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+
+    # AUTO LOGIN DARI COOKIE
+    if cookies.get("logged_in") == "true":
+        st.session_state.logged_in = True
+        st.session_state.email = cookies.get("email")
 
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
@@ -517,6 +530,11 @@ st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
 if st.sidebar.button("Log Out"):
     st.session_state.logged_in = False
+
+    cookies["logged_in"] = "false"
+    cookies["email"] = ""
+    cookies.save()
+
     st.success("Successfully logged out.")
     st.rerun()
 
