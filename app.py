@@ -805,11 +805,10 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
 
-        if mode == "Owner":
-            st.subheader("🏗️ Cost Summary")
+        st.subheader("🏗️ Cost Summary")
 
-            for k, v in owner_data.items():
-                st.write(f"• {k}: Rp {v:,.0f}")
+        for k, v in owner_data.items():
+            st.write(f"• {k}: Rp {v:,.0f}")
 
             if additional_breakdown:
                 st.markdown("➕ Additional Costs")
