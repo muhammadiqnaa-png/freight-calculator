@@ -269,6 +269,32 @@ def get_pods_by_pol(pol):
     return sorted(list(pods))
 
 
+def get_pods_by_pol(pol):
+    data = load_distances()
+    pol = (pol or "").strip().upper()
+
+    pods = set()
+
+    for route in data.keys():
+        try:
+            p, d = route.split(" - ")
+
+            p = p.strip().upper()
+            d = d.strip().upper()
+
+            # ✅ normal direction
+            if p == pol:
+                pods.add(d)
+
+            # 🔥 reverse direction (INI KUNCINYA)
+            elif d == pol:
+                pods.add(p)
+
+        except:
+            continue
+
+    return sorted(list(pods))
+
 def get_next_by_pod(pod):
     data = load_distances()
     pod = (pod or "").strip().upper()
@@ -277,10 +303,18 @@ def get_next_by_pod(pod):
 
     for route in data.keys():
         try:
-            pol, dest = route.split(" - ")
+            p, d = route.split(" - ")
 
-            if pol.strip().upper() == pod:
-                next_ports.add(dest.strip().upper())
+            p = p.strip().upper()
+            d = d.strip().upper()
+
+            # maju
+            if p == pod:
+                next_ports.add(d)
+
+            # 🔥 balik
+            elif d == pod:
+                next_ports.add(p)
 
         except:
             continue
