@@ -17,18 +17,8 @@ import streamlit as st
 st.set_page_config(
     page_title="Freight Calculator Barge",
     page_icon="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png",
-    layout="centered"
+    layout="wide"
 )
-
-st.markdown("""
-<style>
-@media (max-width: 768px) {
-    [data-testid="stSidebar"] {
-        display: none;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
 
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
@@ -99,7 +89,6 @@ if not st.session_state.logged_in:
                 st.error("Failed to register. Email may already exist.")
     st.stop()
 
-
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
 # - ditaruh di expander sidebar yang default tertutup
@@ -163,40 +152,25 @@ if st.session_state.preset_selected != "Custom":
         st.session_state[k] = v
 
 
-st.subheader("📱 Menu")
-
-menu = st.radio(
-    "",
-    ["🧮 Calculator", "⚙️ Parameter", "👤 Account"],
-    horizontal=True
-)
-
-if menu == "🧮 Calculator":
-
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
 
-tab1, tab2, tab3 = st.tabs(["⚙️ Parameter", "🚢 Input", "👤 Account"])
+# ===== SIDEBAR PARAMETERS =====
+with st.sidebar.expander("🚢 Speed"):
+    # set default values from session_state if exist, else 0.0
+    speed_laden = st.number_input("Speed Laden (knot)", value=st.session_state.get("speed_laden", 0.0))
+    speed_ballast = st.number_input("Speed Ballast (knot)", value=st.session_state.get("speed_ballast", 0.0))
 
-with tab1:
-    with st.expander("🚢 Speed"):
-        speed_laden = st.number_input("Speed Laden (knot)", value=st.session_state.get("speed_laden", 0.0))
-        speed_ballast = st.number_input("Speed Ballast (knot)", value=st.session_state.get("speed_ballast", 0.0))
+with st.sidebar.expander("⛽ Fuel"):
+    consumption = st.number_input("Consumption Fuel (liter/hour)", value=st.session_state.get("consumption", 0))
+    price_fuel = st.number_input("Price Fuel (Rp/Ltr)", value=st.session_state.get("price_fuel", 0))
 
-with tab1:
-    with st.expander("⛽ Fuel"):
-        consumption = st.number_input("Consumption Fuel (liter/hour)", value=st.session_state.get("consumption", 0))
-        price_fuel = st.number_input("Price Fuel (Rp/Ltr)", value=st.session_state.get("price_fuel", 0))
-
-with tab1:
-    with st.expander("💧 Freshwater"):
+with st.sidebar.expander("💧 Freshwater"):
     consumption_fw = st.number_input("Consumption Freshwater (Ton/Day)", value=st.session_state.get("consumption_fw", 0))
     price_fw = st.number_input("Price Freshwater (Rp/Ton)", value=st.session_state.get("price_fw", 0))
 
-
-with tab1:
 if mode == "Owner":
-    with st.expander("🏗️ Owner Cost"):
+    with st.sidebar.expander("🏗️ Owner Cost"):
         charter = st.number_input("Angsuran (Rp/Month)", value=st.session_state.get("charter", 0))
         crew = st.number_input("Crew (Rp/Month)", value=st.session_state.get("crew", 0))
         insurance = st.number_input("Insurance (Rp/Month)", value=st.session_state.get("insurance", 0))
@@ -206,12 +180,12 @@ if mode == "Owner":
         premi_nm = st.number_input("Premi (Rp/NM)", value=st.session_state.get("premi_nm", 0))
         other_cost = st.number_input("Other Cost (Rp)", value=st.session_state.get("other_cost", 0))
 else:
-    with st.expander("🏗️ Charter Cost"):
+    with st.sidebar.expander("🏗️ Charter Cost"):
         charter = st.number_input("Charter Hire (Rp/Month)", value=st.session_state.get("charter", 0))
         premi_nm = st.number_input("Premi (Rp/NM)", value=st.session_state.get("premi_nm", 0))
         other_cost = st.number_input("Other Cost (Rp)", value=st.session_state.get("other_cost", 0))
 
-    with st.expander("⚓ Port Cost"):
+with st.sidebar.expander("⚓ Port Cost"):
     port_cost_pol = st.number_input("Port Cost POL (Rp)", value=st.session_state.get("port_cost_pol", 0))
     port_cost_pod = st.number_input("Port Cost POD (Rp)", value=st.session_state.get("port_cost_pod", 0))
     asist_tug = st.number_input("Asist Tug (Rp)", value=st.session_state.get("asist_tug", 0))
@@ -314,7 +288,7 @@ distance_pod_pol = st.number_input("Distance POD - POL (NM)", 0.0)
 freight_price_input = st.number_input("Freight Price (Rp/MT)", 0)
 
 # ===== PERHITUNGAN =====
-if st.button("🚀 CALCULATE FREIGHT"):
+if st.button("Calculate Freight 💸"):
     try:
         # Waktu sailing (hour) based on speed inputs (hours)
         sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
@@ -406,20 +380,13 @@ if st.button("🚀 CALCULATE FREIGHT"):
         # ===== DISPLAY RESULTS =====
         st.subheader("📋 Calculation Results")
         st.markdown(f""" 
-        <div style="
-        background:#0d47a1;
-        color:white;
-        padding:15px;
-        border-radius:12px;
-        font-size:14px;
-        line-height:1.6;
-        ">
-        <b>Total Voyage:</b> {total_voyage_days:.2f} Days<br>
-        <b>Sailing Time:</b> {sailing_time:.2f} Hours<br>
-        <b>Fuel Cost:</b> Rp {cost_fuel:,.0f}<br>
-        <b>Freshwater Cost:</b> Rp {cost_fw:,.0f}
-        </div>
-        """, unsafe_allow_html=True)
+        **Total Voyage (Days):** {total_voyage_days:.2f}  
+        **Total Sailing Time (Hour):** {sailing_time:.2f}  
+        **Total Consumption Fuel (Ltr):** {total_consumption_fuel:,.0f}  
+        **Total Consumption Freshwater (Ton):** {total_consumption_fw:,.0f}  
+        **Fuel Cost (Rp):** Rp {cost_fuel:,.0f}  
+        **Freshwater Cost (Rp):** Rp {cost_fw:,.0f}
+        """)
 
         if mode == "Owner":
             st.markdown("### 🏗️ Owner Costs Summary")
@@ -486,7 +453,7 @@ if st.button("🚀 CALCULATE FREIGHT"):
         df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Gross Profit (Rp)"])
 
         st.subheader("💹 Profit Scenario 0–75%")
-        st.dataframe(df_profit, use_container_width=True, height=300)
+        st.dataframe(df_profit, use_container_width=True)
 
         # ===== PDF GENERATOR =====
         def create_pdf(username):
