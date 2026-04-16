@@ -807,18 +807,30 @@ if calculate:
 
         st.subheader("🏗️ Cost Summary")
 
+        # =========================
+        # 1. BREAKDOWN COST ONLY
+        # =========================
         for k, v in owner_data.items():
             st.write(f"• {k}: Rp {v:,.0f}")
 
-            if additional_breakdown:
-                st.markdown("➕ Additional Costs")
-                for k, v in additional_breakdown.items():
-                    st.write(f"• {k}: Rp {v:,.0f}")
+        # =========================
+        # 2. ADDITIONAL COST (sekali saja)
+        # =========================
+        if additional_breakdown:
+            st.markdown("➕ Additional Costs")
+            for k, v in additional_breakdown.items():
+                st.write(f"• {k}: Rp {v:,.0f}")
 
-            st.write(f"• General Overhead: Rp {total_general_overhead:,.0f}")
+        # =========================
+        # 3. GENERAL OVERHEAD (sekali saja)
+        # =========================
+        st.write(f"• General Overhead: Rp {total_general_overhead:,.0f}")
 
-            st.success(f"💰 Total Cost: Rp {total_cost:,.0f}")
-            st.warning(f"📦 Freight Cost: Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}")
+        # =========================
+        # 4. SUMMARY (WAJIB SINGLE OUTPUT)
+        # =========================
+        st.success(f"💰 Total Cost: Rp {total_cost:,.0f}")
+        st.warning(f"📦 Freight Cost: Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}")
 
 
         # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
