@@ -31,6 +31,18 @@ def find_distance(pol, pod):
 
     return 0
 
+def load_distances():
+    if not os.path.exists(DATA_FILE):
+        return {}
+
+    with open(DATA_FILE, "r") as f:
+        return json.load(f)
+
+
+def save_distances(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
 # ✅ TAMBAH DI SINI
 def clean_data(data):
     clean = []
@@ -40,23 +52,32 @@ def clean_data(data):
     return clean
 
 def get_all_ports():
-    data = clean_data(load_distances())
+    data = load_distances()
     ports = set()
 
-    for d in data:
-        ports.add(d.get("pol", "").upper())
-        ports.add(d.get("pod", "").upper())
+    for route in data.keys():
+        try:
+            pol, pod = route.split(" - ")
+            ports.add(pol.upper())
+            ports.add(pod.upper())
+        except:
+            continue
 
     return sorted(list(ports))
 
 def get_next_ports(pod):
-    data = clean_data(load_distances())
+    data = load_distances()
     pod = (pod or "").upper()
 
     next_ports = []
-    for d in data:
-        if d.get("pol") == pod:
-            next_ports.append(d.get("pod"))
+
+    for route in data.keys():
+        try:
+            pol, dest = route.split(" - ")
+            if pol.upper() == pod:
+                next_ports.append(dest.upper())
+        except:
+            continue
 
     return sorted(list(set(next_ports)))
 
