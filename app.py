@@ -15,18 +15,21 @@ import os
 
 DATA_FILE = "distance_data.json"
 
-def load_distances():
-    if not os.path.exists(DATA_FILE):
-        return []
-    try:
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    except:
-        return []
+def find_distance(pol, pod):
+    data = load_distances()
 
-def save_distances(data):
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=2)
+    pol = (pol or "").upper()
+    pod = (pod or "").upper()
+
+    for route, distance in data.items():
+        try:
+            p, d = route.split(" - ")
+            if p.upper() == pol and d.upper() == pod:
+                return distance
+        except:
+            continue
+
+    return 0
 
 # ✅ TAMBAH DI SINI
 def clean_data(data):
