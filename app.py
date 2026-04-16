@@ -131,6 +131,28 @@ preset_params = {
     }
 }
 
+
+cargo_qty_default = {
+    "270 ft": {
+        "Coal (MT)": 7500,
+        "Nickel (MT)": 8000,
+        "Bauxite (MT)": 7000,
+        "Sand (M3)": 6500
+    },
+    "300 ft": {
+        "Coal (MT)": 9000,
+        "Nickel (MT)": 9500,
+        "Bauxite (MT)": 8500,
+        "Sand (M3)": 8000
+    },
+    "330 ft": {
+        "Coal (MT)": 11000,
+        "Nickel (MT)": 11500,
+        "Bauxite (MT)": 10500,
+        "Sand (M3)": 10000
+    }
+}
+
 # ==== PRESET SEGMEN ====
 
 # Default state
@@ -315,8 +337,9 @@ st.markdown("### 📦 Cargo Information")
 col1, col2 = st.columns(2)
 with col1:
     type_cargo = st.selectbox(
-        "Cargo Type",
-        ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"]
+    "Cargo Type",
+    ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
+    key="cargo_type"
     )
 
 with col2:
