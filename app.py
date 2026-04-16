@@ -271,14 +271,19 @@ def get_pods_by_pol(pol):
 
 def get_next_by_pod(pod):
     data = load_distances()
-    pod = (pod or "").upper()
+    pod = (pod or "").strip().upper()
 
     next_ports = set()
 
-    for d in data:
-        if isinstance(d, dict):
-            if d.get("pol", "").upper() == pod:
-                next_ports.add(d.get("pod", ""))
+    for route in data.keys():
+        try:
+            pol, dest = route.split(" - ")
+
+            if pol.strip().upper() == pod:
+                next_ports.add(dest.strip().upper())
+
+        except:
+            continue
 
     return sorted(list(next_ports))
 
