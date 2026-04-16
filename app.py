@@ -1030,7 +1030,7 @@ if calculate:
         # ===== GENERATE PDF & DOWNLOAD BUTTON =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         selected_barge = st.session_state.get("preset_selected", "Custom")
-        file_name = f"Freight Report {selected_barge} {port_pol}-{po rt_pod} ({datetime.now():%Y%m%d}).pdf"
+        file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%Y%m%d}).pdf"
 
         st.download_button(
             label="📥 Download PDF Report",
