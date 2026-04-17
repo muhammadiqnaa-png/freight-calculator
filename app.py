@@ -652,7 +652,7 @@ st.markdown("""
     color:white;
     margin-bottom:20px;
 ">
-    <h1 style="margin:0; font-size:45px;">🚢 Freight Calculator</h1>
+    <h1 style="margin:0; font-size:40px;">🚢 Freight Calculator</h1>
     <p style="margin:0; font-size:16px; opacity:0.9;">
         Mobile Shipping Cost & Profit Tool
     </p>
