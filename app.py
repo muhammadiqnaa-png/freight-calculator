@@ -659,6 +659,32 @@ with col1:
     ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
     key="cargo_type"
     )
+    
+    def get_default_cargo(barge, cargo_type):
+        return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
+
+    selected_barge = st.session_state.get("preset_selected", "Custom")
+    cargo_type_now = st.session_state.get("cargo_type") or type_cargo
+
+    # tracker
+    if "last_barge" not in st.session_state:
+        st.session_state.last_barge = None
+
+    if "last_cargo_type" not in st.session_state:
+        st.session_state.last_cargo_type = None
+
+    # 🔥 AUTO ONLY WHEN BOTH SELECTED
+    if selected_barge and cargo_type_now:
+
+        # kondisi: baru jalan kalau berubah atau pertama kali lengkap
+        if (
+            st.session_state.last_barge != selected_barge
+            or st.session_state.last_cargo_type != cargo_type_now
+        ):
+            st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
+
+            st.session_state.last_barge = selected_barge
+            st.session_state.last_cargo_type = cargo_type_now
 
 with col2:
     selected_barge = st.session_state.get("preset_selected", "Custom")
@@ -674,20 +700,7 @@ with col2:
 
     selected_barge = st.session_state.get("preset_selected", "Custom")
     cargo_type_now = st.session_state.get("cargo_type") or type_cargo
-
-    # init state pertama kali
-    if "cargo_qty" not in st.session_state:
-        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
-
-    # detect barge change → RESET
-    if st.session_state.get("last_barge") != selected_barge:
-        st.session_state.last_barge = selected_barge
-        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
-
-    # detect cargo type change → RESET
-    if st.session_state.get("last_cargo_type") != cargo_type_now:
-        st.session_state.last_cargo_type = cargo_type_now
-        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
+    
         
     qyt_cargo = st.number_input(
         "Cargo Quantity",
