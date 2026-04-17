@@ -643,18 +643,19 @@ if st.sidebar.button("Log Out"):
     st.rerun()
 
 # ===== MAIN INPUT =====
-st.title("")
 st.markdown("""
 <div style="
     text-align:center;
-    padding:10px;
-    border-radius:12px;
+    padding:20px;
+    border-radius:16px;
     background:#0d47a1;
     color:white;
-    margin-bottom:15px;
+    margin-bottom:20px;
 ">
-    <h3 style="margin:0;">🚢 Freight Calculator</h3>
-    <p style="margin:0; font-size:12px;">Mobile Shipping Cost & Profit Tool</p>
+    <h1 style="margin:0; font-size:32px;">🚢 Freight Calculator</h1>
+    <p style="margin:0; font-size:16px; opacity:0.9;">
+        Mobile Shipping Cost & Profit Tool
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
