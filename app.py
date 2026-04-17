@@ -322,13 +322,6 @@ if "preset_selected" not in st.session_state:
 def update_preset():
     st.session_state.preset_selected = st.session_state.preset_control
 
-
-def get_pods_by_pol(pol):
-    data = load_distances()
-    pol = (pol or "").upper()
-
-    pods = set()
-
     for route in data.keys():
         try:
             p, d = route.split(" - ")
