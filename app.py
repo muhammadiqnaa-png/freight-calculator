@@ -452,8 +452,19 @@ with st.sidebar.expander("📋 Saved Distance"):
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
-    speed_laden = st.number_input("Speed Laden (knot)", value=st.session_state.get("speed_laden", 0.0))
-    speed_ballast = st.number_input("Speed Ballast (knot)", value=st.session_state.get("speed_ballast", 0.0))
+    speed_laden = st.number_input(
+        "Speed Laden (knot)",
+        value=float(st.session_state.get("speed_laden", 0)),
+        step=0.1
+        format="%.2f"
+    )
+
+    speed_ballast = st.number_input(
+        "Speed Ballast (knot)",
+        value=float(st.session_state.get("speed_ballast", 0)),
+        step=0.1
+        format="%.2f"
+    )
 
     consumption = st.number_input("Fuel Consumption (L/hr)", value=st.session_state.get("consumption", 0))
     price_fuel = st.number_input("Fuel Price (Rp/L)", value=st.session_state.get("price_fuel", 0))
