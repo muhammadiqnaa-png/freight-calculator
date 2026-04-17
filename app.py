@@ -666,32 +666,36 @@ selected_barge = st.session_state.get("preset_selected", "Custom")
 def get_default_cargo(barge, cargo_type):
     return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
-# 🔥 ALWAYS SAFE DEFAULT (ini penting)
-default_qty = get_default_cargo(selected_barge, type_cargo)
+# =========================
+# INIT STATE ONCE ONLY
+# =========================
+if "cargo_qty_init_done" not in st.session_state:
+    st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
+    st.session_state.cargo_qty_init_done = True
 
 # =========================
-# FIX STATE LOGIC
+# RESET LOGIC (SAFE VERSION)
 # =========================
-
-if "cargo_qty" not in st.session_state:
-    st.session_state.cargo_qty = default_qty
-
-# hanya reset kalau barge atau cargo type benar-benar berubah
-barge_changed = st.session_state.get("last_barge") != selected_barge
-cargo_changed = st.session_state.get("last_cargo_type") != type_cargo
-
-if barge_changed or cargo_changed:
-    st.session_state.cargo_qty = default_qty
+if (
+    st.session_state.get("last_barge") != selected_barge
+):
+    st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
     st.session_state.last_barge = selected_barge
+
+# kalau cargo type berubah → update via rerender aman
+if (
+    st.session_state.get("last_cargo_type") != type_cargo
+):
+    st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
     st.session_state.last_cargo_type = type_cargo
 
 
 with col2:
     qyt_cargo = st.number_input(
         "Cargo Quantity",
-        key="cargo_qty",
         step=1.0,
-        min_value=0.0
+        min_value=0.0,
+        value=st.session_state.cargo_qty
     )
 
 
