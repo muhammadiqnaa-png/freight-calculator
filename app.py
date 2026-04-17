@@ -661,34 +661,28 @@ with col1:
     )
 
     selected_barge = st.session_state.get("preset_selected", "Custom")
-    cargo_type_now = type_cargo
+    cargo_type_now = st.session_state.get("cargo_type")
 
     def get_default_cargo(barge, cargo_type):
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
-    if "last_barge" not in st.session_state:
-        st.session_state.last_barge = None
+    default_qty = get_default_cargo(selected_barge, cargo_type_now)
 
-    if "last_cargo_type" not in st.session_state:
-        st.session_state.last_cargo_type = None
+    # INIT FIRST TIME
+    if "cargo_qty" not in st.session_state:
+        st.session_state.cargo_qty = default_qty
 
-    # 🔥 FIX UTAMA
-    if selected_barge and cargo_type_now:
-
-        if (
-            st.session_state.last_barge != selected_barge
-            or st.session_state.last_cargo_type != cargo_type_now
-        ):
-
-            default_val = get_default_cargo(selected_barge, cargo_type_now)
-
-            # 🔥 JANGAN overwrite kalau default 0 DAN sudah ada value sebelumnya
-            if default_val > 0:
-                st.session_state.cargo_qty = default_val
-
-            st.session_state.last_barge = selected_barge
-            st.session_state.last_cargo_type = cargo_type_now
-
+    # AUTO UPDATE hanya kalau:
+    # - barge berubah
+    # - cargo type berubah
+    if (
+        st.session_state.get("last_barge") != selected_barge
+        or st.session_state.get("last_cargo_type") != cargo_type_now
+    ):
+        st.session_state.cargo_qty = default_qty
+        st.session_state.last_barge = selected_barge
+        st.session_state.last_cargo_type = cargo_type_now
+    
 with col2:
     selected_barge = st.session_state.get("preset_selected", "Custom")
     selected_cargo = st.session_state.get("cargo_type") or type_cargo
