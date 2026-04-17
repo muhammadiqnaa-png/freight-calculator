@@ -728,13 +728,30 @@ freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
 st.markdown("""
 <style>
+
+/* 🔥 BUTTON CALCULATE UTAMA */
 div.stButton > button {
-    background: #0d47a1;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
     color: white;
     font-weight: bold;
-    border-radius: 10px;
-    height: 45px;
+    border-radius: 12px;
+    height: 48px;
+    font-size: 14px;
+    border: none;
 }
+
+/* 🔥 EFFECT HOVER */
+div.stButton > button:hover {
+    background: linear-gradient(135deg, #1565c0, #1e88e5);
+    transform: scale(1.02);
+}
+
+/* 🔥 BIAR ADA JARAK DI HP */
+div.stButton {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
