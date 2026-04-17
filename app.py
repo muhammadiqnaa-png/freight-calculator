@@ -654,54 +654,33 @@ st.markdown("### 📦 Cargo Information")
 
 col1, col2 = st.columns(2)
 with col1:
-    type_cargo = st.selectbox(
+        type_cargo = st.selectbox(
         "Cargo Type",
         ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
         key="cargo_type"
     )
 
     selected_barge = st.session_state.get("preset_selected", "Custom")
-    cargo_type_now = st.session_state.get("cargo_type")
 
     def get_default_cargo(barge, cargo_type):
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
-    default_qty = get_default_cargo(selected_barge, cargo_type_now)
+    default_qty = get_default_cargo(selected_barge, type_cargo)
 
-    # INIT FIRST TIME
+    # INIT ONLY
     if "cargo_qty" not in st.session_state:
         st.session_state.cargo_qty = default_qty
 
-    # AUTO UPDATE hanya kalau:
-    # - barge berubah
-    # - cargo type berubah
+    # AUTO UPDATE ONLY WHEN CHANGE
     if (
         st.session_state.get("last_barge") != selected_barge
-        or st.session_state.get("last_cargo_type") != cargo_type_now
+        or st.session_state.get("last_cargo_type") != type_cargo
     ):
         st.session_state.cargo_qty = default_qty
         st.session_state.last_barge = selected_barge
-        st.session_state.last_cargo_type = cargo_type_now
+        st.session_state.last_cargo_type = type_cargo
     
 with col2:
-    selected_barge = st.session_state.get("preset_selected", "Custom")
-    selected_cargo = st.session_state.get("cargo_type") or type_cargo
-
-    # RESET kalau ganti barge
-    if selected_barge != st.session_state.last_barge:
-        st.session_state.last_barge = selected_barge
-        st.session_state.cargo_user_override = False
-
-    def get_default_cargo(barge, cargo_type):
-        return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
-
-    # ✅ INIT DEFAULT (INI YANG KAMU MAU)
-    if "cargo_qty" not in st.session_state:
-        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
-
-    selected_barge = st.session_state.get("preset_selected", "Custom")
-    cargo_type_now = type_cargo
-    
         
     qyt_cargo = st.number_input(
         "Cargo Quantity",
