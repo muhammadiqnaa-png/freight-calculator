@@ -645,44 +645,41 @@ if "cargo_user_override" not in st.session_state:
 if "last_barge" not in st.session_state:
     st.session_state.last_barge = None
 
-st.markdown("### 📦 Cargo Information")
+# ===== TYPE CARGO =====
+type_cargo = st.selectbox(
+    "Type Cargo",
+    ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
+    key="type_cargo"
+)
 
-col1, col2 = st.columns(2)
+# ===== DEFAULT QTY =====
+default_qty = 0
+if st.session_state.preset_selected in cargo_capacity:
+    default_qty = cargo_capacity[st.session_state.preset_selected].get(type_cargo, 0)
 
-with col1:
-    type_cargo = st.selectbox(
-        "Cargo Type",
-        ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
-        key="cargo_type"
-    )
+# ===== INIT SESSION (HANYA SEKALI) =====
+if "qyt_cargo" not in st.session_state:
+    st.session_state.qyt_cargo = default_qty
 
-selected_barge = st.session_state.get("preset_selected", "Custom")
+# ===== UPDATE HANYA KALAU SIZE / CARGO BERUBAH =====
+if (
+    "last_preset" not in st.session_state or
+    "last_cargo" not in st.session_state or
+    st.session_state.last_preset != st.session_state.preset_selected or
+    st.session_state.last_cargo != type_cargo
+):
+    st.session_state.qyt_cargo = default_qty
 
-def get_default_cargo(barge, cargo_type):
-    return float(cargo_qty_default.get(barge, {}).get(cargo_type, 0))
+# simpan kondisi terakhir
+st.session_state.last_preset = st.session_state.preset_selected
+st.session_state.last_cargo = type_cargo
 
-# INIT SEKALI
-if "cargo_qty" not in st.session_state:
-    st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
-
-# RESET kalau barge berubah
-if st.session_state.get("last_barge") != selected_barge:
-    st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
-    st.session_state.last_barge = selected_barge
-
-# RESET kalau cargo type berubah
-if st.session_state.get("last_cargo_type") != type_cargo:
-    st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
-    st.session_state.last_cargo_type = type_cargo
-
-with col2:
-    qyt_cargo = st.number_input(
-        "Cargo Quantity",
-        value=float(st.session_state.cargo_qty),
-        step=1.0,
-        min_value=0.0
-    )
-
+# ===== INPUT (BISA DIEDIT) =====
+qyt_cargo = st.number_input(
+    "Cargo Quantity",
+    value=st.session_state.qyt_cargo,
+    key="qyt_cargo"
+)
 
 st.markdown("### 💸 Freight Pricing")
 
