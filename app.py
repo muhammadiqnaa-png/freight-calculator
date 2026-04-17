@@ -109,6 +109,44 @@ st.set_page_config(
     layout="centered"
 )
 
+st.markdown("""
+<style>
+
+/* Base font */
+html, body, [class*="css"]  {
+    font-size: 13px !important;
+}
+
+/* Label */
+label {
+    font-size: 12px !important;
+}
+
+/* Input text & number */
+input, select {
+    font-size: 13px !important;
+}
+
+/* Button */
+button {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+}
+
+/* Metric / big text */
+h1, h2, h3 {
+    font-size: 16px !important;
+}
+
+/* Caption kecil */
+.small-text {
+    font-size: 11px !important;
+    color: #666;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
