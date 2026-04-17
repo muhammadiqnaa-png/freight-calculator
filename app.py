@@ -644,6 +644,12 @@ with col2:
             auto_distance_return = find_distance(port_pod, next_port)
             st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
 
+if "cargo_user_override" not in st.session_state:
+    st.session_state.cargo_user_override = False
+
+if "last_barge" not in st.session_state:
+    st.session_state.last_barge = None
+
 st.markdown("### 📦 Cargo Information")
 
 col1, col2 = st.columns(2)
@@ -658,6 +664,11 @@ with col2:
     selected_barge = st.session_state.get("preset_selected", "Custom")
     selected_cargo = st.session_state.get("cargo_type") or type_cargo
 
+    # RESET kalau ganti barge
+    if selected_barge != st.session_state.last_barge:
+        st.session_state.last_barge = selected_barge
+        st.session_state.cargo_user_override = False
+
     # default value logic
     default_qty = 0
 
@@ -665,13 +676,28 @@ with col2:
         if selected_cargo in cargo_qty_default[selected_barge]:
             default_qty = cargo_qty_default[selected_barge][selected_cargo]
 
+    def get_default_cargo(barge, cargo_type):
+        return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
+
+
+    selected_barge = st.session_state.get("preset_selected", "Custom")
+    cargo_type_now = st.session_state.get("cargo_type") or type_cargo
+
+    default_qty = get_default_cargo(selected_barge, cargo_type_now)
+
+    # kalau belum override → pakai default
+    if not st.session_state.cargo_user_override:
+        st.session_state.cargo_qty = default_qty
+
     qyt_cargo = st.number_input(
         "Cargo Quantity",
-        step=1.0,
-        key="cargo_qty"
+        key="cargo_qty",
+        step=1.0
     )
 
-    st.caption(f"Suggested capacity for {selected_barge} - {selected_cargo}")
+    # detect user edit manual
+    if qyt_cargo != default_qty:
+        st.session_state.cargo_user_override = True
 
 
 st.markdown("### 💸 Freight Pricing")
