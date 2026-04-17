@@ -112,37 +112,42 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* FORCE SIDEBAR MUNCUL */
+/* ===== FORCE SIDEBAR SELALU MUNCUL ===== */
 section[data-testid="stSidebar"] {
-    transform: translateX(0px) !important;
+    transform: translateX(0%) !important;
     visibility: visible !important;
+    position: relative !important;
 }
 
-/* HILANGIN OVERLAY GELAP */
-div[data-testid="collapsedControl"] {
+/* ===== HILANGKAN TOMBOL HAMBURGER ===== */
+button[kind="header"] {
     display: none !important;
 }
 
-/* Biar layout ga ketutup */
-section[data-testid="stSidebarContent"] {
-    width: 250px !important;
+/* ===== HILANGKAN OVERLAY ===== */
+div[data-testid="stSidebarOverlay"] {
+    display: none !important;
 }
 
-/* MAIN CONTENT geser dikit */
-.main .block-container {
-    margin-left: 260px !important;
+/* ===== LEBAR SIDEBAR ===== */
+section[data-testid="stSidebar"] > div {
+    width: 240px !important;
 }
 
-/* KHUSUS HP */
+/* ===== GESER MAIN CONTENT ===== */
+section.main > div {
+    margin-left: 240px !important;
+}
+
+/* ===== KHUSUS HP ===== */
 @media (max-width: 768px) {
-    .main .block-container {
-        margin-left: 250px !important;
+    section.main > div {
+        margin-left: 240px !important;
     }
 }
 
 </style>
 """, unsafe_allow_html=True)
-
 st.markdown("""
 <style>
 
