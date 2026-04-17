@@ -600,8 +600,6 @@ st.markdown("""
 
 
 # ===== MAIN INPUT =====
-st.title("🚢 Freight Calculator Barge")
-
 st.markdown("### 🚢 Voyage Input")
 
 # ===== POL =====
