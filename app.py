@@ -147,6 +147,35 @@ h1, h2, h3 {
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* 🔥 BUTTON CALCULATE UTAMA */
+div.stButton > button {
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    height: 48px;
+    font-size: 14px;
+    border: none;
+}
+
+/* 🔥 EFFECT HOVER */
+div.stButton > button:hover {
+    background: linear-gradient(135deg, #1565c0, #1e88e5);
+    transform: scale(1.02);
+}
+
+/* 🔥 BIAR ADA JARAK DI HP */
+div.stButton {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
@@ -726,34 +755,15 @@ st.markdown("### 💸 Freight Pricing")
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
 
-st.markdown("""
-<style>
+# 🔥 SPACING BIAR RAPI
+st.markdown("<br>", unsafe_allow_html=True)
 
-/* 🔥 BUTTON CALCULATE UTAMA */
-div.stButton > button {
-    background: linear-gradient(135deg, #0d47a1, #1976d2);
-    color: white;
-    font-weight: bold;
-    border-radius: 12px;
-    height: 48px;
-    font-size: 14px;
-    border: none;
-}
-
-/* 🔥 EFFECT HOVER */
-div.stButton > button:hover {
-    background: linear-gradient(135deg, #1565c0, #1e88e5);
-    transform: scale(1.02);
-}
-
-/* 🔥 BIAR ADA JARAK DI HP */
-div.stButton {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-</style>
-""", unsafe_allow_html=True)
+# 🔥 BUTTON UTAMA
+calculate = st.button(
+    "🚀 CALCULATE NOW",
+    use_container_width=True,
+    type="primary"
+)
 
 # ===== PERHITUNGAN =====
 
