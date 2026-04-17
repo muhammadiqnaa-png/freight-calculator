@@ -693,9 +693,9 @@ if (
 with col2:
     qyt_cargo = st.number_input(
         "Cargo Quantity",
+        value=float(st.session_state.cargo_qty),
         step=1.0,
-        min_value=0.0,
-        value=st.session_state.cargo_qty
+        min_value=0.0
     )
 
 
