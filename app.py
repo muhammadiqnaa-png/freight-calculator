@@ -653,35 +653,40 @@ if "last_barge" not in st.session_state:
 st.markdown("### 📦 Cargo Information")
 
 col1, col2 = st.columns(2)
+
 with col1:
-        type_cargo = st.selectbox(
+    type_cargo = st.selectbox(
         "Cargo Type",
         ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
         key="cargo_type"
     )
 
-    selected_barge = st.session_state.get("preset_selected", "Custom")
+selected_barge = st.session_state.get("preset_selected", "Custom")
 
-    def get_default_cargo(barge, cargo_type):
-        return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
+def get_default_cargo(barge, cargo_type):
+    return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
-    default_qty = get_default_cargo(selected_barge, type_cargo)
+# 🔥 ALWAYS SAFE DEFAULT (ini penting)
+default_qty = get_default_cargo(selected_barge, type_cargo)
 
-    # INIT ONLY
-    if "cargo_qty" not in st.session_state:
-        st.session_state.cargo_qty = default_qty
+# =========================
+# FIX STATE LOGIC
+# =========================
 
-    # AUTO UPDATE ONLY WHEN CHANGE
-    if (
-        st.session_state.get("last_barge") != selected_barge
-        or st.session_state.get("last_cargo_type") != type_cargo
-    ):
-        st.session_state.cargo_qty = default_qty
-        st.session_state.last_barge = selected_barge
-        st.session_state.last_cargo_type = type_cargo
-    
+if "cargo_qty" not in st.session_state:
+    st.session_state.cargo_qty = default_qty
+
+# hanya reset kalau barge atau cargo type benar-benar berubah
+barge_changed = st.session_state.get("last_barge") != selected_barge
+cargo_changed = st.session_state.get("last_cargo_type") != type_cargo
+
+if barge_changed or cargo_changed:
+    st.session_state.cargo_qty = default_qty
+    st.session_state.last_barge = selected_barge
+    st.session_state.last_cargo_type = type_cargo
+
+
 with col2:
-        
     qyt_cargo = st.number_input(
         "Cargo Quantity",
         key="cargo_qty",
