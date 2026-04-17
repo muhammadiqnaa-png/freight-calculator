@@ -659,31 +659,21 @@ with col1:
 selected_barge = st.session_state.get("preset_selected", "Custom")
 
 def get_default_cargo(barge, cargo_type):
-    return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
+    return float(cargo_qty_default.get(barge, {}).get(cargo_type, 0))
 
-# =========================
-# INIT STATE ONCE ONLY
-# =========================
-if "cargo_qty_init_done" not in st.session_state:
+# INIT SEKALI
+if "cargo_qty" not in st.session_state:
     st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
-    st.session_state.cargo_qty_init_done = True
 
-# =========================
-# RESET LOGIC (SAFE VERSION)
-# =========================
-if (
-    st.session_state.get("last_barge") != selected_barge
-):
+# RESET kalau barge berubah
+if st.session_state.get("last_barge") != selected_barge:
     st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
     st.session_state.last_barge = selected_barge
 
-# kalau cargo type berubah → update via rerender aman
-if (
-    st.session_state.get("last_cargo_type") != type_cargo
-):
+# RESET kalau cargo type berubah
+if st.session_state.get("last_cargo_type") != type_cargo:
     st.session_state.cargo_qty = get_default_cargo(selected_barge, type_cargo)
     st.session_state.last_cargo_type = type_cargo
-
 
 with col2:
     qyt_cargo = st.number_input(
