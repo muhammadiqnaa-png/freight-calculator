@@ -109,45 +109,42 @@ st.set_page_config(
     layout="centered"
 )
 
+
 st.markdown("""
 <style>
 
-/* ===== FORCE SIDEBAR SELALU MUNCUL ===== */
-section[data-testid="stSidebar"] {
-    transform: translateX(0%) !important;
-    visibility: visible !important;
-    position: relative !important;
+/* Tombol floating */
+.open-sidebar-btn {
+    position: fixed;
+    top: 70px;
+    left: 10px;
+    z-index: 9999;
+    background: #0d47a1;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
-/* ===== HILANGKAN TOMBOL HAMBURGER ===== */
-button[kind="header"] {
-    display: none !important;
-}
-
-/* ===== HILANGKAN OVERLAY ===== */
-div[data-testid="stSidebarOverlay"] {
-    display: none !important;
-}
-
-/* ===== LEBAR SIDEBAR ===== */
-section[data-testid="stSidebar"] > div {
-    width: 240px !important;
-}
-
-/* ===== GESER MAIN CONTENT ===== */
-section.main > div {
-    margin-left: 240px !important;
-}
-
-/* ===== KHUSUS HP ===== */
-@media (max-width: 768px) {
-    section.main > div {
-        margin-left: 240px !important;
+/* Optional: sembunyikan di desktop */
+@media (min-width: 768px) {
+    .open-sidebar-btn {
+        display: none;
     }
 }
 
 </style>
+
+<div class="open-sidebar-btn" onclick="
+    const btn = window.parent.document.querySelector('[data-testid=collapsedControl]');
+    if (btn) btn.click();
+">
+☰ Menu
+</div>
 """, unsafe_allow_html=True)
+
+
 st.markdown("""
 <style>
 
