@@ -660,7 +660,8 @@ with col2:
     qyt_cargo = st.number_input(
         "Cargo Quantity",
         value=float(default_qty),
-        step=1.0
+        step=1.0,
+        key="cargo_qty"
     )
 
     st.caption(f"Suggested capacity for {selected_barge} - {selected_cargo}")
