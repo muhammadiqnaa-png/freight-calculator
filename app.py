@@ -765,9 +765,9 @@ calculate = st.button(
     type="primary"
 )
 
-if calculate:
-    with st.spinner("⏳ Calculating..."):
-        # semua logic perhitungan lu disini
+    if calculate:
+        with st.spinner("⏳ Calculating..."):
+            # semua logic perhitungan lu disini
         
 
 # ===== PERHITUNGAN =====
