@@ -701,6 +701,10 @@ with col2:
     def get_default_cargo(barge, cargo_type):
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
+    # ✅ INIT DEFAULT (INI YANG KAMU MAU)
+    if "cargo_qty" not in st.session_state:
+        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
+
     selected_barge = st.session_state.get("preset_selected", "Custom")
     cargo_type_now = type_cargo
     
