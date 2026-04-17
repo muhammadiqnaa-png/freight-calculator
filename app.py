@@ -713,9 +713,6 @@ with col2:
         min_value=0.0
     )
 
-    # 🔥 TAMBAHAN INI TARUH DI SINI
-    st.session_state.cargo_qty = qyt_cargo
-
 
 st.markdown("### 💸 Freight Pricing")
 
