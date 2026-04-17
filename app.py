@@ -111,50 +111,6 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-.open-sidebar-btn {
-    position: fixed;
-    top: 70px;
-    left: 10px;
-    z-index: 9999;
-    background: #0d47a1;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
-@media (min-width: 768px) {
-    .open-sidebar-btn {
-        display: none;
-    }
-}
-</style>
-
-<div class="open-sidebar-btn" onclick="
-(function() {
-    let btn = window.parent.document.querySelector('[data-testid=\"collapsedControl\"]');
-    
-    if (!btn) {
-        btn = window.parent.document.querySelector('button[aria-label=\"Toggle sidebar\"]');
-    }
-
-    if (!btn) {
-        btn = window.parent.document.querySelector('button');
-    }
-
-    if (btn) {
-        btn.click();
-    } else {
-        alert('Sidebar button not found');
-    }
-})();
-">
-☰
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
 
 /* Base font */
 html, body, [class*="css"]  {
