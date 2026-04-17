@@ -109,11 +109,8 @@ st.set_page_config(
     layout="centered"
 )
 
-
 st.markdown("""
 <style>
-
-/* Tombol floating */
 .open-sidebar-btn {
     position: fixed;
     top: 70px;
@@ -121,29 +118,40 @@ st.markdown("""
     z-index: 9999;
     background: #0d47a1;
     color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 16px;
     cursor: pointer;
 }
-
-/* Optional: sembunyikan di desktop */
 @media (min-width: 768px) {
     .open-sidebar-btn {
         display: none;
     }
 }
-
 </style>
 
 <div class="open-sidebar-btn" onclick="
-    const btn = window.parent.document.querySelector('[data-testid=collapsedControl]');
-    if (btn) btn.click();
+(function() {
+    let btn = window.parent.document.querySelector('[data-testid=\"collapsedControl\"]');
+    
+    if (!btn) {
+        btn = window.parent.document.querySelector('button[aria-label=\"Toggle sidebar\"]');
+    }
+
+    if (!btn) {
+        btn = window.parent.document.querySelector('button');
+    }
+
+    if (btn) {
+        btn.click();
+    } else {
+        alert('Sidebar button not found');
+    }
+})();
 ">
-☰ Menu
+☰
 </div>
 """, unsafe_allow_html=True)
-
 
 st.markdown("""
 <style>
