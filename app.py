@@ -348,20 +348,29 @@ if "preset_applied" not in st.session_state:
 
 
 def apply_preset():
-    selected = st.session_state.preset_control
+    selected = st.session_state.get("preset_control")
 
-    if selected != "Custom":
-        chosen = preset_params[selected]
+    if selected not in preset_params:
+        return
 
-        for k, v in chosen.items():
-            st.session_state[k] = v
+    chosen = preset_params.get(selected)
+    if not chosen:
+        return
+
+    for k, v in chosen.items():
+        st.session_state[k] = v
 
 preset = st.sidebar.segmented_control(
     "Size Barge",
     ["270 ft", "300 ft", "330 ft", "Custom"],
-    key="preset_control",
-    on_change=apply_preset
+    key="preset_control"
 )
+
+selected = st.session_state.preset_control
+
+if selected in preset_params:
+    for k, v in preset_params[selected].items():
+        st.session_state[k] = v
 
 
 # ===== MODE =====
