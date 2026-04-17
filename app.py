@@ -648,7 +648,7 @@ with col1:
 
 with col2:
     selected_barge = st.session_state.get("preset_selected", "Custom")
-    selected_cargo = st.session_state.get("cargo_type", None)
+    selected_cargo = st.session_state.get("cargo_type") or type_cargo
 
     # default value logic
     default_qty = 0
