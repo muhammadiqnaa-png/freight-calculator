@@ -385,6 +385,8 @@ if selected in preset_params:
     for k, v in preset_params[selected].items():
         st.session_state[k] = v
 
+st.session_state.preset_selected = st.session_state.preset_control
+
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
