@@ -769,8 +769,6 @@ calculate = st.button(
 
 
 if calculate:
-    with st.spinner("⏳ Calculating..."):
-        # semua logic perhitungan lu disini
     try:
         distance_pol_pod = find_distance(port_pol, port_pod)
 
