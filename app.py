@@ -669,26 +669,26 @@ with col2:
         st.session_state.last_barge = selected_barge
         st.session_state.cargo_user_override = False
 
-    # default value logic
-    default_qty = 0
-
-    if selected_barge in cargo_qty_default:
-        if selected_cargo in cargo_qty_default[selected_barge]:
-            default_qty = cargo_qty_default[selected_barge][selected_cargo]
-
     def get_default_cargo(barge, cargo_type):
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
-
 
     selected_barge = st.session_state.get("preset_selected", "Custom")
     cargo_type_now = st.session_state.get("cargo_type") or type_cargo
 
-    default_qty = get_default_cargo(selected_barge, cargo_type_now)
+    # init state pertama kali
+    if "cargo_qty" not in st.session_state:
+        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
 
-    # kalau belum override → pakai default
-    if not st.session_state.cargo_user_override:
-        st.session_state.cargo_qty = default_qty
+    # detect barge change → RESET
+    if st.session_state.get("last_barge") != selected_barge:
+        st.session_state.last_barge = selected_barge
+        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
 
+    # detect cargo type change → RESET
+    if st.session_state.get("last_cargo_type") != cargo_type_now:
+        st.session_state.last_cargo_type = cargo_type_now
+        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
+        
     qyt_cargo = st.number_input(
         "Cargo Quantity",
         key="cargo_qty",
