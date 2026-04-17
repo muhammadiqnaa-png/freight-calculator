@@ -647,23 +647,29 @@ if "cargo_user_override" not in st.session_state:
 if "last_barge" not in st.session_state:
     st.session_state.last_barge = None
 
+st.markdown("### 📦 Type Cargo & Quantity")
+
+col1, col2 = st.columns(2)
+
 # ===== TYPE CARGO =====
-type_cargo = st.selectbox(
-    "Type Cargo",
-    ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
-    key="type_cargo"
-)
+with col1:
+    type_cargo = st.selectbox(
+        "Type",
+        ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
+        key="type_cargo",
+        label_visibility="collapsed"
+    )
 
 # ===== DEFAULT QTY =====
 default_qty = 0
 if st.session_state.preset_selected in cargo_qty_default:
     default_qty = cargo_qty_default[st.session_state.preset_selected].get(type_cargo, 0)
 
-# ===== INIT SESSION (HANYA SEKALI) =====
+# ===== INIT =====
 if "qyt_cargo" not in st.session_state:
     st.session_state.qyt_cargo = default_qty
 
-# ===== UPDATE HANYA KALAU SIZE / CARGO BERUBAH =====
+# ===== AUTO UPDATE =====
 if (
     "last_preset" not in st.session_state or
     "last_cargo" not in st.session_state or
@@ -672,16 +678,19 @@ if (
 ):
     st.session_state.qyt_cargo = default_qty
 
-# simpan kondisi terakhir
 st.session_state.last_preset = st.session_state.preset_selected
 st.session_state.last_cargo = type_cargo
 
-# ===== INPUT (BISA DIEDIT) =====
-qyt_cargo = st.number_input(
-    "Cargo Quantity",
-    value=st.session_state.qyt_cargo,
-    key="qyt_cargo"
-)
+# ===== QTY =====
+with col2:
+    unit = type_cargo.split()[1]
+
+    qyt_cargo = st.number_input(
+        f"Qty ({unit})",
+        value=st.session_state.qyt_cargo,
+        key="qyt_cargo",
+        label_visibility="collapsed"
+    )
 
 st.markdown("### 💸 Freight Pricing")
 
