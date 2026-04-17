@@ -661,34 +661,33 @@ with col1:
     )
 
     selected_barge = st.session_state.get("preset_selected", "Custom")
-    cargo_type_now = st.session_state.get("cargo_type")
+    cargo_type_now = type_cargo
 
     def get_default_cargo(barge, cargo_type):
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
-    # init state
     if "last_barge" not in st.session_state:
         st.session_state.last_barge = None
 
     if "last_cargo_type" not in st.session_state:
         st.session_state.last_cargo_type = None
 
-    if "cargo_user_override" not in st.session_state:
-        st.session_state.cargo_user_override = False
+    # 🔥 FIX UTAMA
+    if selected_barge and cargo_type_now:
 
-    # 🔥 AUTO UPDATE ONLY IF CHANGE
-    if (
-        st.session_state.last_barge != selected_barge
-        or st.session_state.last_cargo_type != cargo_type_now
-    ):
-        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
+        if (
+            st.session_state.last_barge != selected_barge
+            or st.session_state.last_cargo_type != cargo_type_now
+        ):
 
-        st.session_state.last_barge = selected_barge
-        st.session_state.last_cargo_type = cargo_type_now
+            default_val = get_default_cargo(selected_barge, cargo_type_now)
 
-    # reset override kalau ganti barge
-    if st.session_state.last_barge != selected_barge:
-        st.session_state.cargo_user_override = False
+            # 🔥 JANGAN overwrite kalau default 0 DAN sudah ada value sebelumnya
+            if default_val > 0:
+                st.session_state.cargo_qty = default_val
+
+            st.session_state.last_barge = selected_barge
+            st.session_state.last_cargo_type = cargo_type_now
 
 with col2:
     selected_barge = st.session_state.get("preset_selected", "Custom")
@@ -703,7 +702,7 @@ with col2:
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
     selected_barge = st.session_state.get("preset_selected", "Custom")
-    cargo_type_now = st.session_state.get("cargo_type") or type_cargo
+    cargo_type_now = type_cargo
     
         
     qyt_cargo = st.number_input(
