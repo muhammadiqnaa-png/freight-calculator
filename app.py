@@ -271,6 +271,9 @@ cargo_qty_default = {
     }
 }
 
+def get_default_cargo(barge, cargo_type):
+    return float(cargo_qty_default.get(barge, {}).get(cargo_type, 0))
+
 # ==== PRESET SEGMEN ====
 
 # Default state
