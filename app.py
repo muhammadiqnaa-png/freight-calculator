@@ -233,6 +233,16 @@ preset_params = {
         "certificate": 50000000, "premi_nm": 50000, "other_cost": 20000000,
         "port_cost_pol": 35000000, "port_cost_pod": 35000000, "asist_tug": 0,
         "port_stay_pol": 5, "port_stay_pod": 5
+    },
+    "Custom": {
+        "speed_laden": 0, "speed_ballast": 0,
+        "consumption": 0, "price_fuel": 0,
+        "consumption_fw": 0, "price_fw": 0,
+        "charter": 0, "crew": 0, "insurance": 0,
+        "docking": 000, "maintenance": 0,
+        "certificate": 0, "premi_nm": 0, "other_cost": 0,
+        "port_cost_pol": 0, "port_cost_pod": 0, "asist_tug": 0,
+        "port_stay_pol": 0, "port_stay_pod": 0
     }
 }
 
