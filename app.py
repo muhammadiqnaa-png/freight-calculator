@@ -755,25 +755,22 @@ st.markdown("### 💸 Freight Pricing")
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
 
-# 🔥 SPACING BIAR RAPI
+# ===== BUTTON =====
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 🔥 BUTTON UTAMA
 calculate = st.button(
     "🚀 CALCULATE NOW",
     use_container_width=True,
     type="primary"
 )
-
-    if calculate:
-        with st.spinner("⏳ Calculating..."):
-            # semua logic perhitungan lu disini
         
 
 # ===== PERHITUNGAN =====
 
 
 if calculate:
+    with st.spinner("⏳ Calculating..."):
+        # semua logic perhitungan lu disini
     try:
         distance_pol_pod = find_distance(port_pol, port_pod)
 
