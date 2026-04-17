@@ -112,6 +112,40 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+/* FORCE SIDEBAR MUNCUL */
+section[data-testid="stSidebar"] {
+    transform: translateX(0px) !important;
+    visibility: visible !important;
+}
+
+/* HILANGIN OVERLAY GELAP */
+div[data-testid="collapsedControl"] {
+    display: none !important;
+}
+
+/* Biar layout ga ketutup */
+section[data-testid="stSidebarContent"] {
+    width: 250px !important;
+}
+
+/* MAIN CONTENT geser dikit */
+.main .block-container {
+    margin-left: 260px !important;
+}
+
+/* KHUSUS HP */
+@media (max-width: 768px) {
+    .main .block-container {
+        margin-left: 250px !important;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
 /* Base font */
 html, body, [class*="css"]  {
     font-size: 13px !important;
