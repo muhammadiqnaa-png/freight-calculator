@@ -655,36 +655,40 @@ st.markdown("### 📦 Cargo Information")
 col1, col2 = st.columns(2)
 with col1:
     type_cargo = st.selectbox(
-    "Cargo Type",
-    ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
-    key="cargo_type"
+        "Cargo Type",
+        ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)"],
+        key="cargo_type"
     )
-    
+
+    selected_barge = st.session_state.get("preset_selected", "Custom")
+    cargo_type_now = st.session_state.get("cargo_type")
+
     def get_default_cargo(barge, cargo_type):
         return cargo_qty_default.get(barge, {}).get(cargo_type, 0)
 
-    selected_barge = st.session_state.get("preset_selected", "Custom")
-    cargo_type_now = st.session_state.get("cargo_type") or type_cargo
-
-    # tracker
+    # init state
     if "last_barge" not in st.session_state:
         st.session_state.last_barge = None
 
     if "last_cargo_type" not in st.session_state:
         st.session_state.last_cargo_type = None
 
-    # 🔥 AUTO ONLY WHEN BOTH SELECTED
-    if selected_barge and cargo_type_now:
+    if "cargo_user_override" not in st.session_state:
+        st.session_state.cargo_user_override = False
 
-        # kondisi: baru jalan kalau berubah atau pertama kali lengkap
-        if (
-            st.session_state.last_barge != selected_barge
-            or st.session_state.last_cargo_type != cargo_type_now
-        ):
-            st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
+    # 🔥 AUTO UPDATE ONLY IF CHANGE
+    if (
+        st.session_state.last_barge != selected_barge
+        or st.session_state.last_cargo_type != cargo_type_now
+    ):
+        st.session_state.cargo_qty = get_default_cargo(selected_barge, cargo_type_now)
 
-            st.session_state.last_barge = selected_barge
-            st.session_state.last_cargo_type = cargo_type_now
+        st.session_state.last_barge = selected_barge
+        st.session_state.last_cargo_type = cargo_type_now
+
+    # reset override kalau ganti barge
+    if st.session_state.last_barge != selected_barge:
+        st.session_state.cargo_user_override = False
 
 with col2:
     selected_barge = st.session_state.get("preset_selected", "Custom")
@@ -705,12 +709,12 @@ with col2:
     qyt_cargo = st.number_input(
         "Cargo Quantity",
         key="cargo_qty",
-        step=1.0
+        step=1.0,
+        min_value=0.0
     )
 
-    # detect user edit manual
-    if qyt_cargo != default_qty:
-        st.session_state.cargo_user_override = True
+    # 🔥 TAMBAHAN INI TARUH DI SINI
+    st.session_state.cargo_qty = qyt_cargo
 
 
 st.markdown("### 💸 Freight Pricing")
