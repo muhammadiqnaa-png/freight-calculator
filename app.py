@@ -654,8 +654,8 @@ type_cargo = st.selectbox(
 
 # ===== DEFAULT QTY =====
 default_qty = 0
-if st.session_state.preset_selected in cargo_capacity:
-    default_qty = cargo_capacity[st.session_state.preset_selected].get(type_cargo, 0)
+if st.session_state.preset_selected in cargo_qty_default:
+    default_qty = cargo_qty_default[st.session_state.preset_selected].get(type_cargo, 0)
 
 # ===== INIT SESSION (HANYA SEKALI) =====
 if "qyt_cargo" not in st.session_state:
