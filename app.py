@@ -382,6 +382,14 @@ if selected in preset_params:
     for k, v in preset_params[selected].items():
         st.session_state[k] = v
 
+if selected in cargo_qty_default:
+    cargo_type_now = st.session_state.get("cargo_type")
+
+    if cargo_type_now:
+        default_qty = cargo_qty_default[selected].get(cargo_type_now, 0)
+
+        st.session_state["cargo_qty"] = default_qty
+
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
@@ -659,7 +667,6 @@ with col2:
 
     qyt_cargo = st.number_input(
         "Cargo Quantity",
-        value=float(default_qty),
         step=1.0,
         key="cargo_qty"
     )
