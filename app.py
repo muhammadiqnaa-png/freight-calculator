@@ -662,13 +662,13 @@ with col1:
     else:
         auto_distance = 0
 
-    st.text_input("POL → POD (NM)", value=str(auto_distance), disabled=True)
+    st.metric("POL → POD (NM)", f"{auto_distance:,.0f}")
 
 with col2:
         # hanya hitung kalau NEXT PORT dipilih
         if port_pod and next_port:
             auto_distance_return = find_distance(port_pod, next_port)
-            st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
+            st.metric("POD → NEXT (NM)", f"{auto_distance_return:,.0f}")
 
 if "cargo_user_override" not in st.session_state:
     st.session_state.cargo_user_override = False
