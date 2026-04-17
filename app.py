@@ -662,13 +662,13 @@ with col1:
     else:
         auto_distance = 0
 
-    st.metric("POL → POD (NM)", f"{auto_distance:,.0f}")
+    st.text_input("POL → POD (NM)", value=str(auto_distance), disabled=True)
 
 with col2:
         # hanya hitung kalau NEXT PORT dipilih
         if port_pod and next_port:
             auto_distance_return = find_distance(port_pod, next_port)
-            st.metric("POD → NEXT (NM)", f"{auto_distance_return:,.0f}")
+            st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
 
 if "cargo_user_override" not in st.session_state:
     st.session_state.cargo_user_override = False
@@ -726,12 +726,17 @@ st.markdown("### 💸 Freight Pricing")
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
 
-st.markdown("")
-
-calculate = st.button(
-    "🚀 CALCULATE NOW",
-    use_container_width=True
-)
+st.markdown("""
+<style>
+div.stButton > button {
+    background: #0d47a1;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    height: 45px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ===== PERHITUNGAN =====
 
