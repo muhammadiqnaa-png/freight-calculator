@@ -59,6 +59,7 @@
 
   "Lampung, Muara Teladas - Marunda": 125,
 
+  "Hasnur Pendang, Kalteng - Taboneo": 195,
   "Hasnur Pendang, Kalteng - Celukan Bawang": 475,
   "Hasnur Pendang, Kalteng - Marunda": 705,
   "Hasnur Pendang, Kalteng - Indramayu": 635,
@@ -66,6 +67,18 @@
   "Hasnur Pendang, Kalteng - Cirebon": 600,
   "Hasnur Pendang, Kalteng - Gresik": 435,
 
+  "SEM, Kalteng - Taboneo": 119,
+  "SEM, Kalteng - Gresik": 355,
+  "SEM, Kalteng - Marunda": 625,
+
+  "BNJM, Kalteng - Taboneo": 117,
+  "BNJM, Kalteng - Paiton": 370,
+  "BNJM, Kalteng - Mamuju": 455,
+
+  "Hasnur, Sungai Putting - Taboneo": 70,
+  "Hasnur, Sungai Putting - Gresik": 305,
+  "Hasnur, Sungai Putting - Marund": 585,
+  
   "Talenta, Sungai Putting - Taboneo": 60,
   "Talenta, Sungai Putting - Gresik": 295,
   "Talenta, Sungai Putting - BAI, Bintan": 725,
@@ -74,6 +87,8 @@
   "ABN, Samarinda - Cirebon": 710,
 
   "Trias Sebulu, Samarinda - Gresik": 570,
+
+  "SMO PKN, Tanjung Selor - Pulau Obi": 740,
 
   "RMB, Bukit Jering - Pulau Obi": 860,
 
@@ -86,6 +101,11 @@
   "SPJ, Suralaya - Labuan": 40,
   "SPJ, Suralaya - Pelabuhan Ratu": 165,
 
-  "Lariang - IPIP, Pomala": 450,
-  "SMO PKN, Tanjung Selor - Pulau Obi": 740
+  "Bojonegara - Paramarta, Palembang": 395,
+  "Bojonegara - Marunda": 70,
+  "Bojonegara - Jelapat, Kalteng": 725,
+
+  "Sluke, Rembang - Marunda": 300,
+
+  "Lariang - IPIP, Pomala": 450
 }
