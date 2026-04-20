@@ -284,8 +284,8 @@ if not st.session_state.logged_in:
             background: white;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             margin-top: 60px;
-         }
-     </style>
+        }
+    </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-container">', unsafe_allow_html=True)
@@ -312,42 +312,10 @@ if not st.session_state.logged_in:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # optional register link style
     if st.button("Create Account →"):
         st.session_state.show_register = True
 
-    if st.session_state.get("show_register", False) and not st.session_state.logged_in:
-
-        st.markdown("""
-        <div style="
-            max-width:380px;
-            margin:auto;
-            padding:30px;
-            border-radius:20px;
-            background:#ffffff;
-            box-shadow:0 10px 30px rgba(0,0,0,0.15);
-            margin-top:40px;
-        ">
-        """, unsafe_allow_html=True)
-
-        st.markdown("### 📝 Create Account")
-
-        email = st.text_input("Email Register", key="reg_email")
-        password = st.text_input("Password Register", type="password", key="reg_pass")
-
-        if st.button("REGISTER", use_container_width=True):
-            ok, data = register_user(email, password)
-            if ok:
-                st.success("Account created! Please login")
-                st.session_state.show_register = False
-            else:
-                st.error("Register failed")
-    
-        if st.button("← Back to Login"):
-            st.session_state.show_register = False
-
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.stop()
+    st.stop()
 
 
 # ==========================================================
