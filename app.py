@@ -131,12 +131,12 @@ if st.session_state.page == "welcome":
 
         <hr>
 
-        <p style="font-size:13px;">
-            ✔ Calculate voyage cost instantly<br>
-            ✔ Fuel, port, crew, charter included<br>
-            ✔ Profit simulation<br>
-            ✔ Export PDF report<br>
-        </p>
+    <p style="font-size:13px;">
+        ✔ Calculate voyage cost instantly<br>
+        ✔ Fuel, port, crew, charter included<br>
+        ✔ Profit simulation<br>
+         ✔ Export PDF report<br>
+    </p>
     </div>
     """, unsafe_allow_html=True)
 
