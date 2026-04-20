@@ -259,32 +259,23 @@ div.stButton > button[kind="secondary"]:hover {
 st.markdown("""
 <style>
 
-/* ===== SEGMENTED CONTROL UPGRADE LOOK ===== */
-div[data-baseweb="segmented-control"] {
-    background: #f1f5f9;
-    padding: 4px;
-    border-radius: 12px;
-}
-
 /* tombol default */
-div[data-baseweb="segmented-control"] button {
-    border-radius: 10px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
+div.stButton > button {
+    border-radius: 10px;
+    font-size: 12px;
     transition: 0.2s;
 }
 
 /* hover */
-div[data-baseweb="segmented-control"] button:hover {
-    background: #e2e8f0 !important;
+div.stButton > button:hover {
+    transform: scale(1.03);
 }
 
-/* ACTIVE BUTTON (yang dipilih) */
-div[data-baseweb="segmented-control"] button[aria-pressed="true"] {
+/* ACTIVE STATE (pakai session state trick) */
+div.stButton > button[kind="primary"] {
     background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
     color: white !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    font-weight: 700;
 }
 
 </style>
