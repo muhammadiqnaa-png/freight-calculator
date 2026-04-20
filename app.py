@@ -953,22 +953,27 @@ if calculate:
         
         st.markdown(f"""
         <div style="
-            background:#f5f7ff;
+            background:#1a1a1a;
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
+            color:white;
+            border-left:5px solid #f9a825;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
-        <h4>🚢 Voyage Summary</h4>
-        
+        <h4 style="color:#f9a825;">🚢 Voyage Summary</h4>
+
         • Cargo Type: <b>{type_cargo}</b><br>
         • Route: <b>{port_pol} → {port_pod}</b><br>
         • Distance POL → POD: <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
         • Total Voyage: <b>{total_voyage_days:.2f} Days</b><br>
-        <span style="margin-left:10px; font-size:12px; color:#666;">
-        (sailing time POL→POD {pol_pod_day:.2f} Days - POD→POL {pod_pol_day:.2f} Days )
+
+        <span style="font-size:12px; color:#bbb;">
+        (sailing POL→POD {pol_pod_day:.2f} Days - POD→POL {pod_pol_day:.2f} Days)
         </span><br>
-        • Freight Cost: <b>Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}</b>
+
+        • Freight Cost: <b style="color:#ffd54f;">Rp {freight_cost_mt:,.0f}</b>
 
         </div>
         """, unsafe_allow_html=True)
