@@ -957,7 +957,7 @@ if calculate:
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            color:white;
+            color:#0f172a;;
             border-left:5px solid #f9a825;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
