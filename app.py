@@ -152,19 +152,26 @@ st.markdown("""
 
 /* 🔥 BUTTON CALCULATE UTAMA */
 div.stButton > button {
-    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    background: linear-gradient(135deg, #000000, #b71c1c, #f9a825);
     color: white;
     font-weight: bold;
     border-radius: 12px;
     height: 48px;
     font-size: 14px;
     border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
 }
 
 /* 🔥 EFFECT HOVER */
 div.stButton > button:hover {
-    background: linear-gradient(135deg, #1565c0, #1e88e5);
-    transform: scale(1.02);
+    background: linear-gradient(135deg, #000000, #b71c1c, #f9a825);
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    height: 48px;
+    font-size: 14px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
 }
 
 /* 🔥 BIAR ADA JARAK DI HP */
@@ -648,31 +655,31 @@ if st.sidebar.button("Log Out"):
 st.markdown("""
 <div style="
     width: 100%;
-    background: linear-gradient(135deg, #000000, #b71c1c, #f9a825);
-    padding: 18px 12px;
-    border-radius: 14px;
+    background: linear-gradient(135deg, #0b0b0b, #8b0000, #f9a825);
+    padding: 20px 14px;
+    border-radius: 16px;
     text-align: center;
     color: white;
-    margin-bottom: 15px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.08);
 ">
-<div style="
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-">
-    🚢 Freight Calculator
-</div>
+    <div style="
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 0.8px;
+    ">
+        🚢 Freight Calculator
+    </div>
 
-<div style="
-    font-size: 12px;
-    margin-top: 5px;
-    opacity: 0.9;
-    color: #ffe082;
- ">
-    Mobile Shipping Cost & Profit Tool
-</div>
+    <div style="
+        font-size: 12px;
+        margin-top: 6px;
+        opacity: 0.85;
+        color: #ffd54f;
+    ">
+        Mobile Shipping Cost & Profit Tool
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
