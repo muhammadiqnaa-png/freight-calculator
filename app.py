@@ -258,15 +258,48 @@ div.stButton > button[kind="secondary"]:hover {
 
 st.markdown("""
 <style>
-div[data-testid="stButton"] button {
-    border-radius: 10px;
-    font-size: 12px;
+
+/* ===== CONTAINER ===== */
+div[role="radiogroup"] {
+    display: flex;
+    gap: 8px;
+    width: 100%;
 }
 
-/* active look */
-div[data-testid="stButton"] button:active {
-    transform: scale(0.98);
+/* ===== DEFAULT OPTION ===== */
+div[role="radiogroup"] label {
+    flex: 1;
+    text-align: center;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    color: #334155;
 }
+
+/* hide radio dot */
+div[role="radiogroup"] input {
+    display: none;
+}
+
+/* 🔥 ACTIVE (SELECTED) */
+div[role="radiogroup"] label:has(input:checked) {
+    background: #2563eb !important;
+    color: white !important;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(37,99,235,0.35);
+    transform: scale(1.05);
+    border: none;
+}
+
+/* hover */
+div[role="radiogroup"] label:hover {
+    background: #e2e8f0;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
