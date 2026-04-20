@@ -113,6 +113,40 @@ st.set_page_config(
     layout="wide"
 )
 
+# =========================
+# 🚀 WELCOME PAGE
+# =========================
+if st.session_state.page == "welcome":
+
+    st.markdown("""
+    <div style="
+        text-align:center;
+        padding:40px;
+        background:linear-gradient(135deg,#6495ED,#FFFFFF);
+        border-radius:16px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    ">
+        <h1>🚢 Freight Calculator</h1>
+        <p>Smart Shipping Cost & Profit Tool</p>
+
+        <hr>
+
+        <p style="font-size:13px;">
+            ✔ Calculate voyage cost instantly<br>
+            ✔ Fuel, port, crew, charter included<br>
+            ✔ Profit simulation<br>
+            ✔ Export PDF report<br>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if st.button("➡ NEXT"):
+        st.session_state.page = "auth"
+        st.rerun()
+
+    st.stop()
+
+
 st.markdown("""
 <style>
 
@@ -244,39 +278,6 @@ st.markdown("""
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
-
-# =========================
-# 🚀 WELCOME PAGE
-# =========================
-if st.session_state.page == "welcome":
-
-    st.markdown("""
-    <div style="
-        text-align:center;
-        padding:40px;
-        background:linear-gradient(135deg,#6495ED,#FFFFFF);
-        border-radius:16px;
-        box-shadow:0 10px 25px rgba(0,0,0,0.3);
-    ">
-        <h1>🚢 Freight Calculator</h1>
-        <p>Smart Shipping Cost & Profit Tool</p>
-
-        <hr>
-
-        <p style="font-size:13px;">
-            ✔ Calculate voyage cost instantly<br>
-            ✔ Fuel, port, crew, charter included<br>
-            ✔ Profit simulation<br>
-            ✔ Export PDF report<br>
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    if st.button("➡ NEXT"):
-        st.session_state.page = "auth"
-        st.rerun()
-
-    st.stop()
 
 # ====== FIREBASE AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
