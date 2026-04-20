@@ -271,20 +271,32 @@ if "show_register" not in st.session_state:
 if "email" not in st.session_state:
     st.session_state.email = ""
 
-# ===== LOGIN =====
+# ===== LOGIN SYSTEM =====
 if not st.session_state.logged_in:
 
     st.markdown("""
     <style>
-        .login-container {
-            max-width: 380px;
-            margin: auto;
-            padding: 30px;
-            border-radius: 20px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            margin-top: 60px;
-        }
+    .login-container {
+        max-width: 380px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin-top: 60px;
+    }
+    .title {
+        text-align:center;
+        font-size:24px;
+        font-weight:700;
+        margin-bottom:5px;
+    }
+    .subtitle {
+        text-align:center;
+        font-size:13px;
+        color:gray;
+        margin-bottom:20px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -298,6 +310,7 @@ if not st.session_state.logged_in:
 
     if st.button("LOGIN", use_container_width=True):
         ok, data = login_user(email, password)
+
         if ok:
             st.session_state.logged_in = True
             st.session_state.email = email
@@ -308,15 +321,44 @@ if not st.session_state.logged_in:
 
             st.rerun()
         else:
-            st.error("Email or password incorrect")
+            st.error("Email atau password salah")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    if st.button("Create Account →"):
+    st.markdown("---")
+
+    if st.button("➕ Create Account"):
         st.session_state.show_register = True
 
-    st.stop()
+    # ===== REGISTER PAGE =====
+    if st.session_state.get("show_register", False):
 
+        st.markdown("""
+        <div class="login-container">
+        """, unsafe_allow_html=True)
+
+        st.markdown("### 📝 Create Account")
+
+        reg_email = st.text_input("Email Register", key="reg_email")
+        reg_password = st.text_input("Password Register", type="password", key="reg_pass")
+
+        if st.button("REGISTER", use_container_width=True):
+            ok, data = register_user(reg_email, reg_password)
+
+            if ok:
+                st.success("Account berhasil dibuat! Silakan login")
+                st.session_state.show_register = False
+                st.rerun()
+            else:
+                st.error("Register gagal")
+
+        if st.button("← Back to Login"):
+            st.session_state.show_register = False
+            st.rerun()
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.stop()
 
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
