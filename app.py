@@ -354,13 +354,13 @@ if not st.session_state.logged_in:
                 else:
                     st.error("❌ Email sudah dipakai atau gagal daftar.")
 
-        st.markdown("---")
+            st.markdown("---")
 
-        if st.button("⬅ Back to Login"):
-            st.session_state.page = "login"
-            st.rerun()
+            if st.button("⬅ Back to Login"):
+                st.session_state.page = "login"
+                st.rerun()
 
-        st.stop()
+            st.stop()
     
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
