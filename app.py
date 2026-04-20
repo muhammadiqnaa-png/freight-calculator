@@ -1244,6 +1244,3 @@ if calculate:
 
     except Exception as e:
         st.error(f"Error: {e}")
-
-
-Kasih kesimpulan dari aplikasi yang saya punya bro 
