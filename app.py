@@ -958,10 +958,10 @@ if calculate:
             border-radius:12px;
             margin-bottom:10px;
             color:#0f172a;;
-            border-left:5px solid #60a5fa;
+            border-left:5px solid #93c5fd;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
-        <h4 style="color:#f9a825;">🚢 Voyage Summary</h4>
+        <h4 style="color:#93c5fd;">🚢 Voyage Summary</h4>
 
         • Cargo Type: <b>{type_cargo}</b><br>
         • Route: <b>{port_pol} → {port_pod}</b><br>
