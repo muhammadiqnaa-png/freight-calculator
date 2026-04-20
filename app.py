@@ -268,44 +268,105 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if not st.session_state.logged_in:
+
     st.markdown("""
-    <div style="text-align:center; padding:10px;">
-        <h3>🚢 Freight Calculator Login</h3>
-    </div>
+    <style>
+        .login-container {
+            max-width: 380px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 60px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .create-text {
+            text-align: center;
+            font-size: 12px;
+            color: #2563eb;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
     """, unsafe_allow_html=True)
-    tab_login, tab_register = st.tabs(["Login", "Register"])
 
-    with tab_login:
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-        if st.button("Login 🚀"):
-            ok, data = login_user(email, password)
-            if ok:
-                st.session_state.logged_in = True
-                st.session_state.email = email
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
 
-                cookies["logged_in"] = "true"
-                cookies["email"] = email
-                cookies.save()
+    st.markdown('<div class="title">🚢 Freight Calculator</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Login to continue</div>', unsafe_allow_html=True)
 
-                st.success("Login successful!")
-                st.rerun()
-            else:
-                st.error("Email or password incorrect!")
+    email = st.text_input("Email", key="login_email")
+    password = st.text_input("Password", type="password", key="login_pass")
 
-    with tab_register:
-        email = st.text_input("Email Register")
-        password = st.text_input("Password Register", type="password")
-        if st.button("Register 📝"):
-            ok, data = register_user(email, password)
-            if ok:
-                st.success("Registration successful! Please login.")
-            else:
-                st.error("Failed to register. Email may already exist.")
+    if st.button("LOGIN", use_container_width=True):
+        ok, data = login_user(email, password)
+        if ok:
+            st.session_state.logged_in = True
+            st.session_state.email = email
+
+            cookies["logged_in"] = "true"
+            cookies["email"] = email
+            cookies.save()
+
+            st.rerun()
+        else:
+            st.error("Email or password incorrect")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # optional register link style
+    if st.button("Create Account →"):
+        st.session_state.show_register = True
+
+if st.session_state.get("show_register", False) and not st.session_state.logged_in:
+
+    st.markdown("""
+    <div style="
+        max-width:380px;
+        margin:auto;
+        padding:30px;
+        border-radius:20px;
+        background:#ffffff;
+        box-shadow:0 10px 30px rgba(0,0,0,0.15);
+        margin-top:40px;
+    ">
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 📝 Create Account")
+
+    email = st.text_input("Email Register", key="reg_email")
+    password = st.text_input("Password Register", type="password", key="reg_pass")
+
+    if st.button("REGISTER", use_container_width=True):
+        ok, data = register_user(email, password)
+        if ok:
+            st.success("Account created! Please login")
+            st.session_state.show_register = False
+        else:
+            st.error("Register failed")
+
+    if st.button("← Back to Login"):
+        st.session_state.show_register = False
+
+    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
-    
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
+
 
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
