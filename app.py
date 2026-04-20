@@ -328,7 +328,7 @@ if not st.session_state.logged_in:
              opacity: 0.85;
               color: #64748B;
          ">
-             Freight Calculator Barge
+             🚢Freight Calculator Barge🚢
          </div>
 
          <div style="
