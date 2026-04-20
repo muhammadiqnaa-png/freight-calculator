@@ -314,7 +314,7 @@ if not st.session_state.logged_in:
             ">
                 Login to continue
             </div>
-            </div>
+        </div>
         """, unsafe_allow_html=True)
         if st.session_state.register_success:
             st.success("🎉 Registrasi berhasil! Silakan login untuk melanjutkan.")
