@@ -258,37 +258,18 @@ div.stButton > button[kind="secondary"]:hover {
 
 st.markdown("""
 <style>
-
-/* ===== SEGMENTED CONTROL WRAPPER ===== */
-div[data-baseweb="segmented-control"] {
-    background: #f1f5f9;
-    padding: 6px;
-    border-radius: 12px;
+div[data-testid="stButton"] button {
+    border-radius: 10px;
+    font-size: 12px;
 }
 
-/* ===== DEFAULT BUTTON ===== */
-div[data-baseweb="segmented-control"] button {
-    color: #334155 !important;
-    border-radius: 10px !important;
-    transition: all 0.2s ease;
+/* active look */
+div[data-testid="stButton"] button:active {
+    transform: scale(0.98);
 }
-
-/* ===== SELECTED STATE (INI KUNCI FIX) ===== */
-div[data-baseweb="segmented-control"] button[aria-checked="true"] {
-    background: #2563eb !important;   /* 🔵 BIRU */
-    color: white !important;
-    font-weight: 600 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
-}
-
-/* hover */
-div[data-baseweb="segmented-control"] button:hover {
-    background: #e2e8f0;
-}
-
 </style>
 """, unsafe_allow_html=True)
+
 
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
