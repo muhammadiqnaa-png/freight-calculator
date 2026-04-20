@@ -319,7 +319,7 @@ if not st.session_state.logged_in:
             font-weight: 900;
             letter-spacing: 0.8px;
         ">
-            🚢 Freight Calculator
+            Welcome
         </div>
 
         <div style="
@@ -328,8 +328,18 @@ if not st.session_state.logged_in:
              opacity: 0.85;
               color: #64748B;
          ">
-             Mobile Shipping Cost & Profit Tool
+             Freight Calculator Barge
          </div>
+
+         <div style="
+             font-size: 12px;
+             margin-top: 6px;
+             opacity: 0.85;
+              color: #64748B;
+         ">
+             Shipping Cost & Profit Tool
+         </div>
+         
         </div>
         """, unsafe_allow_html=True)
         
