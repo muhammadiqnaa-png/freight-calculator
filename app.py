@@ -261,6 +261,9 @@ if cookies.get("logged_in") == "true":
     st.session_state.logged_in = True
     st.session_state.email = cookies.get("email")
 
+if "page" not in st.session_state:
+    st.session_state.page = "login"
+
 # ===== SESSION INIT =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
