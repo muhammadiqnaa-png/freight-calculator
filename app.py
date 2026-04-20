@@ -272,40 +272,40 @@ if "email" not in st.session_state:
     st.session_state.email = ""
 
 # ===== LOGIN =====
-    st.markdown("""
-    <style>
-        .login-container {
-            max-width: 380px;
-            margin: auto;
-            padding: 30px;
-            border-radius: 20px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            margin-top: 60px;
-        }
+st.markdown("""
+<style>
+    .login-container {
+        max-width: 380px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin-top: 60px;
+    }
 
-        .title {
-            text-align: center;
-            font-size: 26px;
-            font-weight: 800;
-            color: #1e3a8a;
-            margin-bottom: 5px;
-        }
+    .title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 800;
+        color: #1e3a8a;
+        margin-bottom: 5px;
+    }
 
-        .subtitle {
-            text-align: center;
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 25px;
-        }
+    .subtitle {
+        text-align: center;
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 25px;
+    }
 
-        .create-text {
-            text-align: center;
-            font-size: 12px;
-            color: #2563eb;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+    .create-text {
+        text-align: center;
+        font-size: 12px;
+        color: #2563eb;
+        cursor: pointer;
+        margin-top: 15px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
