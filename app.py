@@ -218,6 +218,23 @@ html, body, [class*="css"] {
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+input {
+    font-size: 14px !important;
+}
+
+label {
+    font-size: 13px !important;
+}
+
+div.stButton > button {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
