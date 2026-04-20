@@ -307,48 +307,48 @@ if not st.session_state.logged_in:
     
     tab_login, tab_register = st.tabs(["Login", "Register"])
 
-# ================= LOGIN =================
-with tab_login:
-    email = st.text_input("Email", value=st.session_state.prefill_email)
-    password = st.text_input("Password", type="password")
+    # ================= LOGIN =================
+    with tab_login:
+        email = st.text_input("Email", value=st.session_state.prefill_email)
+        password = st.text_input("Password", type="password")
 
-    if st.button("Login 🚀"):
-        ok, data = login_user(email, password)
-        if ok:
-            st.session_state.logged_in = True
-            st.session_state.email = email
+        if st.button("Login 🚀"):
+            ok, data = login_user(email, password)
+            if ok:
+                st.session_state.logged_in = True
+                st.session_state.email = email
 
-            cookies["logged_in"] = "true"
-            cookies["email"] = email
-            cookies.save()
+                cookies["logged_in"] = "true"
+                cookies["email"] = email
+                cookies.save()
 
-            st.success("Login berhasil 🚀")
+                st.success("Login berhasil 🚀")
+                st.rerun()
+            else:
+                st.error("Email atau password salah!")
+
+    # ================= REGISTER =================
+    with tab_register:
+        st.markdown("### 📝 Create Account")
+
+        email_reg = st.text_input("Email Register")
+        password_reg = st.text_input("Password Register", type="password")
+
+        if st.button("Create Account 📝"):
+            ok, data = register_user(email_reg, password_reg)
+
+            if ok:
+                st.success("Akun berhasil dibuat! Silakan login.")
+                st.session_state.prefill_email = email_reg
+            else:
+                st.error("Email sudah dipakai atau gagal daftar.")
+
+        if st.button("⬅ Back to Login"):
+            st.session_state.page = "login"
             st.rerun()
-        else:
-            st.error("Email atau password salah!")
-
-# ================= REGISTER =================
-with tab_register:
-    st.markdown("### 📝 Create Account")
-
-    email_reg = st.text_input("Email Register")
-    password_reg = st.text_input("Password Register", type="password")
-
-    if st.button("Create Account 📝"):
-        ok, data = register_user(email_reg, password_reg)
-
-        if ok:
-            st.success("Akun berhasil dibuat! Silakan login.")
-            st.session_state.prefill_email = email_reg
-        else:
-            st.error("Email sudah dipakai atau gagal daftar.")
-
-    if st.button("⬅ Back to Login"):
-        st.session_state.page = "login"
-        st.rerun()
     
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
+        if "logged_in" not in st.session_state:
+            st.session_state.logged_in = False
 
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
