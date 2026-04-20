@@ -256,6 +256,41 @@ div.stButton > button[kind="secondary"]:hover {
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* ===== SEGMENTED CONTROL BASE STYLE ===== */
+div[data-baseweb="segmented-control"] {
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 12px;
+}
+
+/* ===== DEFAULT ITEM ===== */
+div[data-baseweb="segmented-control"] button {
+    border-radius: 10px !important;
+    font-weight: 500;
+    color: #334155 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* ===== SELECTED ITEM (INI KUNCINYA) ===== */
+div[data-baseweb="segmented-control"] button[aria-checked="true"] {
+    background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    transform: scale(1.03);
+}
+
+/* hover effect */
+div[data-baseweb="segmented-control"] button:hover {
+    background: #e2e8f0;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
