@@ -274,80 +274,80 @@ if "email" not in st.session_state:
 # ===== LOGIN =====
 if not st.session_state.logged_in:
 
-st.markdown("""
-<style>
-    .login-container {
-        max-width: 380px;
-        margin: auto;
-        padding: 30px;
-        border-radius: 20px;
-        background: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        margin-top: 60px;
-     }
- </style>
-""", unsafe_allow_html=True)
-
-st.markdown('<div class="login-container">', unsafe_allow_html=True)
-
-st.markdown('<div class="title">🚢 Freight Calculator</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Login to continue</div>', unsafe_allow_html=True)
-
-email = st.text_input("Email", key="login_email")
-password = st.text_input("Password", type="password", key="login_pass")
-
-if st.button("LOGIN", use_container_width=True):
-    ok, data = login_user(email, password)
-    if ok:
-        st.session_state.logged_in = True
-        st.session_state.email = email
-
-        cookies["logged_in"] = "true"
-        cookies["email"] = email
-        cookies.save()
-
-        st.rerun()
-    else:
-        st.error("Email or password incorrect")
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# optional register link style
-if st.button("Create Account →"):
-    st.session_state.show_register = True
-
-if st.session_state.get("show_register", False) and not st.session_state.logged_in:
-
     st.markdown("""
-    <div style="
-        max-width:380px;
-        margin:auto;
-        padding:30px;
-        border-radius:20px;
-        background:#ffffff;
-        box-shadow:0 10px 30px rgba(0,0,0,0.15);
-        margin-top:40px;
-    ">
+    <style>
+        .login-container {
+            max-width: 380px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 60px;
+         }
+     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 📝 Create Account")
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
 
-    email = st.text_input("Email Register", key="reg_email")
-    password = st.text_input("Password Register", type="password", key="reg_pass")
+    st.markdown('<div class="title">🚢 Freight Calculator</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Login to continue</div>', unsafe_allow_html=True)
 
-    if st.button("REGISTER", use_container_width=True):
-        ok, data = register_user(email, password)
+    email = st.text_input("Email", key="login_email")
+    password = st.text_input("Password", type="password", key="login_pass")
+
+    if st.button("LOGIN", use_container_width=True):
+        ok, data = login_user(email, password)
         if ok:
-            st.success("Account created! Please login")
-            st.session_state.show_register = False
-        else:
-            st.error("Register failed")
+            st.session_state.logged_in = True
+            st.session_state.email = email
 
-    if st.button("← Back to Login"):
-        st.session_state.show_register = False
+            cookies["logged_in"] = "true"
+            cookies["email"] = email
+            cookies.save()
+
+            st.rerun()
+        else:
+            st.error("Email or password incorrect")
 
     st.markdown("</div>", unsafe_allow_html=True)
-    st.stop()
+
+    # optional register link style
+    if st.button("Create Account →"):
+        st.session_state.show_register = True
+
+    if st.session_state.get("show_register", False) and not st.session_state.logged_in:
+
+        st.markdown("""
+        <div style="
+            max-width:380px;
+            margin:auto;
+            padding:30px;
+            border-radius:20px;
+            background:#ffffff;
+            box-shadow:0 10px 30px rgba(0,0,0,0.15);
+            margin-top:40px;
+        ">
+        """, unsafe_allow_html=True)
+
+        st.markdown("### 📝 Create Account")
+
+        email = st.text_input("Email Register", key="reg_email")
+        password = st.text_input("Password Register", type="password", key="reg_pass")
+
+        if st.button("REGISTER", use_container_width=True):
+            ok, data = register_user(email, password)
+            if ok:
+                st.success("Account created! Please login")
+                st.session_state.show_register = False
+            else:
+                st.error("Register failed")
+    
+        if st.button("← Back to Login"):
+            st.session_state.show_register = False
+
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.stop()
 
 
 # ==========================================================
