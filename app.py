@@ -269,10 +269,35 @@ if "logged_in" not in st.session_state:
 
 if not st.session_state.logged_in:
     st.markdown("""
-    <div style="text-align:center; padding:10px;">
-        <h3>🚢 Freight Calculator Login</h3>
+    <div style="
+        width: 100%;
+        background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
+        padding: 20px 14px;
+        border-radius: 16px;
+        text-align: center;
+        color: Black;
+        margin-bottom: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+        border: 1px solid rgba(255,255,255,0.08);
+    ">
+    <div style="
+        font-size: 40px;
+        font-weight: 900;
+        letter-spacing: 0.8px;
+    ">
+        🚢 Freight Calculator
     </div>
-    """, unsafe_allow_html=True)
+
+    <div style="
+         font-size: 12px;
+         margin-top: 6px;
+         opacity: 0.85;
+          color: #64748B;
+     ">
+         Mobile Shipping Cost & Profit Tool
+     </div>
+    </div>
+    
     tab_login, tab_register = st.tabs(["Login", "Register"])
 
     with tab_login:
