@@ -306,7 +306,7 @@ if not st.session_state.logged_in:
         <div style="
             width: 100%;
             background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
-            padding: 14px;
+            padding: 10px;
             border-radius: 16px;
             text-align: center;
             color: Black;
