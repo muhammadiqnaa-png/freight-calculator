@@ -604,7 +604,6 @@ st.sidebar.markdown("### 🚢 Barge Class")
 
 options = ["270 ft", "300 ft", "330 ft", "Custom"]
 
-# init state
 if "preset_control" not in st.session_state:
     st.session_state.preset_control = "270 ft"
 
@@ -612,9 +611,18 @@ cols = st.sidebar.columns(4)
 
 for i, opt in enumerate(options):
 
+    # 🔥 ACTIVE STYLE
+    is_active = st.session_state.preset_control == opt
+
+    if is_active:
+        btn_type = "primary"
+    else:
+        btn_type = "secondary"
+
     if cols[i].button(
         opt,
         key=f"barge_{opt}",
+        type=btn_type,
         use_container_width=True
     ):
         st.session_state.preset_control = opt
