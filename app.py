@@ -986,7 +986,8 @@ if calculate:
         <h4 style="color:#ff9800;">⛽ Fuel & Water</h4>
 
         • Fuel Consumption: <b>{total_consumption_fuel:,.0f} Ltr</b><br>
-        • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b>
+        • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b><br>
+        
         • Freshwater Consumption: <b>{total_consumption_fw:,.0f} Ton</b><br>
         • FW Cost: <b>Rp {cost_fw:,.0f}</b>
 
