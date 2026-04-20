@@ -287,15 +287,6 @@ if not st.session_state.logged_in:
 
         st.markdown("""
         <div style="
-            max-width:380px;
-            margin:auto;
-            padding:30px;
-            border-radius:20px;
-            background:white;
-            box-shadow:0 10px 30px rgba(0,0,0,0.15);
-            margin-top:60px;
-            text-align:center;
-        <div style="
             text-align:center;
             margin-bottom:18px;
         ">
@@ -316,6 +307,7 @@ if not st.session_state.logged_in:
             </div>
         </div>
         """, unsafe_allow_html=True)
+        
         if st.session_state.register_success:
             st.success("🎉 Registrasi berhasil! Silakan login untuk melanjutkan.")
             st.session_state.register_success = False
