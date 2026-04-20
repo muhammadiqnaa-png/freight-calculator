@@ -323,8 +323,7 @@ if not st.session_state.logged_in:
     # =========================
     if st.session_state.page == "login":
 
-        st.markdown('<div class="login-title">Welcome</div>', unsafe_allow_html=True)
-        st.markdown('<div class="login-subtitle">Freight Calculator</div>', unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center;'>🔐 Login Freight Calculator Barge</h2>", unsafe_allow_html=True)
         
         if st.session_state.register_success:
             st.success("🎉 Registrasi berhasil! Silakan login untuk melanjutkan.")
