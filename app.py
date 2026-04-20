@@ -258,9 +258,6 @@ def register_user(email, password):
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-if "page" not in st.session_state:
-    st.session_state.page = "login"
-
 # ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
 if cookies.get("logged_in") == "true":
     st.session_state.logged_in = True
@@ -305,7 +302,10 @@ if not st.session_state.logged_in:
     tab_login, tab_register = st.tabs(["Login", "Register"])
 
     with tab_login:
-        email = st.text_input("Email")
+        email = st.text_input(
+            "Email",
+            value=st.session_state.get("prefill_email", "")
+        )
         password = st.text_input("Password", type="password")
         if st.button("Login 🚀"):
             ok, data = login_user(email, password)
