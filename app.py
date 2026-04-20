@@ -975,20 +975,26 @@ if calculate:
 
         st.markdown(f"""
         <div style="
-            background:#fff3e0;
+            background:#1a1a1a;
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
+            color:white;
+            border-left:5px solid #ff9800;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
-        <h4>⛽ Fuel & Water</h4>
+        <h4 style="color:#ff9800;">⛽ Fuel & Water</h4>
+
         • Fuel Consumption: <b>{total_consumption_fuel:,.0f} Ltr</b><br>
-        • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b><br>
-        <br>
+        • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b><br><br>
+
         • Freshwater Consumption: <b>{total_consumption_fw:,.0f} Ton</b><br>
         • FW Cost: <b>Rp {cost_fw:,.0f}</b>
+
         </div>
         """, unsafe_allow_html=True)
 
+        
         st.subheader("🏗️ Cost Summary")
 
         # =========================
