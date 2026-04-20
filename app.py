@@ -1052,7 +1052,7 @@ if calculate:
             border-left:5px solid #03a9f4;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
-        <h4 style="color:#03a9f4;">⏱️ TCE</h4>
+        <h4 style="color:#03a9f4;">⏱️ TCE (Time Charter Equivalent)</h4>
 
         • Per Day: <b>Rp {tce_per_day:,.0f}</b><br>
         • Per Month: <b>Rp {tce_per_month:,.0f}</b>
