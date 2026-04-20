@@ -285,34 +285,37 @@ if not st.session_state.logged_in:
     # =========================
     if st.session_state.page == "login":
 
-        st.markdown("<br>", unsafe_allow_html=True)
-
         st.markdown("""
         <div style="
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            text-align:center;
-            margin-bottom:20px;
+            width: 100%;
+            background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
+            padding: 20px 14px;
+            border-radius: 16px;
+            text-align: center;
+            color: Black;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+            border: 1px solid rgba(255,255,255,0.08);
         ">
-            <div style="
-                font-size:28px;
-                font-weight:800;
-                color:#1f2937;
-            ">
-                🚢 Freight Calculator
-            </div>
+        <div style="
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: 0.8px;
+        ">
+            🚢 Freight Calculator
+        </div>
 
-            <div style="
-                font-size:13px;
-                color:#6b7280;
-                margin-top:6px;
-            ">
-                Login to continue
-            </div>
+        <div style="
+             font-size: 12px;
+             margin-top: 6px;
+             opacity: 0.85;
+              color: #64748B;
+         ">
+             Mobile Shipping Cost & Profit Tool
+         </div>
         </div>
         """, unsafe_allow_html=True)
+        
         if st.session_state.register_success:
             st.success("🎉 Registrasi berhasil! Silakan login untuk melanjutkan.")
             st.session_state.register_success = False
