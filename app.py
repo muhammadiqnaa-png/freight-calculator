@@ -256,31 +256,6 @@ div.stButton > button[kind="secondary"]:hover {
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<style>
-
-/* tombol default */
-div.stButton > button {
-    border-radius: 10px;
-    font-size: 12px;
-    transition: 0.2s;
-}
-
-/* hover */
-div.stButton > button:hover {
-    transform: scale(1.03);
-}
-
-/* ACTIVE STATE (pakai session state trick) */
-div.stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
-    color: white !important;
-    font-weight: 700;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
@@ -577,39 +552,13 @@ def apply_preset():
     for k, v in chosen.items():
         st.session_state[k] = v
 
-st.sidebar.markdown("### 🚢 Barge Class")
-
-options = ["270 ft", "300 ft", "330 ft", "Custom"]
-
-if "preset_control" not in st.session_state:
-    st.session_state.preset_control = "Custom"
-
-cols = st.sidebar.columns(2)
-
-for i, opt in enumerate(options):
-    is_active = st.session_state.preset_control == opt
-
-    if cols[i % 2].button(
-        opt,
-        key=f"barge_{opt}",
-        use_container_width=True
-    ):
-        st.session_state.preset_control = opt
-
-    # kasih highlight visual manual
-    if is_active:
-        cols[i % 2].markdown(
-            f"""
-            <div style="
-                margin-top:-10px;
-                margin-bottom:10px;
-                height:4px;
-                background:#2563eb;
-                border-radius:10px;
-            "></div>
-            """,
-            unsafe_allow_html=True
-        )
+preset = st.sidebar.segmented_control(
+    "Barge Class",
+    ["270 ft", "300 ft", "330 ft", "Custom"],
+    key="preset_control"
+)
+        
+selected = st.session_state.preset_control
 
 if selected in preset_params:
     for k, v in preset_params[selected].items():
