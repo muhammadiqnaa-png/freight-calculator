@@ -270,6 +270,17 @@ if "logged_in" not in st.session_state:
 if not st.session_state.logged_in:
     st.markdown("""
     <div style="
+        width: 100%;
+        background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
+        padding: 20px 14px;
+        border-radius: 16px;
+        text-align: center;
+        color: Black;
+        margin-bottom: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+        border: 1px solid rgba(255,255,255,0.08);
+    ">
+    <div style="
         font-size: 35px;
         font-weight: 900;
         letter-spacing: 0.8px;
