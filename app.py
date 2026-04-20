@@ -743,7 +743,7 @@ st.markdown("""
     border: 1px solid rgba(255,255,255,0.08);
 ">
 <div style="
-    font-size: 40px;
+    font-size: 35px;
     font-weight: 900;
     letter-spacing: 0.8px;
 ">
