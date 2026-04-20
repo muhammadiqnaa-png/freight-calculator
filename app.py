@@ -361,20 +361,7 @@ if not st.session_state.logged_in:
     # =========================
     if st.session_state.page == "register":
 
-        st.markdown("""
-        <div style="
-            max-width:380px;
-            margin:auto;
-            padding:30px;
-            border-radius:20px;
-            background:white;
-            box-shadow:0 10px 30px rgba(0,0,0,0.15);
-            margin-top:60px;
-            text-align:center;
-        ">
-        """, unsafe_allow_html=True)
-
-        st.markdown("### 📝 Create Account")
+        st.markdown("<h2 style='text-align:center;'> Register Freight Calculator Barge</h2>", unsafe_allow_html=True)
 
         reg_email = st.text_input("Email", key="reg_email")
         reg_password = st.text_input("Password", type="password", key="reg_pass")
