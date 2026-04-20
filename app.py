@@ -971,7 +971,7 @@ if calculate:
         <span style="font-size:11px; color:#bbb;">
         (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
         </span><br>
-        • Freight Cost: <b style="color:#ffd54f;">Rp {freight_cost_mt:,.0f}</b>
+        • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
 
         </div>
         """, unsafe_allow_html=True)
