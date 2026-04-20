@@ -958,7 +958,7 @@ if calculate:
             border-radius:12px;
             margin-bottom:10px;
             color:#0f172a;;
-            border-left:5px solid #f9a825;
+            border-left:5px solid #60a5fa;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
         <h4 style="color:#f9a825;">🚢 Voyage Summary</h4>
