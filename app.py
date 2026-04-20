@@ -323,23 +323,13 @@ if not st.session_state.logged_in:
         </div>
 
         <div style="
-             font-size: 12px;
+             font-size: 25px;
              margin-top: 6px;
              opacity: 0.85;
               color: #64748B;
          ">
              🚢Freight Calculator Barge🚢
          </div>
-
-         <div style="
-             font-size: 12px;
-             margin-top: 6px;
-             opacity: 0.85;
-              color: #64748B;
-         ">
-             Shipping Cost & Profit Tool
-         </div>
-         
         </div>
         """, unsafe_allow_html=True)
         
