@@ -304,7 +304,7 @@ if cookies.get("logged_in") == "true":
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-if not st.session_state.logged_in:
+if st.session_state.page == "auth":
     st.markdown("""
     <div style="text-align:center; padding:10px;">
         <h3>🚢 Freight Calculator Login</h3>
@@ -319,6 +319,9 @@ if not st.session_state.logged_in:
             ok, data = login_user(email, password)
             if ok:
                 st.session_state.logged_in = True
+                st.session_state.logged_in = True
+                st.session_state.page = "app"
+                st.rerun()
                 st.session_state.email = email
                 st.session_state.show_welcome = True
 
@@ -719,7 +722,9 @@ if st.sidebar.button("**Log Out**"):
     st.success("Successfully logged out.")
     st.rerun()
 
-
+if st.session_state.page != "app":
+    st.stop()
+        
 # ===== Judul =====
 
 st.markdown("""
