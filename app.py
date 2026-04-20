@@ -13,6 +13,10 @@ import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
 
+# ===== PAGE CONTROLLER =====
+if "page" not in st.session_state:
+    st.session_state.page = "welcome"
+
 cookies = EncryptedCookieManager(
     prefix="freight_app",
     password="abc123"
@@ -20,10 +24,6 @@ cookies = EncryptedCookieManager(
 
 if not cookies.ready():
     st.stop()
-
-# ===== PAGE CONTROLLER =====
-if "page" not in st.session_state:
-    st.session_state.page = "welcome"
 
 DATA_FILE = "distance_data.json"
 
