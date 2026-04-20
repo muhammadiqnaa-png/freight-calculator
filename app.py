@@ -366,7 +366,7 @@ if not st.session_state.logged_in:
         reg_email = st.text_input("Email", key="reg_email")
         reg_password = st.text_input("Password", type="password", key="reg_pass")
 
-        if st.button("Create Account", use_container_width=True):
+        if st.button("Create New Account", use_container_width=True):
             ok, data = register_user(reg_email, reg_password)
 
             if ok:
