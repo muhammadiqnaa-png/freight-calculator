@@ -256,10 +256,10 @@ def register_user(email, password):
     return res.ok, res.json()
 
     if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+        st.session_state.logged_in = False
 
     if "show_register" not in st.session_state:
-    st.session_state.show_register = False
+        st.session_state.show_register = False
 
 # ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
 if cookies.get("logged_in") == "true":
