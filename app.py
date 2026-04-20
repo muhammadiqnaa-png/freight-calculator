@@ -340,7 +340,7 @@ if not st.session_state.logged_in:
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        if st.button("➕ Create Account"):
+        if st.button("➕ Create Account", use_container_width=True):
             st.session_state.page = "register"
             st.rerun()
 
