@@ -957,7 +957,7 @@ if calculate:
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            color:#0f172a;;
+            color:#0f172a;
             border-left:5px solid #93c5fd;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
@@ -978,11 +978,11 @@ if calculate:
 
         st.markdown(f"""
         <div style="
-            background:#1a1a1a;
+            background:linear-gradient(135deg, #f8fafc, #eef5ff);
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            color:white;
+            color:#0f172a;;
             border-left:5px solid #ff9800;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
