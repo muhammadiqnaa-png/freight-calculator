@@ -267,51 +267,17 @@ if cookies.get("logged_in") == "true":
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-if "page" not in st.session_state:
-    st.session_state.page = "login"
-
-if "prefill_email" not in st.session_state:
-    st.session_state.prefill_email = ""
-
 if not st.session_state.logged_in:
     st.markdown("""
-    <div style="
-        width: 100%;
-        background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
-        padding: 20px 14px;
-        border-radius: 16px;
-        text-align: center;
-        color: Black;
-        margin-bottom: 18px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.45);
-        border: 1px solid rgba(255,255,255,0.08);
-    ">
-    <div style="
-        font-size: 35px;
-        font-weight: 900;
-        letter-spacing: 0.8px;
-    ">
-        🚢 Freight Calculator
-    </div>
-
-    <div style="
-         font-size: 12px;
-         margin-top: 6px;
-         opacity: 0.85;
-          color: #64748B;
-     ">
-         Mobile Shipping Cost & Profit Tool
-     </div>
+    <div style="text-align:center; padding:10px;">
+        <h3>🚢 Freight Calculator Login</h3>
     </div>
     """, unsafe_allow_html=True)
-    
     tab_login, tab_register = st.tabs(["Login", "Register"])
 
-    # ================= LOGIN =================
     with tab_login:
-        email = st.text_input("Email", value=st.session_state.prefill_email)
+        email = st.text_input("Email")
         password = st.text_input("Password", type="password")
-
         if st.button("Login 🚀"):
             ok, data = login_user(email, password)
             if ok:
@@ -322,33 +288,24 @@ if not st.session_state.logged_in:
                 cookies["email"] = email
                 cookies.save()
 
-                st.success("Login berhasil 🚀")
+                st.success("Login successful!")
                 st.rerun()
             else:
-                st.error("Email atau password salah!")
+                st.error("Email or password incorrect!")
 
-    # ================= REGISTER =================
     with tab_register:
-        st.markdown("### 📝 Create Account")
-
-        email_reg = st.text_input("Email Register")
-        password_reg = st.text_input("Password Register", type="password")
-
-        if st.button("Create Account 📝"):
-            ok, data = register_user(email_reg, password_reg)
-
+        email = st.text_input("Email Register")
+        password = st.text_input("Password Register", type="password")
+        if st.button("Register 📝"):
+            ok, data = register_user(email, password)
             if ok:
-                st.success("Akun berhasil dibuat! Silakan login.")
-                st.session_state.prefill_email = email_reg
+                st.success("Registration successful! Please login.")
             else:
-                st.error("Email sudah dipakai atau gagal daftar.")
-
-        if st.button("⬅ Back to Login"):
-            st.session_state.page = "login"
-            st.rerun()
+                st.error("Failed to register. Email may already exist.")
+    st.stop()
     
-        if "logged_in" not in st.session_state:
-            st.session_state.logged_in = False
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
 
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
