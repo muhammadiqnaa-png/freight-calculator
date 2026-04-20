@@ -264,6 +264,9 @@ if cookies.get("logged_in") == "true":
 if "page" not in st.session_state:
     st.session_state.page = "login"
 
+if "register_success" not in st.session_state:
+    st.session_state.register_success = False
+
 # ===== SESSION INIT =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -352,7 +355,7 @@ if not st.session_state.logged_in:
             ok, data = register_user(reg_email, reg_password)
 
             if ok:
-                st.success("Account berhasil dibuat")
+                st.session_state.register_success = True
                 st.session_state.page = "login"
                 st.rerun()
             else:
