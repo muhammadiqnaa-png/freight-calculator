@@ -690,11 +690,11 @@ if st.sidebar.button("Log Out"):
 st.markdown("""
 <div style="
     width: 100%;
-    background: linear-gradient(135deg, #FFFFFF, #87CEEB, #87CEEB);
+    background: linear-gradient(135deg, #0000FF, #FFFFFF, #0000FF);
     padding: 20px 14px;
     border-radius: 16px;
     text-align: center;
-    color: white;
+    color: Black;
     margin-bottom: 18px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.45);
     border: 1px solid rgba(255,255,255,0.08);
