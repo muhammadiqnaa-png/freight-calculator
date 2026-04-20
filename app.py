@@ -109,7 +109,6 @@ st.set_page_config(
     layout="wide"
 )
 
-
 st.markdown("""
 <style>
 
@@ -242,6 +241,7 @@ st.markdown("""
 <meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
 
+
 # ====== FIREBASE AUTH ======
 FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
 AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
@@ -267,7 +267,7 @@ if cookies.get("logged_in") == "true":
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-if st.session_state.page == "auth":
+if not st.session_state.logged_in:
     st.markdown("""
     <div style="text-align:center; padding:10px;">
         <h3>🚢 Freight Calculator Login</h3>
@@ -282,9 +282,7 @@ if st.session_state.page == "auth":
             ok, data = login_user(email, password)
             if ok:
                 st.session_state.logged_in = True
-                st.session_state.logged_in = True
                 st.session_state.email = email
-                st.session_state.show_welcome = True
 
                 cookies["logged_in"] = "true"
                 cookies["email"] = email
@@ -305,6 +303,9 @@ if st.session_state.page == "auth":
             else:
                 st.error("Failed to register. Email may already exist.")
     st.stop()
+    
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
 
 # ==========================================================
 # ⚙️ PRESET PARAMETER KAPAL (non-intrusive)
@@ -683,9 +684,7 @@ if st.sidebar.button("**Log Out**"):
     st.success("Successfully logged out.")
     st.rerun()
 
-if st.session_state.page != "app":
-    st.stop()
-        
+
 # ===== Judul =====
 
 st.markdown("""
@@ -701,7 +700,7 @@ st.markdown("""
     border: 1px solid rgba(255,255,255,0.08);
 ">
 <div style="
-    font-size: 35px;
+    font-size: 40px;
     font-weight: 900;
     letter-spacing: 0.8px;
 ">
@@ -1245,3 +1244,6 @@ if calculate:
 
     except Exception as e:
         st.error(f"Error: {e}")
+
+
+Kasih kesimpulan dari aplikasi yang saya punya bro 
