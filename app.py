@@ -221,7 +221,7 @@ html, body, [class*="css"] {
 st.markdown("""
 <style>
 
-/* ===== LOGIN BUTTON (tetap biru) ===== */
+/* ===== LOGIN BUTTON (BIRU) ===== */
 div.stButton > button[kind="primary"] {
     background: #2563eb !important;
     color: white !important;
@@ -231,25 +231,26 @@ div.stButton > button[kind="primary"] {
     border: none !important;
 }
 
+/* hover login */
 div.stButton > button[kind="primary"]:hover {
     background: #1d4ed8 !important;
 }
 
-/* ===== CREATE ACCOUNT (POLOS / TRANSPARAN) ===== */
+/* ===== CREATE ACCOUNT (KOTAK POLOS) ===== */
 div.stButton > button[kind="secondary"] {
-    background: transparent !important;
+    background: transparent !important;   /* ❌ tidak ada warna */
     color: #2563eb !important;
-    border: none !important;
-    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important; /* kotak tetap ada */
+    border-radius: 10px !important;
+    height: 42px !important;
     font-weight: 500 !important;
-    height: 38px !important;
+    box-shadow: none !important;
 }
 
-/* hover kecil aja (tanpa background) */
+/* hover tetap soft */
 div.stButton > button[kind="secondary"]:hover {
-    color: #1d4ed8 !important;
-    text-decoration: underline;
-    background: transparent !important;
+    background: #f8fafc !important;
+    border-color: #2563eb !important;
 }
 
 </style>
@@ -360,7 +361,7 @@ if not st.session_state.logged_in:
         email = st.text_input("Email", key="login_email")
         password = st.text_input("Password", type="password", key="login_pass")
 
-        if st.button("LOGIN", use_container_width=True):
+        if st.button("LOGIN", type="primary", use_container_width=True):
             ok, data = login_user(email, password)
 
             if ok:
@@ -377,7 +378,7 @@ if not st.session_state.logged_in:
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        if st.button("Create New Account", type="secondary", use_container_width=True):
+        if st.button("➕ Create Account", type="secondary", use_container_width=True):
             st.session_state.page = "register"
             st.rerun()
 
