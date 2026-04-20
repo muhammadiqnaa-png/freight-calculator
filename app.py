@@ -319,16 +319,46 @@ if not st.session_state.logged_in:
             else:
                 st.error("Email or password incorrect!")
 
-    with tab_register:
+    if not st.session_state.logged_in and st.session_state.page == "register":
+
+        st.markdown("""
+        <div style="
+            text-align:center;
+            padding:30px;
+            font-size:28px;
+            font-weight:900;
+        ">
+        📝 Create Account
+        </div>
+        """, unsafe_allow_html=True)
+
         email = st.text_input("Email Register")
         password = st.text_input("Password Register", type="password")
-        if st.button("Register 📝"):
+
+        if st.button("Create Account 📝"):
             ok, data = register_user(email, password)
+
             if ok:
-                st.success("Registration successful! Please login.")
+                st.success("🎉 Account successfully created! Please login to continue.")
+
+                # 🔥 pindah ke login
+                st.session_state.page = "login"
+
+                # auto isi email di login
+                st.session_state.prefill_email = email
+
+                st.rerun()
+
             else:
-                st.error("Failed to register. Email may already exist.")
-    st.stop()
+                st.error("❌ Registration failed. Email may already be used.")
+
+        st.markdown("---")
+
+        if st.button("⬅ Back to Login"):
+            st.session_state.page = "login"
+            st.rerun()
+
+        st.stop()
     
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
