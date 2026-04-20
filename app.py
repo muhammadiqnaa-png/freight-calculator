@@ -818,7 +818,7 @@ freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 st.markdown("<br>", unsafe_allow_html=True)
 
 calculate = st.button(
-    "🚀 CALCULATE NOW",
+    "**🚀 CALCULATE NOW**",
     use_container_width=True,
     type="primary"
 )
