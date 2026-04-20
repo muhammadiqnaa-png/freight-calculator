@@ -13,10 +13,6 @@ import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
 
-# ===== PAGE CONTROLLER =====
-if "page" not in st.session_state:
-    st.session_state.page = "welcome"
-
 cookies = EncryptedCookieManager(
     prefix="freight_app",
     password="abc123"
@@ -267,39 +263,6 @@ if cookies.get("logged_in") == "true":
     st.session_state.logged_in = True
     st.session_state.email = cookies.get("email")
 
-# =========================
-# 🚀 WELCOME PAGE
-# =========================
-if st.session_state.page == "welcome":
-
-    st.markdown("""
-    <div style="
-        text-align:center;
-        padding:40px;
-        background:linear-gradient(135deg,#6495ED,#FFFFFF);
-        border-radius:16px;
-        box-shadow:0 10px 25px rgba(0,0,0,0.3);
-    ">
-        <h1>🚢 Freight Calculator</h1>
-        <p>Smart Shipping Cost & Profit Tool</p>
-
-    <hr>
-
-    <p style="font-size:13px;">
-        ✔ Calculate voyage cost instantly<br>
-        ✔ Fuel, port, crew, charter included<br>
-        ✔ Profit simulation<br>
-         ✔ Export PDF report<br>
-    </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    if st.button("➡ NEXT"):
-        st.session_state.page = "auth"
-        st.rerun()
-
-    st.stop()
-
 # ===== LOGIN =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -320,8 +283,6 @@ if st.session_state.page == "auth":
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.logged_in = True
-                st.session_state.page = "app"
-                st.rerun()
                 st.session_state.email = email
                 st.session_state.show_welcome = True
 
