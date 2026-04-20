@@ -183,6 +183,41 @@ div.stButton {
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* ===== FIX RESULT BOX DARK MODE ===== */
+
+div[data-testid="stAlert"] {
+    color: white !important;
+}
+
+/* SUCCESS */
+div[data-testid="stAlert"][kind="success"] {
+    background-color: #1b5e20 !important;
+    border-left: 5px solid #00e676 !important;
+}
+
+/* WARNING */
+div[data-testid="stAlert"][kind="warning"] {
+    background-color: #ff8f00 !important;
+    border-left: 5px solid #ffd54f !important;
+}
+
+/* ERROR */
+div[data-testid="stAlert"][kind="error"] {
+    background-color: #b71c1c !important;
+    border-left: 5px solid #ff5252 !important;
+}
+
+/* FORCE TEXT ALWAYS VISIBLE */
+html, body, [class*="css"] {
+    color: #f5f5f5 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
