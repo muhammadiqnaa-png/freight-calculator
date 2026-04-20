@@ -323,36 +323,8 @@ if not st.session_state.logged_in:
     # =========================
     if st.session_state.page == "login":
 
-        st.markdown("""
-        <div style="
-            width: 100%;
-            background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
-            padding: 0px;
-            border-radius: 12px;
-            text-align: center;
-            color: Black;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
-            border: 1px solid rgba(255,255,255,0.08);
-        ">
-        <div style="
-            font-size: 40px;
-            font-weight: 900;
-            letter-spacing: 0.8px;
-        ">
-            Welcome
-        </div>
-
-        <div style="
-             font-size: 25px;
-             margin-top: 6px;
-             opacity: 0.85;
-              color: #64748B;
-         ">
-             🚢Freight Calculator Barge🚢
-         </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="login-title">Welcome</div>', unsafe_allow_html=True)
+        st.markdown('<div class="login-subtitle">Freight Calculator</div>', unsafe_allow_html=True)
         
         if st.session_state.register_success:
             st.success("🎉 Registrasi berhasil! Silakan login untuk melanjutkan.")
