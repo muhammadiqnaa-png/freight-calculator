@@ -586,11 +586,25 @@ def apply_preset():
     for k, v in chosen.items():
         st.session_state[k] = v
 
-preset = st.sidebar.segmented_control(
-    "Barge Class",
-    ["270 ft", "300 ft", "330 ft", "Custom"],
-    key="preset_control"
-)
+st.sidebar.markdown("### 🚢 Barge Class")
+
+options = ["270 ft", "300 ft", "330 ft", "Custom"]
+
+# init state
+if "preset_control" not in st.session_state:
+    st.session_state.preset_control = "270 ft"
+
+cols = st.sidebar.columns(4)
+
+for i, opt in enumerate(options):
+
+    if cols[i].button(
+        opt,
+        key=f"barge_{opt}",
+        use_container_width=True
+    ):
+        st.session_state.preset_control = opt
+        st.rerun()
         
 selected = st.session_state.preset_control
 
