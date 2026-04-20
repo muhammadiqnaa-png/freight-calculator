@@ -271,34 +271,41 @@ if not st.session_state.logged_in:
 
     st.markdown("""
     <style>
+
+    /* HAPUS SPACE STREAMLIT */
+    .block-container {
+        padding-top: 0rem !important;
+        padding-bottom: 0rem !important;
+    }
+
+    /* FULL SCREEN WRAPPER */
     .login-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
         height: 100vh;
+
         display: flex;
         justify-content: center;
         align-items: center;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
     }
+
+    /* CARD */
     .login-card {
         width: 360px;
         padding: 25px;
         border-radius: 16px;
         background: rgba(255,255,255,0.08);
         backdrop-filter: blur(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="login-card">
-        <h2 style="text-align:center; color:Black; margin-top:0;">
-            🚢 Freight Calculator
-        </h2>
-        <p style="text-align:center; color:#aaa; font-size:12px;">
-            Shipping Cost & Profit Tool
-        </p>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
     tab_login, tab_register = st.tabs(["🔑 Login", "📝 Register"])
 
