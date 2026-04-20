@@ -268,52 +268,17 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if not st.session_state.logged_in:
-
     st.markdown("""
-    <style>
-
-    /* HAPUS SPACE STREAMLIT */
-    .block-container {
-        padding-top: 0rem !important;
-        padding-bottom: 0rem !important;
-    }
-
-    /* FULL SCREEN WRAPPER */
-    .login-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-    }
-
-    /* CARD */
-    .login-card {
-        width: 360px;
-        padding: 25px;
-        border-radius: 16px;
-        background: rgba(255,255,255,0.08);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-    </style>
+    <div style="text-align:center; padding:10px;">
+        <h3>🚢 Freight Calculator Login</h3>
+    </div>
     """, unsafe_allow_html=True)
-
-    st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
-    st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
-    tab_login, tab_register = st.tabs(["🔑 Login", "📝 Register"])
+    tab_login, tab_register = st.tabs(["Login", "Register"])
 
     with tab_login:
-        email = st.text_input("Email", placeholder="Enter email")
+        email = st.text_input("Email")
         password = st.text_input("Password", type="password")
-
-        if st.button("Login", use_container_width=True):
+        if st.button("Login 🚀"):
             ok, data = login_user(email, password)
             if ok:
                 st.session_state.logged_in = True
@@ -323,23 +288,20 @@ if not st.session_state.logged_in:
                 cookies["email"] = email
                 cookies.save()
 
+                st.success("Login successful!")
                 st.rerun()
             else:
-                st.error("Invalid login")
+                st.error("Email or password incorrect!")
 
     with tab_register:
-        email_r = st.text_input("Email Register")
-        password_r = st.text_input("Password Register", type="password")
-
-        if st.button("Create Account", use_container_width=True):
-            ok, data = register_user(email_r, password_r)
+        email = st.text_input("Email Register")
+        password = st.text_input("Password Register", type="password")
+        if st.button("Register 📝"):
+            ok, data = register_user(email, password)
             if ok:
-                st.success("Account created, please login")
+                st.success("Registration successful! Please login.")
             else:
-                st.error("Failed to register")
-
-    st.markdown("</div></div>", unsafe_allow_html=True)
-
+                st.error("Failed to register. Email may already exist.")
     st.stop()
     
     if "logged_in" not in st.session_state:
