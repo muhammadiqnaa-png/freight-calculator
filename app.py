@@ -656,7 +656,7 @@ st.markdown("""
     margin-bottom: 15px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 ">
-    <div style="font-size: 20px; font-weight: 700;">
+    <div style="font-size: 25px; font-weight: 700;">
         🚢 Freight Calculator
     </div>
     <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">
