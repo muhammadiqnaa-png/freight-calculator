@@ -552,35 +552,11 @@ def apply_preset():
     for k, v in chosen.items():
         st.session_state[k] = v
 
-st.markdown("### 🚢 Barge Class")
-
-options = ["270 ft", "300 ft", "330 ft", "Custom"]
-
-cols = st.columns(4)
-
-for i, opt in enumerate(options):
-    active = st.session_state.get("preset_control") == opt
-
-    cols[i].markdown(
-        f"""
-        <div style="
-            padding:10px;
-            border-radius:12px;
-            text-align:center;
-            cursor:pointer;
-            border:1px solid {'#2563eb' if active else '#ddd'};
-            background:{'#2563eb' if active else 'white'};
-            color:{'white' if active else 'black'};
-            font-weight:600;
-        ">
-        {opt}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    if cols[i].button("Select", key=opt):
-        st.session_state.preset_control = opt
+preset = st.sidebar.segmented_control(
+    "Barge Class",
+    ["270 ft", "300 ft", "330 ft", "Custom"],
+    key="preset_control"
+)
         
 selected = st.session_state.preset_control
 
