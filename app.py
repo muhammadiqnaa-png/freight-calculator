@@ -301,6 +301,10 @@ if not st.session_state.logged_in:
         st.markdown("### 🚢 Freight Calculator")
         st.markdown("Login to continue")
 
+        if st.session_state.register_success:
+            st.success("🎉 Registrasi berhasil! Silakan login untuk melanjutkan.")
+            st.session_state.register_success = False
+
         email = st.text_input("Email", key="login_email")
         password = st.text_input("Password", type="password", key="login_pass")
 
