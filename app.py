@@ -272,8 +272,6 @@ if "email" not in st.session_state:
     st.session_state.email = ""
 
 # ===== LOGIN =====
-if not st.session_state.logged_in:
-
     st.markdown("""
     <style>
         .login-container {
