@@ -552,9 +552,12 @@ def apply_preset():
     for k, v in chosen.items():
         st.session_state[k] = v
 
-preset = st.sidebar.segmented_control(
-    "Barge Class",
+st.sidebar.markdown("### 🚢 Barge Class")
+
+preset = st.sidebar.radio(
+    "",
     ["270 ft", "300 ft", "330 ft", "Custom"],
+    horizontal=True,
     key="preset_control"
 )
         
