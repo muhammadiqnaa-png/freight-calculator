@@ -220,18 +220,38 @@ html, body, [class*="css"] {
 
 st.markdown("""
 <style>
-input {
-    font-size: 14px !important;
-}
 
-label {
-    font-size: 13px !important;
-}
-
-div.stButton > button {
-    font-size: 14px !important;
+/* ===== LOGIN BUTTON (tetap biru) ===== */
+div.stButton > button[kind="primary"] {
+    background: #2563eb !important;
+    color: white !important;
+    border-radius: 10px !important;
+    height: 42px !important;
     font-weight: 600 !important;
+    border: none !important;
 }
+
+div.stButton > button[kind="primary"]:hover {
+    background: #1d4ed8 !important;
+}
+
+/* ===== CREATE ACCOUNT (POLOS / TRANSPARAN) ===== */
+div.stButton > button[kind="secondary"] {
+    background: transparent !important;
+    color: #2563eb !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-weight: 500 !important;
+    height: 38px !important;
+}
+
+/* hover kecil aja (tanpa background) */
+div.stButton > button[kind="secondary"]:hover {
+    color: #1d4ed8 !important;
+    text-decoration: underline;
+    background: transparent !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -357,7 +377,7 @@ if not st.session_state.logged_in:
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        if st.button("➕ Create Account", use_container_width=True):
+        if st.button("Create New Account", type="secondary", use_container_width=True):
             st.session_state.page = "register"
             st.rerun()
 
