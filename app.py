@@ -285,10 +285,10 @@ if not st.session_state.logged_in:
             box-shadow:0 10px 30px rgba(0,0,0,0.3);
         ">
             <h2 style="text-align:center; color:#ffffff;">
-                🚢 Freight App
+                🚢 Freight Calculator
             </h2>
             <p style="text-align:center; color:#bbb; font-size:12px;">
-                Login to continue
+                Welcome
             </p>
     """, unsafe_allow_html=True)
 
