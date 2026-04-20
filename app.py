@@ -297,6 +297,7 @@ if not st.session_state.logged_in:
          Mobile Shipping Cost & Profit Tool
      </div>
     </div>
+    """, unsafe_allow_html=True)
     
     tab_login, tab_register = st.tabs(["Login", "Register"])
 
