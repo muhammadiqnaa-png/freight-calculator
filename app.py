@@ -664,22 +664,22 @@ st.markdown("""
     box-shadow: 0 10px 25px rgba(0,0,0,0.45);
     border: 1px solid rgba(255,255,255,0.08);
 ">
-    <div style="
-        font-size: 24px;
-        font-weight: 900;
-        letter-spacing: 0.8px;
-    ">
-        🚢 Freight Calculator
-    </div>
+<div style="
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+">
+    🚢 Freight Calculator
+</div>
 
-    <div style="
-        font-size: 12px;
-        margin-top: 6px;
-        opacity: 0.85;
-        color: #ffd54f;
-    ">
-        Mobile Shipping Cost & Profit Tool
-    </div>
+<div style="
+     font-size: 12px;
+     margin-top: 6px;
+     opacity: 0.85;
+      color: #ffd54f;
+ ">
+     Mobile Shipping Cost & Profit Tool
+ </div>
 </div>
 """, unsafe_allow_html=True)
 
