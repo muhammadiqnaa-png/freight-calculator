@@ -642,19 +642,26 @@ if st.sidebar.button("Log Out"):
     st.success("Successfully logged out.")
     st.rerun()
 
-# ===== MAIN INPUT =====
-st.title("")
+
+# ===== Judul =====
+
 st.markdown("""
 <div style="
-    text-align:center;
-    padding:10px;
-    border-radius:12px;
-    background:#0d47a1;
-    color:white;
-    margin-bottom:15px;
+    width: 100%;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    padding: 18px 12px;
+    border-radius: 14px;
+    text-align: center;
+    color: white;
+    margin-bottom: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 ">
-    <h3 style="margin:0;">🚢 Freight Calculator</h3>
-    <p style="margin:0; font-size:12px;">Mobile Shipping Cost & Profit Tool</p>
+    <div style="font-size: 20px; font-weight: 700;">
+        🚢 Freight Calculator
+    </div>
+    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">
+        Mobile Shipping Cost & Profit Tool
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
