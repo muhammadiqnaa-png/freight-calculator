@@ -317,7 +317,7 @@ if st.session_state.logged_in and st.session_state.show_welcome:
     <div style="text-align:center; padding:30px;">
         <h1>🚢 Welcome to Freight Calculator</h1>
         <p style="font-size:16px; color:gray;">
-            Smart Shipping Cost & Profit Simulation Tool
+            Shipping Cost & Profit Tool
         </p>
     </div>
     """, unsafe_allow_html=True)
