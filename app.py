@@ -953,7 +953,7 @@ if calculate:
         
         st.markdown(f"""
         <div style="
-            background:#1a1a1a;
+            background:#1e293b;
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
