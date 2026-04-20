@@ -21,6 +21,10 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
+# ===== PAGE CONTROLLER =====
+if "page" not in st.session_state:
+    st.session_state.page = "welcome"
+
 DATA_FILE = "distance_data.json"
 
 def find_distance(pol, pod):
@@ -267,9 +271,6 @@ if cookies.get("logged_in") == "true":
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-if "show_welcome" not in st.session_state:
-    st.session_state.show_welcome = False
-
 if not st.session_state.logged_in:
     st.markdown("""
     <div style="text-align:center; padding:10px;">
@@ -306,48 +307,6 @@ if not st.session_state.logged_in:
                 st.success("Registration successful! Please login.")
             else:
                 st.error("Failed to register. Email may already exist.")
-    st.stop()
-
-# =========================
-# 🎬 WELCOME SCREEN
-# =========================
-if st.session_state.logged_in and st.session_state.show_welcome:
-
-    st.markdown("""
-    <div style="text-align:center; padding:30px;">
-        <h1>🚢 Welcome to Freight Calculator</h1>
-        <p style="font-size:16px; color:gray;">
-            Shipping Cost & Profit Tool
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    ### 📌 What you can do in this app:
-
-    🚢 Plan voyage routes (POL → POD → Next Port)  
-    📦 Manage cargo & quantity automatically  
-    ⛽ Calculate fuel & operational cost  
-    💰 Simulate profit & freight pricing  
-    📊 Profit scenario analysis (0–75%)  
-    📄 Export professional PDF report  
-    ⚙️ Use ship presets (270 / 300 / 330 ft)  
-
-    ---
-    """)
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("🚀 Start Now"):
-            st.session_state.show_welcome = False
-            st.rerun()
-
-    with col2:
-        if st.button("⏭️ Skip"):
-            st.session_state.show_welcome = False
-            st.rerun()
-
     st.stop()
 
 # ==========================================================
