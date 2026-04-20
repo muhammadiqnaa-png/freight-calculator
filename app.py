@@ -359,7 +359,7 @@ if not st.session_state.logged_in:
     # =========================
     # PAGE: REGISTER
     # =========================
-    if st.session_state.page == "Register":
+    if st.session_state.page == "register":
 
         st.markdown("<h2 style='text-align:center;'>Create Account</h2>", unsafe_allow_html=True)
 
