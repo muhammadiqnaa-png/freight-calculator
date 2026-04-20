@@ -967,12 +967,10 @@ if calculate:
         • Route: <b>{port_pol} → {port_pod}</b><br>
         • Distance POL → POD: <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Cargo: <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
-        • Total Voyage: <b>{total_voyage_days:.2f} Days</b><br>
-
+        • Total Voyage: <b>{total_voyage_days:.2f} Days</b>
         <span style="font-size:12px; color:#bbb;">
         (sailing POL→POD {pol_pod_day:.2f} Days - POD→POL {pod_pol_day:.2f} Days)
         </span><br>
-
         • Freight Cost: <b style="color:#ffd54f;">Rp {freight_cost_mt:,.0f}</b>
 
         </div>
