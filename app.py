@@ -256,6 +256,40 @@ div.stButton > button[kind="secondary"]:hover {
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* ===== SEGMENTED CONTROL UPGRADE LOOK ===== */
+div[data-baseweb="segmented-control"] {
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 12px;
+}
+
+/* tombol default */
+div[data-baseweb="segmented-control"] button {
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    transition: 0.2s;
+}
+
+/* hover */
+div[data-baseweb="segmented-control"] button:hover {
+    background: #e2e8f0 !important;
+}
+
+/* ACTIVE BUTTON (yang dipilih) */
+div[data-baseweb="segmented-control"] button[aria-pressed="true"] {
+    background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================================
 # 🔧 PWA Support — biar bisa di-install di HP
 # ==========================================================
