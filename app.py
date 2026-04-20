@@ -553,7 +553,7 @@ def apply_preset():
         st.session_state[k] = v
 
 preset = st.sidebar.segmented_control(
-    "Size Barge",
+    "Barge Class",
     ["270 ft", "300 ft", "330 ft", "Custom"],
     key="preset_control"
 )
