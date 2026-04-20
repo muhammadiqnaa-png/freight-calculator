@@ -129,7 +129,7 @@ if st.session_state.page == "welcome":
         <h1>🚢 Freight Calculator</h1>
         <p>Smart Shipping Cost & Profit Tool</p>
 
-        <hr>
+    <hr>
 
     <p style="font-size:13px;">
         ✔ Calculate voyage cost instantly<br>
