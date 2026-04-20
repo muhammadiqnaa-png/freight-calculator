@@ -1044,11 +1044,11 @@ if calculate:
 
         st.markdown(f"""
         <div style="
-            background:#1a1a1a;
+            background:linear-gradient(135deg, #f8fafc, #eef5ff);
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            color:white;
+            color:black;
             border-left:5px solid #03a9f4;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
