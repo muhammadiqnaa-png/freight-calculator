@@ -270,26 +270,34 @@ if "logged_in" not in st.session_state:
 if not st.session_state.logged_in:
 
     st.markdown("""
-    <div style="
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:80vh;
-    ">
-        <div style="
-            width:360px;
-            padding:25px;
-            border-radius:16px;
-            background:rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            box-shadow:0 10px 30px rgba(0,0,0,0.3);
-        ">
-            <h2 style="text-align:center; color:#ffffff;">
-                🚢 Freight Calculator
-            </h2>
-            <p style="text-align:center; color:#bbb; font-size:12px;">
-                Welcome
-            </p>
+    <style>
+    .login-wrapper {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .login-card {
+        width: 360px;
+        padding: 25px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="login-card">
+        <h2 style="text-align:center; color:Black; margin-top:0;">
+            🚢 Freight Calculator
+        </h2>
+        <p style="text-align:center; color:#aaa; font-size:12px;">
+            Shipping Cost & Profit Tool
+        </p>
     """, unsafe_allow_html=True)
 
     tab_login, tab_register = st.tabs(["🔑 Login", "📝 Register"])
