@@ -106,7 +106,7 @@ def get_next_ports(pod):
 st.set_page_config(
     page_title="Freight Calculator Barge",
     page_icon="https://raw.githubusercontent.com/muhammadiqnaa-png/freight-calculator/main/icon-512x512.png",
-    layout="centered"
+    layout="wide"
 )
 
 st.markdown("""
