@@ -711,7 +711,7 @@ st.markdown("""
      font-size: 12px;
      margin-top: 6px;
      opacity: 0.85;
-      color: #ffd54f;
+      color: #64748B;
  ">
      Mobile Shipping Cost & Profit Tool
  </div>
