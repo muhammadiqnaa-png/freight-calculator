@@ -152,8 +152,8 @@ st.markdown("""
 
 /* 🔥 BUTTON CALCULATE UTAMA */
 div.stButton > button {
-    background: linear-gradient(135deg, #000000, #b71c1c, #f9a825);
-    color: white;
+    background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
+    color: Black;
     font-weight: bold;
     border-radius: 12px;
     height: 48px;
@@ -164,8 +164,8 @@ div.stButton > button {
 
 /* 🔥 EFFECT HOVER */
 div.stButton > button:hover {
-    background: linear-gradient(135deg, #000000, #b71c1c, #f9a825);
-    color: white;
+    background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
+    color: Black;
     font-weight: bold;
     border-radius: 12px;
     height: 48px;
