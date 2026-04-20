@@ -259,31 +259,30 @@ div.stButton > button[kind="secondary"]:hover {
 st.markdown("""
 <style>
 
-/* ===== SEGMENTED CONTROL BASE STYLE ===== */
+/* ===== SEGMENTED CONTROL WRAPPER ===== */
 div[data-baseweb="segmented-control"] {
     background: #f1f5f9;
     padding: 6px;
     border-radius: 12px;
 }
 
-/* ===== DEFAULT ITEM ===== */
+/* ===== DEFAULT BUTTON ===== */
 div[data-baseweb="segmented-control"] button {
-    border-radius: 10px !important;
-    font-weight: 500;
     color: #334155 !important;
-    transition: all 0.2s ease-in-out;
+    border-radius: 10px !important;
+    transition: all 0.2s ease;
 }
 
-/* ===== SELECTED ITEM (INI KUNCINYA) ===== */
+/* ===== SELECTED STATE (INI KUNCI FIX) ===== */
 div[data-baseweb="segmented-control"] button[aria-checked="true"] {
-    background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
+    background: #2563eb !important;   /* 🔵 BIRU */
     color: white !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
     box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
-    transform: scale(1.03);
 }
 
-/* hover effect */
+/* hover */
 div[data-baseweb="segmented-control"] button:hover {
     background: #e2e8f0;
 }
