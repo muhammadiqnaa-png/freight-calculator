@@ -359,14 +359,14 @@ if not st.session_state.logged_in:
     # =========================
     # PAGE: REGISTER
     # =========================
-    if st.session_state.page == "register":
+    if st.session_state.page == "Create Account":
 
-        st.markdown("<h2 style='text-align:center;'> Register Freight Calculator Barge</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center;'>Create Account</h2>", unsafe_allow_html=True)
 
         reg_email = st.text_input("Email", key="reg_email")
         reg_password = st.text_input("Password", type="password", key="reg_pass")
 
-        if st.button("REGISTER", use_container_width=True):
+        if st.button("Create Account", use_container_width=True):
             ok, data = register_user(reg_email, reg_password)
 
             if ok:
