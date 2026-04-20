@@ -790,7 +790,7 @@ st.markdown("""
      opacity: 0.85;
       color: #64748B;
  ">
-     Mobile Shipping Cost & Profit Tool
+     Shipping Cost & Profit Tool
  </div>
 </div>
 """, unsafe_allow_html=True)
