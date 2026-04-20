@@ -581,19 +581,35 @@ st.sidebar.markdown("### 🚢 Barge Class")
 
 options = ["270 ft", "300 ft", "330 ft", "Custom"]
 
-cols = st.sidebar.columns(4)
+if "preset_control" not in st.session_state:
+    st.session_state.preset_control = "Custom"
+
+cols = st.sidebar.columns(2)
 
 for i, opt in enumerate(options):
-    if cols[i].button(
+    is_active = st.session_state.preset_control == opt
+
+    if cols[i % 2].button(
         opt,
         key=f"barge_{opt}",
         use_container_width=True
     ):
         st.session_state.preset_control = opt
 
-preset = st.session_state.get("preset_control", "Custom")
-        
-selected = st.session_state.preset_control
+    # kasih highlight visual manual
+    if is_active:
+        cols[i % 2].markdown(
+            f"""
+            <div style="
+                margin-top:-10px;
+                margin-bottom:10px;
+                height:4px;
+                background:#2563eb;
+                border-radius:10px;
+            "></div>
+            """,
+            unsafe_allow_html=True
+        )
 
 if selected in preset_params:
     for k, v in preset_params[selected].items():
