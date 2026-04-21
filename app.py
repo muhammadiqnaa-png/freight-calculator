@@ -952,76 +952,49 @@ with col2:
         st.session_state.show_info = True
 
 
-# ===== POPUP INFO =====
+# ===== POPUP INFO (VERSI STABIL) =====
 if st.session_state.show_info:
 
-    st.markdown("""
-    <div style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    ">
-    """, unsafe_allow_html=True)
+    with st.modal("ℹ️ Info & Tutorial"):
 
-    st.markdown("""
-    <div style="
-        background: white;
-        padding: 25px;
-        border-radius: 16px;
-        width: 90%;
-        max-width: 500px;
-        color: black;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    ">
-    """, unsafe_allow_html=True)
+        tab1, tab2 = st.tabs(["📊 Tentang", "📘 Cara Pakai"])
 
-    tab1, tab2 = st.tabs(["📊 Tentang", "📘 Cara Pakai"])
+        with tab1:
+            st.markdown("""
+            ### 🚢 Freight Calculator Barge
 
-    with tab1:
-        st.markdown("""
-        ### 🚢 Freight Calculator Barge
+            Aplikasi untuk menghitung:
 
-        Aplikasi untuk menghitung:
+            • Total biaya voyage  
+            • Freight per ton  
+            • Profit / loss  
+            • TCE (Time Charter Equivalent)  
 
-        • Total biaya voyage  
-        • Freight per ton  
-        • Profit / loss  
-        • TCE (Time Charter Equivalent)  
+            ⚡ Cepat  
+            🎯 Akurat  
+            💰 Langsung tahu untung/rugi
+            """)
 
-        ⚡ Cepat  
-        🎯 Akurat  
-        💰 Langsung tahu untung/rugi
-        """)
+        with tab2:
+            st.markdown("""
+            ### 📘 Cara Pakai
 
-    with tab2:
-        st.markdown("""
-        ### 📘 Cara Pakai
+            1. Pilih **Barge Class**
+            2. Pilih **Loading Port (POL)**
+            3. Pilih **Discharge Port (POD)**
+            4. Isi **Cargo & Freight Rate**
+            5. Klik **CALCULATE**
 
-        1. Pilih **Barge Class**
-        2. Pilih **Loading Port (POL)**
-        3. Pilih **Discharge Port (POD)**
-        4. Isi **Cargo & Freight Rate**
-        5. Klik **CALCULATE**
+            📊 Output:
+            • Total Cost  
+            • Freight Cost  
+            • Profit  
+            • TCE  
+            """)
 
-        📊 Output:
-        • Total Cost  
-        • Freight Cost  
-        • Profit  
-        • TCE  
-        """)
-
-    if st.button("❌ Tutup", use_container_width=True):
-        st.session_state.show_info = False
-        st.rerun()
-
-    st.markdown("</div></div>", unsafe_allow_html=True)
+        if st.button("Tutup"):
+            st.session_state.show_info = False
+            st.rerun()
 
 
 # ===== MAIN INPUT =====
