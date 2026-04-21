@@ -718,12 +718,6 @@ with st.sidebar.expander("📋 Saved Distance"):
                     del data[selected_route]
                     save_distances(data)
 
-                    # 🔥 TRIGGER NOTIF
-                    st.session_state.delete_success = True
-                    st.session_state.confirm_delete = False
-
-                    st.rerun()
-
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
     
