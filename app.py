@@ -977,8 +977,11 @@ with col1:
     """, unsafe_allow_html=True)
 
 with col2:
+    if "show_info" not in st.session_state:
+        st.session_state.show_info = False
+
     if st.button("ℹ️", help="Info & Tutorial", use_container_width=True):
-        st.session_state.show_info = True
+        st.session_state.show_info = not st.session_state.show_info
 
 
 # ===== POPUP INFO SAFE VERSION =====
