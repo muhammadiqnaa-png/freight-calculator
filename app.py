@@ -915,6 +915,51 @@ if st.sidebar.button("**Log Out**"):
     st.rerun()
 
 
+# ===== TOP INFO CARD =====
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg, #eef5ff, #ffffff);
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border-left: 5px solid #6495ED;
+    color:#0f172a;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+">
+<b>📘 Cara Pakai:</b><br>
+1. Pilih Barge Class → 2. Pilih Route → 3. Isi Cargo → 4. Klik Calculate<br>
+<span style="font-size:11px; color:#64748B;">
+Output: Total Cost, Freight, Profit & TCE
+</span>
+</div>
+""", unsafe_allow_html=True)
+
+with st.expander("📘 Lihat Panduan Lengkap", expanded=False):
+
+    st.markdown("""
+    ### 🚢 Freight Calculator Barge
+
+    Aplikasi untuk menghitung:
+
+    • Total biaya voyage  
+    • Freight per ton  
+    • Profit / Loss  
+    • TCE  
+
+    ---
+    ### 📘 Langkah Penggunaan
+
+    1. Pilih **Barge Class**
+    2. Pilih **Loading Port (POL)**
+    3. Pilih **Discharge Port (POD)**
+    4. Isi **Cargo & Freight Rate**
+    5. Klik **🚀 CALCULATE**
+
+    ---
+    💡 Tips:
+    Gunakan data real agar hasil lebih akurat
+    """)
+
 # ===== HEADER WITH INFO BUTTON =====
 col1, col2 = st.columns([9,1])
 
