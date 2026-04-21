@@ -998,12 +998,36 @@ if st.session_state.show_info:
                 st.markdown("""
                 ### 🚢 Freight Calculator Barge
 
-                Aplikasi untuk menghitung:
-                
-                • Total biaya voyage  
-                • Freight per ton  
-                • Profit / loss  
-                • TCE  
+                Aplikasi ini adalah tools untuk menghitung **biaya operasional kapal tongkang (barge)** secara otomatis berdasarkan rute, cargo, dan parameter kapal.
+
+                ---
+
+                ### 🎯 Fungsi Utama:
+                - Menghitung total voyage cost (biaya perjalanan kapal)
+                - Menghitung freight cost per MT / M³
+                - Analisa profit / loss berdasarkan freight rate
+                - Menghitung TCE (Time Charter Equivalent)
+                - Simulasi beberapa skenario profit
+            
+                ---
+            
+                ### ⚙️ Parameter yang digunakan:
+                - Speed laden & ballast  
+                - Fuel consumption & harga fuel  
+                - Fresh water consumption  
+                - Port cost (POL & POD)  
+                - Crew, insurance, maintenance  
+                - Additional cost (custom input)  
+                - Cargo quantity & jenis cargo  
+            
+                ---
+            
+                ### 📄 Output aplikasi:
+                - Total cost voyage  
+                - Freight cost per unit  
+                - Profit & margin  
+                - Breakdown cost detail  
+                - PDF report otomatis  
                 """)
 
             with tab2:
