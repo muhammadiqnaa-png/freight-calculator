@@ -977,8 +977,11 @@ with col1:
     """, unsafe_allow_html=True)
 
 with col2:
+    if "show_info" not in st.session_state:
+        st.session_state.show_info = False
+
     if st.button("ℹ️", help="Info & Tutorial", use_container_width=True):
-        st.session_state.show_info = True
+        st.session_state.show_info = not st.session_state.show_info
 
 
 # ===== POPUP INFO SAFE VERSION =====
@@ -1017,7 +1020,7 @@ if st.session_state.show_info:
 
         st.markdown("## ℹ️ Info & Tutorial")
 
-        tab1, tab2 = st.tabs(["📊 Tentang", "📘 Cara Pakai"])
+        tab1, tab2, tab3 = st.tabs(["📊 Tentang", "📘 Cara Pakai", "⚠️ Catatan"])
 
         with tab1:
             st.markdown("""
@@ -1057,16 +1060,71 @@ if st.session_state.show_info:
 
         with tab2:
             st.markdown("""
-            ### 📘 Cara Pakai
-
-            1. Pilih Barge Class
-            2. Pilih POL & POD
-            3. Isi cargo & freight
-            4. Klik CALCULATE
-            
-            💡 Tips:
-            Gunakan data real supaya hasil lebih akurat
+            ### 📘 Cara Menggunakan Aplikasi
+        
+            Ikuti langkah berikut agar hasil perhitungan akurat:
+        
+            ---
+        
+            ### 1. Pilih Barge Class
+            - 270 ft / 300 ft / 330 ft / Custom  
+            - Ini akan otomatis mengisi parameter standar kapal  
+        
+            ---
+        
+            ### 2. Tentukan Rute
+            - Pilih Loading Port (POL)  
+            - Pilih Discharge Port (POD)  
+            - Distance akan otomatis muncul jika tersedia  
+        
+            ---
+        
+            ### 3. Input Cargo
+            - Pilih jenis cargo:
+              - Coal (MT)
+              - Nickel (MT)
+              - Bauxite (MT)
+              - Sand / Split (M³)
+            - Masukkan quantity sesuai kebutuhan  
+        
+            ---
+        
+            ### 4. Input Freight Rate
+            - Masukkan harga freight (Rp per MT)
+            - Digunakan untuk simulasi revenue & profit  
+        
+            ---
+        
+            ### 5. Klik CALCULATE
+            Sistem akan menghitung:
+            - Total voyage cost
+            - Fuel & freshwater cost
+            - Port cost & operational cost
+            - Profit / loss
+            - TCE (per day & per month)
+        
+            ---
+        
+            ### 6. Download Report (PDF)
+            - Hasil bisa langsung di-download
+            - Cocok untuk:
+              - Negotiation
+              - Reporting
+              - Analisa voyage
             """)
+
+
+        with tab3:
+            st.markdown("""
+            ### ⚠️ Catatan Penting
+        
+            - Data distance harus tersedia agar otomatis terisi  
+            - Jika tidak ada, bisa input manual di Add Distance  
+            - Semua hasil adalah simulasi berdasarkan input user  
+            - Gunakan data real untuk hasil lebih akurat  
+            - Aplikasi ini untuk analisa & perencanaan voyage  
+            """)
+                    
 
         if st.button("❌ Tutup"):
             st.session_state.show_info = False
