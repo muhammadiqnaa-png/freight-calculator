@@ -1017,9 +1017,6 @@ with col2:
             auto_distance_return = find_distance(port_pod, next_port)
             st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
 
-if "last_barge" not in st.session_state:
-    st.session_state.last_barge = None
-
 st.markdown("### 📦 Type Cargo & Quantity")
 
 col1, col2 = st.columns(2)
