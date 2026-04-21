@@ -1,8 +1,7 @@
-streamlit
-streamlit>=1.32.0
-requests
-pandas
-reportlab
-openpyxl
-numpy
-streamlit-cookies-manager
+streamlit==1.32.2
+requests==2.31.0
+pandas==2.2.2
+reportlab==4.0.9
+openpyxl==3.1.2
+numpy==1.26.4
+streamlit-cookies-manager==0.2.0
