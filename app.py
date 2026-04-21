@@ -1,4 +1,5 @@
 import streamlit as st
+st.write(st.__version__)
 import math
 import pandas as pd
 from io import BytesIO
