@@ -1009,6 +1009,8 @@ if st.session_state.show_info:
             2. Pilih POL & POD
             3. Isi cargo & freight
             4. Klik CALCULATE
+            💡 Tips:
+            Gunakan data real supaya hasil lebih akurat
             """)
 
         if st.button("❌ Tutup"):
