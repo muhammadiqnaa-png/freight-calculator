@@ -679,6 +679,11 @@ with st.sidebar.expander("📋 Saved Distance"):
 
     data = load_distances()
 
+    # ===== NOTIF (MUNCUL SETELAH DELETE) =====
+    if st.session_state.delete_success:
+        st.toast("Distance berhasil dihapus 🚀")
+        st.session_state.delete_success = False
+
     if not data:
         st.info("Belum ada data distance")
 
@@ -690,13 +695,14 @@ with st.sidebar.expander("📋 Saved Distance"):
             routes
         )
 
+        # ===== RESET CONFIRM KALAU GANTI ROUTE =====
+        if st.session_state.last_route != selected_route:
+            st.session_state.confirm_delete = False
+            st.session_state.last_route = selected_route
+
         st.caption(f"Distance: {data[selected_route]:,.0f} NM")
 
-        # ===== INIT STATE =====
-        if "confirm_delete" not in st.session_state:
-            st.session_state.confirm_delete = False
-
-        # ===== STEP 1: KLIK DELETE =====
+        # ===== STEP 1: BUTTON DELETE =====
         if not st.session_state.confirm_delete:
             if st.button("🗑️ Delete Distance", use_container_width=True):
                 st.session_state.confirm_delete = True
@@ -719,9 +725,10 @@ with st.sidebar.expander("📋 Saved Distance"):
                     del data[selected_route]
                     save_distances(data)
 
+                    # 🔥 TRIGGER NOTIF
+                    st.session_state.delete_success = True
                     st.session_state.confirm_delete = False
 
-                    st.success("✅ Distance berhasil dihapus")
                     st.rerun()
 
 # ===== SIDEBAR PARAMETERS =====
