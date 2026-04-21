@@ -396,11 +396,11 @@ if not st.session_state.hide_intro:
         Hitung cost, freight & profit dalam hitungan detik
         </p>
 
-        <p style="font-size:13px; color:gray;">
+    <p style="font-size:13px; color:gray;">
         1. Pilih kapal<br>
         2. Pilih route<br>
         3. Klik calculate
-        </p>
+    </p>
 
     <div style="margin-top:10px; font-size:12px; color:#64748B;">
         ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi
