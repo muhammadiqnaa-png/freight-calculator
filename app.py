@@ -723,14 +723,14 @@ with st.sidebar.expander("📋 Saved Distance"):
             with col2:
                 if st.button("✅ Confirm Delete", use_container_width=True):
 
-                del data[selected_route]
-                save_distances(data)
+                    del data[selected_route]
+                    save_distances(data)
 
-                # 🔥 TRIGGER NOTIF
-                st.session_state.delete_success = True
-                st.session_state.confirm_delete = False
+                    # 🔥 TRIGGER NOTIF
+                    st.session_state.delete_success = True
+                    st.session_state.confirm_delete = False
 
-                st.rerun()
+                    st.rerun()
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
