@@ -383,8 +383,8 @@ if not st.session_state.hide_intro:
     ">
 
     <h1 style="
-        font-size:40px;
-        font-weight:800;
+        font-size:45px;
+        font-weight:1000;
         margin-bottom:5px;
     ">
         🚢 Welcome Freight Calculator
