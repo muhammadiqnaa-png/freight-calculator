@@ -365,53 +365,53 @@ if "show_info" not in st.session_state:
 # ==========================================================
 if not st.session_state.hide_intro:
 
-        st.markdown("""
+    st.markdown("""
+    <div style="
+        text-align:center;
+        padding:40px;
+    ">
+
+        <h1>🚢 Freight Calculator Barge</h1>
+        <p style="font-size:14px; color:#64748B;">
+        Cost, Freight & Profit Analysis Tool
+        </p>
+
         <div style="
-            text-align:center;
-            padding:40px;
-        ">
+             display:grid;
+             grid-template-columns: repeat(2, 1fr);
+             gap:12px;
+              margin-top:20px;
+              font-size:12px;
+    ">
 
-            <h1>🚢 Freight Calculator Barge</h1>
-            <p style="font-size:14px; color:#64748B;">
-            Cost, Freight & Profit Analysis Tool
-            </p>
+        <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
+                  ⚡ Cepat
+        </div>
 
-            <div style="
-                display:grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap:12px;
-                margin-top:20px;
-                font-size:12px;
-            ">
+        <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
+                   🎯 Akurat
+        </div>
 
-                <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
-                    ⚡ Cepat
-                </div>
+        <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
+                💰 Hitung untung/rugi
+        </div>
 
-                <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
-                    🎯 Akurat
-                </div>
-
-                <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
-                    💰 Hitung untung/rugi
-                </div>
-
-                <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
-                    🤝🏻 Nego freight lebih percaya diri
-                </div>
-
-            </div>
-
-            <div style="
-                margin-top:25px;
-                font-size:11px;
-                color:#94a3b8;
-            ">
-                Built with ❤️ by <b>Muhammad Iqna</b>
-            </div>
+        <div style="background:#f1f5f9; padding:10px; border-radius:10px;">
+                🤝🏻 Nego freight lebih percaya diri
+        </div>
 
         </div>
-        """, unsafe_allow_html=True)
+
+        <div style="
+             margin-top:25px;
+             font-size:11px;
+             color:#94a3b8;
+    ">
+            Built with ❤️ by <b>Muhammad Iqna</b>
+        </div>
+
+    </div>
+    """, unsafe_allow_html=True)
     
     # ===== CHECKBOX =====
     dont_show = st.checkbox("Jangan tampilkan lagi")
