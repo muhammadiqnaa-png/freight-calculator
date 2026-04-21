@@ -383,7 +383,7 @@ if not st.session_state.hide_intro:
     ">
 
     <h1 style="
-        font-size:45px;
+        font-size:65px;
         font-weight:1000;
         margin-bottom:5px;
     ">
