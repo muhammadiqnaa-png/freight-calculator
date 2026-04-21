@@ -69,14 +69,6 @@ def save_distances(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
-# ✅ TAMBAH DI SINI
-def clean_data(data):
-    clean = []
-    for d in data:
-        if isinstance(d, dict) and "pol" in d and "pod" in d:
-            clean.append(d)
-    return clean
-
 def get_all_ports():
     data = load_distances()
     ports = set()
