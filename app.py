@@ -1017,9 +1017,6 @@ with col2:
             auto_distance_return = find_distance(port_pod, next_port)
             st.text_input("POD → NEXT (NM)", value=str(auto_distance_return), disabled=True)
 
-if "cargo_user_override" not in st.session_state:
-    st.session_state.cargo_user_override = False
-
 if "last_barge" not in st.session_state:
     st.session_state.last_barge = None
 
