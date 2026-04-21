@@ -363,6 +363,16 @@ if "show_register" not in st.session_state:
 if "email" not in st.session_state:
     st.session_state.email = ""
 
+# ===== DELETE STATE INIT =====
+if "delete_success" not in st.session_state:
+    st.session_state.delete_success = False
+
+if "confirm_delete" not in st.session_state:
+    st.session_state.confirm_delete = False
+
+if "last_route" not in st.session_state:
+    st.session_state.last_route = ""
+
 # ===== AUTH PAGE CONTROLLER =====
 if not st.session_state.logged_in:
 
@@ -713,11 +723,14 @@ with st.sidebar.expander("📋 Saved Distance"):
             with col2:
                 if st.button("✅ Confirm Delete", use_container_width=True):
 
-                    st.warning("✅ Delete_success")
+                del data[selected_route]
+                save_distances(data)
 
-                    del data[selected_route]
-                    save_distances(data)
-                    st.rerun()
+                # 🔥 TRIGGER NOTIF
+                st.session_state.delete_success = True
+                st.session_state.confirm_delete = False
+
+                st.rerun()
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
