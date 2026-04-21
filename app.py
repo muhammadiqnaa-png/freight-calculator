@@ -713,10 +713,11 @@ with st.sidebar.expander("📋 Saved Distance"):
             with col2:
                 if st.button("✅ Confirm Delete", use_container_width=True):
 
-                    st.warning("Delete_success")
+            st.warning("✅ Delete_success")
 
                     del data[selected_route]
                     save_distances(data)
+                    st.rerun()
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
