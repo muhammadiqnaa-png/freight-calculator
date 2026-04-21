@@ -952,10 +952,41 @@ with col2:
         st.session_state.show_info = True
 
 
-# ===== POPUP INFO (VERSI STABIL) =====
+# ===== POPUP INFO SAFE VERSION =====
 if st.session_state.show_info:
 
-    with st.modal("ℹ️ Info & Tutorial"):
+    # ✅ CEK: apakah st.modal tersedia
+    if hasattr(st, "modal"):
+
+        with st.modal("ℹ️ Info & Tutorial"):
+
+            tab1, tab2 = st.tabs(["📊 Tentang", "📘 Cara Pakai"])
+
+            with tab1:
+                st.markdown("""
+                ### 🚢 Freight Calculator Barge
+
+                Aplikasi untuk menghitung:
+                • Total biaya voyage  
+                • Freight per ton  
+                • Profit / loss  
+                • TCE  
+                """)
+
+            with tab2:
+                st.markdown("""
+                ### 📘 Cara Pakai
+
+                1. Pilih Barge Class
+                2. Pilih POL & POD
+                3. Isi cargo & freight
+                4. Klik CALCULATE
+                """)
+
+    # ❌ kalau modal tidak ada → pakai fallback
+    else:
+
+        st.markdown("## ℹ️ Info & Tutorial")
 
         tab1, tab2 = st.tabs(["📊 Tentang", "📘 Cara Pakai"])
 
@@ -964,38 +995,26 @@ if st.session_state.show_info:
             ### 🚢 Freight Calculator Barge
 
             Aplikasi untuk menghitung:
-
             • Total biaya voyage  
             • Freight per ton  
             • Profit / loss  
-            • TCE (Time Charter Equivalent)  
-
-            ⚡ Cepat  
-            🎯 Akurat  
-            💰 Langsung tahu untung/rugi
+            • TCE  
             """)
 
         with tab2:
             st.markdown("""
             ### 📘 Cara Pakai
 
-            1. Pilih **Barge Class**
-            2. Pilih **Loading Port (POL)**
-            3. Pilih **Discharge Port (POD)**
-            4. Isi **Cargo & Freight Rate**
-            5. Klik **CALCULATE**
-
-            📊 Output:
-            • Total Cost  
-            • Freight Cost  
-            • Profit  
-            • TCE  
+            1. Pilih Barge Class
+            2. Pilih POL & POD
+            3. Isi cargo & freight
+            4. Klik CALCULATE
             """)
 
-        if st.button("Tutup"):
+        if st.button("❌ Tutup"):
             st.session_state.show_info = False
             st.rerun()
-
+            
 
 # ===== MAIN INPUT =====
 st.markdown("### 🚢 Voyage Input")
