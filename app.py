@@ -382,78 +382,78 @@ if not st.session_state.hide_intro:
         padding:50px 25px;
     ">
 
-        <h1 style="
-            font-size:28px;
-            font-weight:800;
-            margin-bottom:5px;
-        ">
-            🚢 Freight Calculator
-        </h1>
+    <h1 style="
+        font-size:28px;
+        font-weight:800;
+        margin-bottom:5px;
+    ">
+        🚢 Freight Calculator
+    </h1>
 
-        <p style="
-            font-size:13px;
-            color:#64748B;
-            margin-bottom:20px;
-        ">
-            Cost, Freight & Profit Analysis Tool
-        </p>
+    <p style="
+        font-size:13px;
+        color:#64748B;
+        margin-bottom:20px;
+    ">
+        Cost, Freight & Profit Analysis Tool
+    </p>
 
-        <div style="
-            display:grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap:12px;
-            margin-top:10px;
-            font-size:12px;
-        ">
+    <div style="
+        display:grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap:12px;
+        margin-top:10px;
+        font-size:12px;
+    ">
 
-            <div style="
-                background:linear-gradient(135deg,#e0f2fe,#f8fafc);
-                padding:12px;
-                border-radius:12px;
-                font-weight:500;
-            ">
-                ⚡ Cepat
-            </div>
+    <div style="
+        background:linear-gradient(135deg,#e0f2fe,#f8fafc);
+        padding:12px;
+        border-radius:12px;
+        font-weight:500;
+    ">
+        ⚡ Cepat
+    </div>
 
-            <div style="
-                background:linear-gradient(135deg,#e0f2fe,#f8fafc);
-                padding:12px;
-                border-radius:12px;
-                font-weight:500;
-            ">
-                🎯 Akurat
-            </div>
+    <div style="
+        background:linear-gradient(135deg,#e0f2fe,#f8fafc);
+        padding:12px;
+        border-radius:12px;
+        font-weight:500;
+    ">
+        🎯 Akurat
+    </div>
 
-            <div style="
-                background:linear-gradient(135deg,#e0f2fe,#f8fafc);
-                padding:12px;
-                border-radius:12px;
-                font-weight:500;
-            ">
-                💰 Hitung untung/rugi
-            </div>
+    <div style="
+        background:linear-gradient(135deg,#e0f2fe,#f8fafc);
+        padding:12px;
+        border-radius:12px;
+        font-weight:500;
+    ">
+        💰 Hitung untung/rugi
+    </div>
 
-            <div style="
-                background:linear-gradient(135deg,#e0f2fe,#f8fafc);
-                padding:12px;
-                border-radius:12px;
-                font-weight:500;
-            ">
-                🤝🏻 Nego lebih percaya diri
-            </div>
+    <div style="
+        background:linear-gradient(135deg,#e0f2fe,#f8fafc);
+        padding:12px;
+        border-radius:12px;
+        font-weight:500;
+    ">
+        🤝🏻 Nego lebih percaya diri
+    </div>
 
-        </div>
+    </div>
 
-        <div style="
-            margin-top:30px;
-            font-size:11px;
-            color:#94a3b8;
-        ">
-            Built with ❤️ by <b style="color:#2563eb;">Muhammad Iqna</b>
-        </div>
+    <div style="
+        margin-top:30px;
+        font-size:11px;
+        color:#94a3b8;
+    ">
+        Built with ❤️ by <b style="color:#2563eb;">Muhammad Iqna</b>
+    </div>
 
-        </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
     # ===== CHECKBOX =====
     dont_show = st.checkbox("Jangan tampilkan lagi")
