@@ -383,7 +383,7 @@ if not st.session_state.hide_intro:
     ">
 
     <h1 style="
-        font-size:35px;
+        font-size:40px;
         font-weight:800;
         margin-bottom:5px;
     ">
@@ -393,7 +393,7 @@ if not st.session_state.hide_intro:
     <p style="
         font-size:13px;
         color:#64748B;
-        margin-bottom:20px;
+        margin-bottom:10px;
     ">
         Cost, Freight & Profit Analysis Tool
     </p>
