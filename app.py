@@ -20,14 +20,6 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
-# ===== INTRO STATE =====
-if "hide_intro" not in st.session_state:
-    st.session_state.hide_intro = False
-
-# ambil dari cookies (persist)
-if cookies.get("hide_intro") == "true":
-    st.session_state.hide_intro = True
-
 DATA_FILE = "distance_data.json"
 
 def find_distance(pol, pod):
