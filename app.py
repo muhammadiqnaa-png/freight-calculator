@@ -20,6 +20,14 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
+# ===== INTRO STATE =====
+if "hide_intro" not in st.session_state:
+    st.session_state.hide_intro = False
+
+# ambil dari cookies (persist)
+if cookies.get("hide_intro") == "true":
+    st.session_state.hide_intro = True
+
 DATA_FILE = "distance_data.json"
 
 def find_distance(pol, pod):
@@ -355,7 +363,7 @@ if "show_info" not in st.session_state:
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
 # ==========================================================
-if st.session_state.page != "login" and not st.session_state.logged_in:
+if not st.session_state.hide_intro:
 
     # 🔥 Biar posisi lebih tengah (mobile friendly)
     st.markdown("""
@@ -447,9 +455,17 @@ if st.session_state.page != "login" and not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
 
+    # ===== CHECKBOX =====
+    dont_show = st.checkbox("Jangan tampilkan lagi")
+
     # ===== BUTTON =====
     if st.button("🚀 Get Started", use_container_width=True):
-        
+
+        if dont_show:
+            cookies["hide_intro"] = "true"
+            cookies.save()
+
+        st.session_state.hide_intro = True
         st.session_state.page = "login"
         st.rerun()
 
