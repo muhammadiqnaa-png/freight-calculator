@@ -395,16 +395,10 @@ if not st.session_state.hide_intro:
         text-align:center;
         padding:40px;
     ">
-        <h1>🚢 Freight Calculator Barge</h1>
+        <h1>🚢 Welcome Freight Calculator Barge</h1>
         <p style="font-size:14px;">
-        Hitung cost, freight & profit dalam hitungan detik
+        Hitung cost, freight & profit
         </p>
-
-    <p style="font-size:13px; color:gray;">
-        1. Pilih Barge Class<br>
-        2. Pilih route<br>
-        3. Klik calculate
-    </p>
 
     <div style="margin-top:10px; font-size:12px; color:#64748B;">
         ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi &nbsp;&nbsp; 🤝🏻 nego freight lebih percaya diri
