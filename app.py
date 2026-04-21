@@ -397,13 +397,13 @@ if not st.session_state.hide_intro:
         </p>
 
     <p style="font-size:13px; color:gray;">
-        1. Pilih kapal<br>
+        1. Pilih Barge Class<br>
         2. Pilih route<br>
         3. Klik calculate
     </p>
 
     <div style="margin-top:10px; font-size:12px; color:#64748B;">
-        ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi
+        ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi &nbsp;&nbsp; 🤝🏻 nego freight lebih percaya diri
     </div>
     </div>
     """, unsafe_allow_html=True)
