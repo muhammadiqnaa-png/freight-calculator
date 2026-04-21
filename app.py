@@ -397,7 +397,7 @@ if not st.session_state.hide_intro:
     ">
         <h1>🚢 Welcome Freight Calculator Barge</h1>
         <p style="font-size:14px;">
-        Hitung cost, freight & profit
+        Cost, Freight & Profit
         </p>
 
     <div style="margin-top:10px; font-size:12px; color:#64748B;">
