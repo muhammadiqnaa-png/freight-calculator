@@ -1,5 +1,4 @@
 import streamlit as st
-import math
 import pandas as pd
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
