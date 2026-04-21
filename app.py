@@ -402,9 +402,9 @@ if not st.session_state.hide_intro:
         3. Klik calculate
         </p>
 
-        <div style="margin-top:10px; font-size:12px; color:#64748B;">
+    <div style="margin-top:10px; font-size:12px; color:#64748B;">
         ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi
-        </div>
+    </div>
     </div>
     """, unsafe_allow_html=True)
 
