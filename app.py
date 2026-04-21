@@ -401,7 +401,10 @@ if not st.session_state.hide_intro:
         </p>
 
     <div style="margin-top:10px; font-size:12px; color:#64748B;">
-        ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi &nbsp;&nbsp; 🤝🏻 nego freight lebih percaya diri
+        ⚡ Cepat &nbsp;&nbsp; 
+        🎯 Akurat &nbsp;&nbsp; 
+        💰 Langsung tahu untung/rugi &nbsp;&nbsp; 
+        🤝🏻 nego freight lebih percaya diri
     </div>
     </div>
     """, unsafe_allow_html=True)
