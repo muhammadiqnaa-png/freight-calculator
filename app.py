@@ -999,6 +999,7 @@ if st.session_state.show_info:
                 ### 🚢 Freight Calculator Barge
 
                 Aplikasi untuk menghitung:
+                
                 • Total biaya voyage  
                 • Freight per ton  
                 • Profit / loss  
