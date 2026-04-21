@@ -381,6 +381,10 @@ if "confirm_delete" not in st.session_state:
 if "last_route" not in st.session_state:
     st.session_state.last_route = ""
 
+# ===== POPUP INFO =====
+if "show_info" not in st.session_state:
+    st.session_state.show_info = False
+
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN
 # ==========================================================
@@ -911,38 +915,114 @@ if st.sidebar.button("**Log Out**"):
     st.rerun()
 
 
-# ===== Judul =====
+# ===== HEADER WITH INFO BUTTON =====
+col1, col2 = st.columns([9,1])
 
-st.markdown("""
-<div style="
-    width: 100%;
-    background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
-    padding: 20px 14px;
-    border-radius: 16px;
-    text-align: center;
-    color: Black;
-    margin-bottom: 18px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
-    border: 1px solid rgba(255,255,255,0.08);
-">
-<div style="
-    font-size: 35px;
-    font-weight: 900;
-    letter-spacing: 0.8px;
-">
-    🚢 Freight Calculator
-</div>
+with col1:
+    st.markdown("""
+    <div style="
+        width: 100%;
+        background: linear-gradient(135deg, #6495ED, #FFFFFF, #6495ED);
+        padding: 20px 14px;
+        border-radius: 16px;
+        text-align: center;
+        color: Black;
+        margin-bottom: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+    ">
+        <div style="
+            font-size: 35px;
+            font-weight: 900;
+        ">
+            🚢 Freight Calculator
+        </div>
 
-<div style="
-     font-size: 12px;
-     margin-top: 6px;
-     opacity: 0.85;
-      color: #64748B;
- ">
-     Shipping Cost & Profit Tool
- </div>
-</div>
-""", unsafe_allow_html=True)
+        <div style="
+            font-size: 12px;
+            margin-top: 6px;
+            color: #64748B;
+        ">
+            Shipping Cost & Profit Tool
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    if st.button("ℹ️", help="Info & Tutorial", use_container_width=True):
+        st.session_state.show_info = True
+
+
+# ===== POPUP INFO =====
+if st.session_state.show_info:
+
+    st.markdown("""
+    <div style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    ">
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        color: black;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    ">
+    """, unsafe_allow_html=True)
+
+    tab1, tab2 = st.tabs(["📊 Tentang", "📘 Cara Pakai"])
+
+    with tab1:
+        st.markdown("""
+        ### 🚢 Freight Calculator Barge
+
+        Aplikasi untuk menghitung:
+
+        • Total biaya voyage  
+        • Freight per ton  
+        • Profit / loss  
+        • TCE (Time Charter Equivalent)  
+
+        ⚡ Cepat  
+        🎯 Akurat  
+        💰 Langsung tahu untung/rugi
+        """)
+
+    with tab2:
+        st.markdown("""
+        ### 📘 Cara Pakai
+
+        1. Pilih **Barge Class**
+        2. Pilih **Loading Port (POL)**
+        3. Pilih **Discharge Port (POD)**
+        4. Isi **Cargo & Freight Rate**
+        5. Klik **CALCULATE**
+
+        📊 Output:
+        • Total Cost  
+        • Freight Cost  
+        • Profit  
+        • TCE  
+        """)
+
+    if st.button("❌ Tutup", use_container_width=True):
+        st.session_state.show_info = False
+        st.rerun()
+
+    st.markdown("</div></div>", unsafe_allow_html=True)
+
 
 # ===== MAIN INPUT =====
 st.markdown("### 🚢 Voyage Input")
