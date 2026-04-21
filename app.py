@@ -452,8 +452,8 @@ if not st.session_state.hide_intro:
             Built with ❤️ by <b style="color:#2563eb;">Muhammad Iqna</b>
         </div>
 
-    </div>
-    """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
     # ===== CHECKBOX =====
     dont_show = st.checkbox("Jangan tampilkan lagi")
