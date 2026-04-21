@@ -576,20 +576,6 @@ def get_default_cargo(barge, cargo_type):
 if "preset_selected" not in st.session_state:
     st.session_state.preset_selected = "Custom"
 
-# Handler untuk update state
-def update_preset():
-    st.session_state.preset_selected = st.session_state.preset_control
-
-    for route in data.keys():
-        try:
-            p, d = route.split(" - ")
-            if p.upper() == pol:
-                pods.add(d.upper())
-        except:
-            continue
-
-    return sorted(list(pods))
-
 
 def get_pods_by_pol(pol):
     data = load_distances()
