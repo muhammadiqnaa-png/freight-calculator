@@ -21,6 +21,14 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
+# ===== INTRO STATE =====
+if "hide_intro" not in st.session_state:
+    st.session_state.hide_intro = False
+
+# ambil dari cookies (persist)
+if cookies.get("hide_intro") == "true":
+    st.session_state.hide_intro = True
+
 DATA_FILE = "distance_data.json"
 
 def find_distance(pol, pod):
@@ -372,6 +380,49 @@ if "confirm_delete" not in st.session_state:
 
 if "last_route" not in st.session_state:
     st.session_state.last_route = ""
+
+# ==========================================================
+# 🚀 INTRO / ONBOARDING SCREEN
+# ==========================================================
+if not st.session_state.hide_intro:
+
+    st.markdown("""
+    <div style="
+        text-align:center;
+        padding:40px;
+    ">
+        <h1>🚢 Freight Calculator Barge</h1>
+        <p style="font-size:14px;">
+        Hitung cost, freight & profit dalam hitungan detik
+        </p>
+
+        <p style="font-size:13px; color:gray;">
+        1. Pilih kapal<br>
+        2. Pilih route<br>
+        3. Klik calculate
+        </p>
+
+        <div style="margin-top:10px; font-size:12px; color:#64748B;">
+        ⚡ Cepat &nbsp;&nbsp; 🎯 Akurat &nbsp;&nbsp; 💰 Langsung tahu untung/rugi
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ===== CHECKBOX =====
+    dont_show = st.checkbox("Jangan tampilkan lagi")
+
+    # ===== BUTTON =====
+    if st.button("🚀 Get Started", use_container_width=True):
+
+        if dont_show:
+            cookies["hide_intro"] = "true"
+            cookies.save()
+
+        st.session_state.hide_intro = True
+        st.session_state.page = "login"
+        st.rerun()
+
+    st.stop()
 
 # ===== AUTH PAGE CONTROLLER =====
 if not st.session_state.logged_in:
