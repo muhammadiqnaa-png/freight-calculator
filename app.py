@@ -674,7 +674,6 @@ with st.sidebar.expander("📋 Saved Distance"):
         st.info("Belum ada data distance")
 
     else:
-        # 🔥 list route
         routes = list(data.keys())
 
         selected_route = st.selectbox(
@@ -682,18 +681,39 @@ with st.sidebar.expander("📋 Saved Distance"):
             routes
         )
 
-        # tampilkan detail
         st.caption(f"Distance: {data[selected_route]:,.0f} NM")
 
-        # 🔥 tombol delete simple
-        if st.button("🗑️ Delete Distance", use_container_width=True):
+        # ===== INIT STATE =====
+        if "confirm_delete" not in st.session_state:
+            st.session_state.confirm_delete = False
 
-            del data[selected_route]
-            save_distances(data)
+        # ===== STEP 1: KLIK DELETE =====
+        if not st.session_state.confirm_delete:
+            if st.button("🗑️ Delete Distance", use_container_width=True):
+                st.session_state.confirm_delete = True
+                st.rerun()
 
-            st.success("✅ Distance berhasil dihapus")
-            st.rerun()
-            
+        # ===== STEP 2: KONFIRMASI =====
+        else:
+            st.warning("⚠️ Yakin mau hapus data ini?")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if st.button("❌ Cancel", use_container_width=True):
+                    st.session_state.confirm_delete = False
+                    st.rerun()
+
+            with col2:
+                if st.button("✅ Confirm Delete", use_container_width=True):
+
+                    del data[selected_route]
+                    save_distances(data)
+
+                    st.session_state.confirm_delete = False
+
+                    st.success("✅ Distance berhasil dihapus")
+                    st.rerun()
 
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
