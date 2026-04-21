@@ -682,7 +682,7 @@ with st.sidebar.expander("📋 Saved Distance"):
 
     # ===== NOTIF (MUNCUL SETELAH DELETE) =====
     if st.session_state.delete_success:
-        st.toast("Distance berhasil dihapus 🚀")
+        st.success("Distance berhasil dihapus 🚀")
         st.session_state.delete_success = False
 
     if not data:
