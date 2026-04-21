@@ -930,20 +930,20 @@ with col1:
         margin-bottom: 10px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.45);
     ">
-        <div style="
+    <div style="
             font-size: 35px;
             font-weight: 900;
-        ">
+    ">
             🚢 Freight Calculator
-        </div>
+    </div>
 
-        <div style="
+    <div style="
             font-size: 12px;
             margin-top: 6px;
             color: #64748B;
-        ">
+    ">
             Shipping Cost & Profit Tool
-        </div>
+    </div>
     </div>
     """, unsafe_allow_html=True)
 
