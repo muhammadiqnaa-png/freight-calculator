@@ -91,22 +91,6 @@ def get_all_ports():
 
     return sorted(list(ports))
 
-def get_next_ports(pod):
-    data = load_distances()
-    pod = (pod or "").upper()
-
-    next_ports = []
-
-    for route in data.keys():
-        try:
-            pol, dest = route.split(" - ")
-            if pol.upper() == pod:
-                next_ports.append(dest.upper())
-        except:
-            continue
-
-    return sorted(list(set(next_ports)))
-
 
 # ==========================================================
 # ⚙️ Page Config (WAJIB paling atas!)
