@@ -668,40 +668,31 @@ with st.sidebar.expander("➕ Add Distance"):
 
 with st.sidebar.expander("📋 Saved Distance"):
 
-    raw_data = load_distances()
+    data = load_distances()
 
-    clean = []
-
-    # 🔥 HANDLE 2 FORMAT (lama + baru)
-    if isinstance(raw_data, dict):
-        # format lama: "POL - POD": distance
-        for route, dist in raw_data.items():
-            try:
-                pol, pod = route.split(" - ")
-                clean.append({
-                    "POL": pol,
-                    "POD": pod,
-                    "Distance (NM)": dist
-                })
-            except:
-                continue
-
-    elif isinstance(raw_data, list):
-        # format baru: list of dict
-        for d in raw_data:
-            if isinstance(d, dict):
-                clean.append({
-                    "POL": d.get("pol", "-"),
-                    "POD": d.get("pod", "-"),
-                    "Distance (NM)": d.get("distance", 0)
-                })
-
-    # ===== TAMPILKAN =====
-    if not clean:
+    if not data:
         st.info("Belum ada data distance")
+
     else:
-        df = pd.DataFrame(clean)
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        # 🔥 list route
+        routes = list(data.keys())
+
+        selected_route = st.selectbox(
+            "Pilih route",
+            routes
+        )
+
+        # tampilkan detail
+        st.caption(f"Distance: {data[selected_route]:,.0f} NM")
+
+        # 🔥 tombol delete simple
+        if st.button("🗑️ Delete Distance", use_container_width=True):
+
+            del data[selected_route]
+            save_distances(data)
+
+            st.success("✅ Distance berhasil dihapus")
+            st.rerun()
             
 
 # ===== SIDEBAR PARAMETERS =====
