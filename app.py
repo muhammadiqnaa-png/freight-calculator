@@ -383,11 +383,11 @@ if not st.session_state.hide_intro:
     ">
 
     <h1 style="
-        font-size:28px;
+        font-size:35px;
         font-weight:800;
         margin-bottom:5px;
     ">
-        🚢 Freight Calculator
+        🚢 Welcome Freight Calculator
     </h1>
 
     <p style="
