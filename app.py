@@ -329,6 +329,10 @@ if "page" not in st.session_state:
 if "register_success" not in st.session_state:
     st.session_state.register_success = False
 
+# ===== INTRO CONTROL (FIXED) =====
+if "intro_done" not in st.session_state:
+    st.session_state.intro_done = False
+
 # ===== SESSION INIT =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -338,9 +342,6 @@ if "show_register" not in st.session_state:
 
 if "email" not in st.session_state:
     st.session_state.email = ""
-
-# ===== INTRO CONTROL =====
-show_intro = not st.session_state.get("logged_in", False)
 
 # ===== DELETE STATE INIT =====
 if "delete_success" not in st.session_state:
@@ -359,8 +360,7 @@ if "show_info" not in st.session_state:
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
 # ==========================================================
-if show_intro:
-
+if not st.session_state.intro_done:
     # 🔥 Biar posisi lebih tengah (mobile friendly)
     st.markdown("""
     <style>
