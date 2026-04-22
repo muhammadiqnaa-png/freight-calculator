@@ -20,13 +20,6 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
-# ===== INTRO STATE =====
-if "hide_intro" not in st.session_state:
-    st.session_state.hide_intro = False
-
-# ambil dari cookies (persist)
-if cookies.get("hide_intro") == "true":
-    st.session_state.hide_intro = True
 
 DATA_FILE = "distance_data.json"
 
@@ -460,12 +453,6 @@ if not st.session_state.hide_intro:
 
     # ===== BUTTON =====
     if st.button("🚀 Get Started", use_container_width=True):
-
-        if dont_show:
-            cookies["hide_intro"] = "true"
-            cookies.save()
-
-        st.session_state.hide_intro = True
         st.session_state.page = "login"
         st.rerun()
 
