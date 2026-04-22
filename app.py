@@ -387,7 +387,7 @@ if not st.session_state.hide_intro:
         font-weight:800;
         margin-bottom:5px;
     ">
-        🚢 Freight Calculator
+        🚢 Welcome Freight Calculator
     </h1>
 
     <p style="
@@ -517,7 +517,7 @@ if not st.session_state.logged_in:
     # =========================
     if st.session_state.page == "register":
 
-        st.markdown("<h2 style='text-align:center;'>Create Account</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center;'>🆕Create Account Freight Calculator Barge</h2>", unsafe_allow_html=True)
 
         reg_email = st.text_input("Email", key="reg_email")
         reg_password = st.text_input("Password", type="password", key="reg_pass")
