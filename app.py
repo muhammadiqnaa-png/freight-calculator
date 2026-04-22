@@ -935,14 +935,20 @@ st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
 if st.sidebar.button("**Log Out**"):
     st.session_state.logged_in = False
+    st.session_state.page = "login"
 
+    # 🔥 RESET INTRO
+    st.session_state.hide_intro = False
+    cookies["hide_intro"] = "false"
+
+    # 🔥 CLEAR LOGIN COOKIE
     cookies["logged_in"] = "false"
     cookies["email"] = ""
+
     cookies.save()
 
     st.success("Successfully logged out.")
     st.rerun()
-
 
 # ===== HEADER WITH INFO BUTTON =====
 col1, col2 = st.columns([9,1])
