@@ -20,6 +20,9 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
+cookies["intro_done"] = "false"
+cookies.save()
+
 
 DATA_FILE = "distance_data.json"
 
