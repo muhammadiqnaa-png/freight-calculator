@@ -1125,7 +1125,8 @@ if st.session_state.show_info:
             ### ⚠️ Catatan Penting
         
             - Data distance harus tersedia agar otomatis terisi  
-            - Jika tidak ada, bisa input manual di Add Distance  
+            - Jika tidak ada, bisa input manual di Add Distance
+            - Parameter bisa di edit sesuai biaya akurat
             - Semua hasil adalah simulasi berdasarkan input user  
             - Gunakan data real untuk hasil lebih akurat  
             - Aplikasi ini untuk analisa & perencanaan voyage  
