@@ -333,6 +333,10 @@ if "register_success" not in st.session_state:
 if "intro_done" not in st.session_state:
     st.session_state.intro_done = False
 
+# 🔥 PERSIST INTRO VIA COOKIE
+if cookies.get("intro_done") == "true":
+    st.session_state.intro_done = True
+
 # ===== SESSION INIT =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -454,6 +458,8 @@ if not st.session_state.intro_done:
     # ===== BUTTON =====
     if st.button("🚀 Get Started", use_container_width=True, type="primary"):
         st.session_state.intro_done = True
+        cookies["intro_done"] = "true"
+        cookies.save()
         st.session_state.page = "login"
         st.rerun()
 
@@ -926,6 +932,7 @@ if st.sidebar.button("**Log Out**"):
 
     cookies["logged_in"] = "false"
     cookies["email"] = ""
+    cookies["intro_done"] = "false"
     cookies.save()
 
     st.success("Successfully logged out.")
