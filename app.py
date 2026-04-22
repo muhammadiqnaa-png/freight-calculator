@@ -386,7 +386,7 @@ if not st.session_state.intro_done:
         font-size:65px;
         font-weight:1000;
         margin-bottom:5px;
-        line-height:0;
+        line-height:0,01;
     ">
         🚢 Welcome Freight Calculator
     </h1>
