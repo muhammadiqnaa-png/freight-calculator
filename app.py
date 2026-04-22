@@ -386,6 +386,7 @@ if not st.session_state.intro_done:
         font-size:65px;
         font-weight:1000;
         margin-bottom:5px;
+        line-height:1.05;
     ">
         🚢 Welcome 🚢
     </h1>
@@ -393,6 +394,7 @@ if not st.session_state.intro_done:
         font-size:65px;
         font-weight:1000;
         margin-bottom:5px;
+        line-height:1.05;
     ">
         Freight Calculator
     </h1>
