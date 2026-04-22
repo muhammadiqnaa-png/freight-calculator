@@ -364,7 +364,7 @@ if "show_info" not in st.session_state:
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
 # ==========================================================
-if not st.session_state.intro_done:
+if not st.session_state.logged_in:
     # 🔥 Biar posisi lebih tengah (mobile friendly)
     st.markdown("""
     <style>
