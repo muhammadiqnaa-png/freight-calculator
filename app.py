@@ -451,9 +451,6 @@ if not st.session_state.intro_done:
     </div>
     """, unsafe_allow_html=True)
 
-    # ===== CHECKBOX =====
-    dont_show = st.checkbox("Jangan tampilkan lagi")
-
     # ===== BUTTON =====
     if st.button("🚀 Get Started", use_container_width=True, type="primary"):
         st.session_state.intro_done = True
