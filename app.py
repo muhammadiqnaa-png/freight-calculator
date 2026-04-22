@@ -20,9 +20,13 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
-cookies["intro_done"] = "false"
-cookies.save()
+# ===== INTRO STATE =====
+if "hide_intro" not in st.session_state:
+    st.session_state.hide_intro = False
 
+# ambil dari cookies (persist)
+if cookies.get("hide_intro") == "true":
+    st.session_state.hide_intro = True
 
 DATA_FILE = "distance_data.json"
 
@@ -332,14 +336,6 @@ if "page" not in st.session_state:
 if "register_success" not in st.session_state:
     st.session_state.register_success = False
 
-# ===== INTRO CONTROL (FIXED) =====
-if "intro_done" not in st.session_state:
-    st.session_state.intro_done = False
-
-# 🔥 PERSIST INTRO VIA COOKIE
-if cookies.get("intro_done") == "true":
-    st.session_state.intro_done = True
-
 # ===== SESSION INIT =====
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -367,7 +363,8 @@ if "show_info" not in st.session_state:
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
 # ==========================================================
-if not st.session_state.intro_done:
+if not st.session_state.hide_intro:
+
     # 🔥 Biar posisi lebih tengah (mobile friendly)
     st.markdown("""
     <style>
@@ -386,18 +383,17 @@ if not st.session_state.intro_done:
     ">
 
     <h1 style="
-        font-size:65px;
-        font-weight:1000;
+        font-size:28px;
+        font-weight:800;
         margin-bottom:5px;
-        line-height:0,01;
     ">
-        🚢 Welcome Freight Calculator
+        🚢 Freight Calculator
     </h1>
 
     <p style="
         font-size:13px;
         color:#64748B;
-        margin-bottom:10px;
+        margin-bottom:20px;
     ">
         Cost, Freight & Profit Analysis Tool
     </p>
@@ -459,11 +455,17 @@ if not st.session_state.intro_done:
     </div>
     """, unsafe_allow_html=True)
 
+    # ===== CHECKBOX =====
+    dont_show = st.checkbox("Jangan tampilkan lagi")
+
     # ===== BUTTON =====
-    if st.button("🚀 Get Started", use_container_width=True, type="primary"):
-        st.session_state.intro_done = True
-        cookies["intro_done"] = "true"
-        cookies.save()
+    if st.button("🚀 Get Started", use_container_width=True):
+
+        if dont_show:
+            cookies["hide_intro"] = "true"
+            cookies.save()
+
+        st.session_state.hide_intro = True
         st.session_state.page = "login"
         st.rerun()
 
@@ -936,7 +938,6 @@ if st.sidebar.button("**Log Out**"):
 
     cookies["logged_in"] = "false"
     cookies["email"] = ""
-    cookies["intro_done"] = "false"
     cookies.save()
 
     st.success("Successfully logged out.")
