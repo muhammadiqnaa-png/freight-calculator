@@ -339,6 +339,9 @@ if "show_register" not in st.session_state:
 if "email" not in st.session_state:
     st.session_state.email = ""
 
+# ===== INTRO CONTROL =====
+show_intro = not st.session_state.get("logged_in", False)
+
 # ===== DELETE STATE INIT =====
 if "delete_success" not in st.session_state:
     st.session_state.delete_success = False
