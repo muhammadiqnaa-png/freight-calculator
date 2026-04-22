@@ -455,7 +455,8 @@ if not st.session_state.intro_done:
     dont_show = st.checkbox("Jangan tampilkan lagi")
 
     # ===== BUTTON =====
-    if st.button("🚀 Get Started", use_container_width=True):
+    if st.button("🚀 Get Started", use_container_width=True, type="primary"):
+        st.session_state.intro_done = True
         st.session_state.page = "login"
         st.rerun()
 
