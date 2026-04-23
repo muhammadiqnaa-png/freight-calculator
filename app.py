@@ -1402,13 +1402,13 @@ if calculate:
             profit_color = "#16a34a" if ideal_profit >= 0 else "#dc2626"
 
             pricing_block = f"""
-            <div style="
+        <div style="
                 margin-top:12px;
                 padding-top:10px;
                 border-top:1px solid rgba(0,0,0,0.1);
         ">
 
-            <div style="
+        <div style="
                 background:#fff7ed;
                 padding:10px;
                 border-radius:10px;
