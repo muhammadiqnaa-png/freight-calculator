@@ -1439,9 +1439,8 @@ if calculate:
         (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
         </span><br>
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
-        
-        # ===== PRICING BLOCK =====
-        {pricing_block}
+            
+            {pricing_block}
         
         </div>
         """, unsafe_allow_html=True)
