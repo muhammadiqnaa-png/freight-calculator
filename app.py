@@ -1402,26 +1402,21 @@ if calculate:
             profit_color = "#16a34a" if ideal_profit >= 0 else "#dc2626"
 
             pricing_block = f"""
-            <div style="
-                background:#fff7ed;
-                padding:12px;
-                border-radius:10px;
-                margin-top:10px;
-                border-left:4px solid #f97316;
-            ">
+            <hr style="margin:8px 0; opacity:0.2;
 
-            <b style="color:#f97316;">🎯 Recommendation Freight</b><br><br>
+            <b style="color:#f97316;">🎯 Pricing Recommendation</b><br>
+        ">
 
             • Target Margin: <b>{target_margin} {margin_type}</b><br>
             • Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b><br>
             • Revenue: <b>Rp {ideal_revenue:,.0f}</b><br>
             • PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b><br>
             • Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
-
-            </div>
             """
+        else:
+            pricing_block = ""
 
-        # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
+                # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
         st.markdown(f"""
         <div style="
@@ -1446,8 +1441,7 @@ if calculate:
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
         # ===== PRICING BLOCK =====
-        if target_margin > 0:
-            st.markdown(pricing_block, unsafe_allow_html=True)
+        {pricing_block}
         
         </div>
         """, unsafe_allow_html=True)
