@@ -1420,7 +1420,7 @@ if calculate:
             • Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
 
             </div>
-            """
+            """,unsafe_allow_html=True)
         else:
             pricing_block = ""
 
@@ -1447,8 +1447,7 @@ if calculate:
         (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
         </span><br>
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
-            
-            {pricing_block}
+        {pricing_block}
         
         </div>
         """, unsafe_allow_html=True)
