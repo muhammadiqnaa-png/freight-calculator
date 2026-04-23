@@ -1401,7 +1401,7 @@ if calculate:
         if target_margin > 0:
             profit_color = "#16a34a" if ideal_profit >= 0 else "#dc2626"
 
-            pricing_block = f"""
+            pricing_block = (f"""
             <hr style="margin:10px 0; opacity:0.2;">
 
             <div style="
@@ -1420,7 +1420,7 @@ if calculate:
             • Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
 
             </div>
-            """,unsafe_allow_html=True)
+            """)
         else:
             pricing_block = ""
 
