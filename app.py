@@ -1401,26 +1401,35 @@ if calculate:
         if target_margin > 0:
             profit_color = "#16a34a" if ideal_profit >= 0 else "#dc2626"
 
-            pricing_block = (f"""
-            <hr style="margin:10px 0; opacity:0.2;">
+            pricing_block = f"""
+            <div style="
+                margin-top:12px;
+                padding-top:10px;
+                border-top:1px solid rgba(0,0,0,0.1);
+            ">
 
             <div style="
                 background:#fff7ed;
                 padding:10px;
                 border-radius:10px;
                 border-left:4px solid #f97316;
+                font-size:13px;
+                line-height:1.6;
             ">
 
-            <b style="color:#f97316;">🎯 Pricing Recommendation</b><br><br>
+            <div style="color:#f97316; font-weight:700; margin-bottom:6px;">
+            🎯 Pricing Recommendation
+            </div>
 
-            • Target Margin: <b>{target_margin} {margin_type}</b><br>
-            • Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b><br>
-            • Revenue: <b>Rp {ideal_revenue:,.0f}</b><br>
-            • PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b><br>
-            • Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
+            <div>• Target Margin: <b>{target_margin} {margin_type}</b></div>
+            <div>• Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b></div>
+            <div>• Revenue: <b>Rp {ideal_revenue:,.0f}</b></div>
+            <div>• PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b></div>
+            <div>• Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b></div>
 
             </div>
-            """)
+            </div>
+            """
         else:
             pricing_block = ""
 
