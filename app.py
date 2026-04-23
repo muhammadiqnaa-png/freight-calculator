@@ -1364,6 +1364,20 @@ if calculate:
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
+        # ===== TARGET SELLING PRICE =====
+        ideal_freight = 0
+        ideal_profit = 0
+
+        if margin_type == "%":
+            ideal_freight = freight_cost_mt * (1 + target_margin / 100)
+        elif margin_type == "Rp":
+            if qyt_cargo > 0:
+                ideal_freight = (total_cost + target_margin) / qyt_cargo
+
+        ideal_revenue = ideal_freight * qyt_cargo
+        ideal_pph = ideal_revenue * 0.012
+        ideal_profit = ideal_revenue - total_cost - ideal_pph
+
         # ===== REVENUE CALC =====
         revenue_user = freight_price_input * qyt_cargo
         pph_user = revenue_user * 0.012
