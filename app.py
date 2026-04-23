@@ -1227,25 +1227,6 @@ st.markdown("### 💸 Freight Pricing")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
-# ===== TARGET PROFIT MODE =====
-if freight_price_input > 0:
-
-    margin_mode = st.radio(
-        "Target Profit Mode",
-        ["Nominal (Rp)", "Persen (%)"],
-        horizontal=True
-    )
-
-    if margin_mode == "Nominal (Rp)":
-        target_profit = st.number_input(
-            f"Target Profit (Rp/{type_cargo.split()[1]})",
-            value=15000
-        )
-    else:
-        target_margin_percent = st.number_input(
-            "Target Margin (%)",
-            value=10.0
-        )
 
 # ===== BUTTON =====
 st.markdown("<br>", unsafe_allow_html=True)
@@ -1372,20 +1353,6 @@ if calculate:
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
-        # ===== RECOMMENDED FREIGHT =====
-        recommended_freight = 0
-        profit_per_mt = 0
-
-        if freight_price_input > 0:
-
-            if margin_mode == "Nominal (Rp)":
-                recommended_freight = freight_cost_mt + target_profit
-                profit_per_mt = target_profit
-
-            else:
-                recommended_freight = freight_cost_mt / (1 - target_margin_percent / 100)
-                profit_per_mt = recommended_freight - freight_cost_mt
-
         # ===== TCE CALCULATION =====
         tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
 
@@ -1420,52 +1387,6 @@ if calculate:
         </span><br>
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
-        extra_html = ""
-        </div>
-        """, unsafe_allow_html=True)
-
-        if freight_price_input > 0:
-
-            profit_color = "#16a34a" if profit_user >= 0 else "#dc2626"
-
-            extra_html = f"""
-            <div style="
-                margin-top:14px;
-                padding-top:12px;
-                border-top:1px dashed #cbd5e1;
-                font-size:12px;
-                line-height:1.7;
-            ">
-
-                <div style="
-                    font-weight:600;
-                    margin-bottom:6px;
-                    color:#64748B;
-                ">
-                📊 Target & Recommendation
-            </div>
-
-                • Target Profit: <b style="color:#16a34a;">
-                Rp {profit_per_mt:,.0f} / {type_cargo.split()[1]}
-                </b><br>
-
-                • Recommended Freight: <b style="color:#2563eb;">
-                Rp {recommended_freight:,.0f} / {type_cargo.split()[1]}
-                </b><br><br>
-
-                • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
-                • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
-
-                • Total Profit:
-                <b style="color:{profit_color};">
-                Rp {profit_user:,.0f}
-                </b>
-                <span style="color:#64748B;">
-                ({profit_percent_user:.2f}%)
-                </span>
-
-            </div>
-            """
         </div>
         """, unsafe_allow_html=True)
 
