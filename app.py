@@ -1227,6 +1227,23 @@ st.markdown("### 💸 Freight Pricing")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
+st.markdown("### 🎯 Target Margin")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    margin_type = st.radio(
+        "Type",
+        ["%", "Rp"],
+        horizontal=True
+    )
+
+with col2:
+    target_margin = st.number_input(
+        "Target",
+        min_value=0.0
+    )
+
 
 # ===== BUTTON =====
 st.markdown("<br>", unsafe_allow_html=True)
