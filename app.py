@@ -1438,13 +1438,13 @@ if calculate:
         • Route : <b>{port_pol} → {port_pod}</b><br>
         • Distance POL → POD : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
-        • Total Voyage: <b>{total_voyage_days:.1f} Days</b>
+        • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
         <span style="font-size:11px; color:#bbb;">
         (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
         </span><br>
         • Freight Cost : <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
-        • Recommended Freight :<b style="color:#f97316;">Rp {ideal_freight:,.0f}</b>
+        • Recommended Freight : <b style="color:#f97316;">Rp {ideal_freight:,.0f}</b>
         
         </div>
         """, unsafe_allow_html=True)
