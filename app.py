@@ -1501,7 +1501,7 @@ if calculate:
         • Premi : <b>Rp {premi_cost:,.0f}</b><br>
         • Port Cost : <b>Rp {port_cost:,.0f}</b><br>
 
-        <hr style="opacity:0.2;">
+        <hr style="margin:2px 0; opacity:0.2;">
 
         <b>Total Variable Cost :</b> 
         <b>Rp {(cost_fuel + cost_fw + premi_cost + port_cost):,.0f}</b>
