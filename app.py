@@ -1439,7 +1439,7 @@ if calculate:
                     font-weight:600;
                     margin-bottom:6px;
                     color:#64748B;
-            ">
+                ">
                 📊 Target & Recommendation
             </div>
 
@@ -1463,6 +1463,7 @@ if calculate:
                 </span>
 
             </div>
+            """
         </div>
         """, unsafe_allow_html=True)
 
