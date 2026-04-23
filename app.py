@@ -1379,33 +1379,29 @@ if calculate:
         ideal_revenue = 0
         ideal_pph = 0
         ideal_profit = 0
-
-        if target_margin > 0:
+        
+        margin_value_rp = 0
+        margin_value_pct = 0
+        
+        if target_margin > 0 and freight_cost_mt > 0:
+        
+            # ===== HITUNG IDEAL FREIGHT =====
             if margin_type == "%":
                 ideal_freight = freight_cost_mt * (1 + target_margin / 100)
-
-            elif margin_type == "Rp":
+        
+                margin_value_pct = target_margin
+                margin_value_rp = freight_cost_mt * (target_margin / 100)
+        
+            else:  # Rp
                 ideal_freight = freight_cost_mt + target_margin
-                
+        
+                margin_value_rp = target_margin
+                margin_value_pct = (target_margin / freight_cost_mt) * 100
+        
+            # ===== OUTPUT CALC =====
             ideal_revenue = ideal_freight * qyt_cargo
             ideal_pph = ideal_revenue * 0.012
             ideal_profit = ideal_revenue - total_cost
-
-        if freight_cost_mt > 0:
-
-            # ===== % INPUT =====
-            if margin_type == "%":
-                margin_value_pct = target_margin
-                margin_value_rp = freight_cost_mt * (target_margin / 100)
-
-            # ===== Rp INPUT =====
-            else:
-                margin_value_rp = target_margin
-                margin_value_pct = (target_margin / freight_cost_mt) * 100
-
-else:
-    margin_value_rp = 0
-    margin_value_pct = 0
 
     
         # ===== REVENUE CALC =====
