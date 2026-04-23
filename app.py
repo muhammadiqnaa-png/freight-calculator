@@ -1247,9 +1247,9 @@ with col_input:
     )
 
 if margin_type == "%":
-    st.caption("📌 Mode % = Target profit dihitung dari persentase terhadap cost total")
+    st.caption("📌 Mode % = Target profit dihitung dari Freight Cost dengan persen")
 else:
-    st.caption("📌 Mode Rp = Target profit ditentukan dalam nominal rupiah")
+    st.caption("📌 Mode Rp = Target profit dihitung dari Freight Cost dengan nominal")
 
 
 # ===== BUTTON =====
