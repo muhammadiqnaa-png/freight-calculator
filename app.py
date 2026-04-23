@@ -1420,7 +1420,7 @@ if calculate:
             • Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
 
             </div>
-            """
+            """, unsafe_allow_html=True)
         else:
             pricing_block = ""
 
