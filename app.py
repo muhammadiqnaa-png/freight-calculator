@@ -1223,38 +1223,35 @@ with col2:
         label_visibility="collapsed"
     )
 
-st.markdown("### 💸 Freight Pricing")
+st.markdown("### 💸 Freight Costumer")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
+st.markdown("""
+<div style="
+    background:#f8fafc;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #e2e8f0;
+    margin-bottom:10px;
+">
+""", unsafe_allow_html=True)
+
 st.markdown("### 🎯 Target Margin")
 
-col1, col2 = st.columns(2)
+margin_type = st.radio(
+    "Type",
+    ["%", "Rp"],
+    horizontal=True,
+    label_visibility="collapsed"
+)
 
-with col1:
-    margin_type = st.radio(
-        "Target Margin Type",
-        ["%", "Rp"],
-        horizontal=True,
-        label_visibility="collapsed"
-    )
+if margin_type == "%":
+    target_margin = st.number_input("Margin (%)", 0.0, step=0.1)
+else:
+    target_margin = st.number_input("Margin (Rp)", 0.0, step=1000.0)
 
-with col2:
-    if margin_type == "%":
-        target_margin = st.number_input(
-            "Target Margin (%)",
-            min_value=0.0,
-            step=0.1
-        )
-        st.caption("📌 Margin dihitung dari persentase profit terhadap freight cost")
-    else:
-        target_margin = st.number_input(
-            "Target Margin (Rp)",
-            min_value=0.0,
-            step=1000.0,
-            format="%.0f"
-        )
-        st.caption("📌 Margin langsung ditambahkan ke freight cost")
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ===== BUTTON =====
@@ -1429,41 +1426,6 @@ if calculate:
         )
 
         tce_per_month = tce_per_day * 30
-
-        # ===== PRICING BLOCK =====
-        if target_margin > 0:
-            profit_color = "#16a34a" if ideal_profit >= 0 else "#dc2626"
-
-            pricing_block = f"""
-        <div style="
-                margin-top:12px;
-                padding-top:10px;
-                border-top:1px solid rgba(0,0,0,0.1);
-        ">
-
-        <div style="
-                background:#fff7ed;
-                padding:10px;
-                border-radius:10px;
-                border-left:4px solid #f97316;
-                font-size:13px;
-                line-height:1.6;
-        ">
-
-        <div style="color:#f97316; font-weight:700; margin-bottom:6px;">
-            🎯 Pricing Recommendation
-        </div>
-        <div>• Target Margin: <b>{target_margin_text}</b></div>
-        <div>• Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b></div>
-        <div>• Revenue: <b>Rp {ideal_revenue:,.0f}</b></div>
-        <div>• PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b></div>
-        <div>• Gross Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
-
-        </div>
-        </div>
-        """
-        else:
-            pricing_block = ""
 
                 # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
