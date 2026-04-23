@@ -1471,7 +1471,7 @@ if calculate:
             • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
             • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
             • Total Cost : <b>Rp {total_cost:,.0f}</b><br>
-            • Profit: <b style="color:{profit_color};">Rp {profit_user:,.0f}</b><br> ({profit_percent_user:.2f}%)
+            • Profit: <b style="color:{profit_color};">Rp {profit_user:,.0f} ({profit_percent_user:.2f}%)</b><br>
             • Status: <b style="color:{profit_color};">{status}</b>
 
             </div>
