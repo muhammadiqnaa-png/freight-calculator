@@ -1421,6 +1421,8 @@ if calculate:
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
         extra_html = ""
+        </div>
+        """, unsafe_allow_html=True)
 
         if freight_price_input > 0:
 
