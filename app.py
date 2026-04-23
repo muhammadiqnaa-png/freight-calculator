@@ -1388,7 +1388,7 @@ if calculate:
             target_margin_text = f"Rp {target_margin:,.0f}"
             margin_value_rp = target_margin
         
-        if target_margin > 0 and freight_cost_mt > 0:
+        if float(target_margin or 0) > 0:
         
             # ===== HITUNG IDEAL FREIGHT =====
             if margin_type == "%":
@@ -1449,7 +1449,8 @@ if calculate:
         </span><br>
         • Freight Cost : <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
-        {"• Freight Recommended : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) if target_margin > 0 else ""}
+        {"• Recommended Freight : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
+         if float(target_margin or 0) > 0 else ""}
         
         </div>
         """, unsafe_allow_html=True)
