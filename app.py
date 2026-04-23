@@ -1439,9 +1439,9 @@ if calculate:
                     font-weight:600;
                     margin-bottom:6px;
                     color:#64748B;
-                ">
+            ">
                 📊 Target & Recommendation
-                </div>
+            </div>
 
                 • Target Profit: <b style="color:#16a34a;">
                 Rp {profit_per_mt:,.0f} / {type_cargo.split()[1]}
@@ -1463,7 +1463,6 @@ if calculate:
                 </span>
 
             </div>
-            """
         </div>
         """, unsafe_allow_html=True)
 
