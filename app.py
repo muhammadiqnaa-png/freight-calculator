@@ -1407,8 +1407,9 @@ if calculate:
             ">
             <h4 style="color:{profit_color};">💼 Budget Customer</h4>
 
-            • Freight: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
+            • Freight Input User: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
             • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
+            • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
             • Profit: <b style="color:{profit_color};">Rp {profit_user:,.0f}</b><br>
             • Margin: <b>{profit_percent_user:.2f}%</b><br>
             • Status: <b style="color:{profit_color};">{status}</b>
