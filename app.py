@@ -1485,25 +1485,29 @@ if calculate:
 
         st.markdown(f"""
         <div style="
-            background:linear-gradient(135deg, #f8fafc, #eef5ff);
+            background:linear-gradient(135deg, #fff7ed, #fffbeb);
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            color:#0f172a;;
-            border-left:5px solid #ff9800;
-            box-shadow:0 4px 12px rgba(0,0,0,0.4);
+            color:#0f172a;
+            border-left:5px solid #f97316;
+            box-shadow:0 4px 12px rgba(0,0,0,0.2);
         ">
-        <h4 style="color:#ff9800;">⛽ Fuel & Water</h4>
 
-        • Fuel Consumption: <b>{total_consumption_fuel:,.0f} Ltr</b><br>
-        • Fuel Cost: <b>Rp {cost_fuel:,.0f}</b><br>
-        
-        • Freshwater Consumption: <b>{total_consumption_fw:,.0f} Ton</b><br>
-        • FW Cost: <b>Rp {cost_fw:,.0f}</b>
+        <h4 style="color:#f97316;">⛽ Variable Cost</h4>
+
+        • Fuel Cost : <b>Rp {cost_fuel:,.0f}</b> ({total_consumption_fuel:,.0f} Ltr)<br>
+        • FW Cost : <b>Rp {cost_fw:,.0f}</b> ({total_consumption_fw:,.0f} Ton)<br>
+        • Premi : <b>Rp {premi_cost:,.0f}</b><br>
+        • Port Cost : <b>Rp {port_cost:,.0f}</b><br>
+
+        <hr style="opacity:0.2;">
+
+        <b>Total Variable Cost :</b> 
+        <b>Rp {(cost_fuel + cost_fw + premi_cost + port_cost):,.0f}</b>
 
         </div>
         """, unsafe_allow_html=True)
-
         
         st.subheader("🏗️ Cost Summary")
 
