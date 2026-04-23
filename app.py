@@ -1390,6 +1390,32 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
 
+        if freight_price_input > 0:
+
+            profit_color = "#16a34a" if profit_user >= 0 else "#dc2626"
+            status = "PROFIT ✅" if profit_user >= 0 else "LOSS ❌"
+
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #f0fdf4, #ecfdf5);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                color:#052e16;
+                border-left:5px solid {profit_color};
+                box-shadow:0 4px 12px rgba(0,0,0,0.35);
+            ">
+            <h4 style="color:{profit_color};">💼 Budget Customer</h4>
+
+            • Freight: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
+            • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
+            • Profit: <b style="color:{profit_color};">Rp {profit_user:,.0f}</b><br>
+            • Margin: <b>{profit_percent_user:.2f}%</b><br>
+            • Status: <b style="color:{profit_color};">{status}</b>
+
+            </div>
+            """, unsafe_allow_html=True)
+
         st.markdown(f"""
         <div style="
             background:linear-gradient(135deg, #f8fafc, #eef5ff);
