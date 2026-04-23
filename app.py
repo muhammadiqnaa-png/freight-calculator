@@ -1227,24 +1227,29 @@ st.markdown("### 💸 Freight Costumer")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
-st.markdown("### 🎯 Target Margin")
+st.markdown("### 🎯 Target Profit")
 
-col1, col2 = st.columns([3,1])
+col_mode, col_input = st.columns([1, 3])
 
-with col1:
+with col_mode:
+    margin_type = st.selectbox(
+        "Mode",
+        ["%", "Rp"],
+        label_visibility="collapsed"
+    )
+
+with col_input:
     target_margin = st.number_input(
-        "Margin",
+        "Input",
         min_value=0.0,
         step=0.1,
         label_visibility="collapsed"
     )
 
-with col2:
-    margin_type = st.selectbox(
-        "",
-        ["%", "Rp"],
-        label_visibility="collapsed"
-    )
+if margin_type == "%":
+    st.caption("📌 Mode % = Target profit dihitung dari persentase terhadap cost total")
+else:
+    st.caption("📌 Mode Rp = Target profit ditentukan dalam nominal rupiah")
 
 
 # ===== BUTTON =====
