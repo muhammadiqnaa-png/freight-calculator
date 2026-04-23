@@ -1402,10 +1402,9 @@ if calculate:
             profit_color = "#16a34a" if ideal_profit >= 0 else "#dc2626"
 
             pricing_block = f"""
-            <hr style="margin:8px 0; opacity:0.2;
+            <hr style="margin:8px 0; opacity:0.2;">
 
             <b style="color:#f97316;">🎯 Pricing Recommendation</b><br>
-        ">
 
             • Target Margin: <b>{target_margin} {margin_type}</b><br>
             • Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b><br>
