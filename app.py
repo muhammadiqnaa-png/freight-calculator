@@ -1425,7 +1425,7 @@ if calculate:
 
         tce_per_month = tce_per_day * 30
 
-                # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
+        # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
         st.markdown(f"""
         <div style="
@@ -1449,7 +1449,7 @@ if calculate:
         </span><br>
         • Freight Cost : <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
-        • Recommended Freight : <b style="color:#f97316;">Rp {ideal_freight:,.0f}</b>
+        {"• Freight Recommended : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) if target_margin > 0 else ""}
         
         </div>
         """, unsafe_allow_html=True)
