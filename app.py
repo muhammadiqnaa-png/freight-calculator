@@ -1385,9 +1385,11 @@ if calculate:
 
         # ===== FIX TARGET MARGIN TEXT =====
         if margin_type == "%":
-            target_margin_text = f"{target_margin:.1f}%"
+            target_margin_text = f"{target_margin:.1f} %"
+            margin_value_rp = freight_cost_mt * (target_margin / 100) if freight_cost_mt else 0
         else:
             target_margin_text = f"Rp {target_margin:,.0f}"
+            margin_value_rp = target_margin
         
         if target_margin > 0 and freight_cost_mt > 0:
         
