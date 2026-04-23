@@ -1246,6 +1246,7 @@ with col2:
             min_value=0.0,
             step=0.1
         )
+        st.caption("📌 Margin dihitung dari persentase profit terhadap freight cost")
     else:
         target_margin = st.number_input(
             "Target Margin (Rp)",
@@ -1253,6 +1254,7 @@ with col2:
             step=1000.0,
             format="%.0f"
         )
+        st.caption("📌 Margin langsung ditambahkan ke freight cost")
 
 
 # ===== BUTTON =====
