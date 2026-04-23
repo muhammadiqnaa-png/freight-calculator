@@ -1420,9 +1420,6 @@ if calculate:
         </span><br>
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
 
-        </div>
-        """, unsafe_allow_html=True)
-
         if freight_price_input > 0:
             st.markdown(f"""
             <div style="
@@ -1440,6 +1437,10 @@ if calculate:
             </b>
             </div>
             """, unsafe_allow_html=True)
+
+        </div>
+        """, unsafe_allow_html=True)
+
             
         if freight_price_input > 0:
 
