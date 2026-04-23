@@ -1599,11 +1599,36 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        # =========================
-        # 4. SUMMARY (WAJIB SINGLE OUTPUT)
-        # =========================
-        st.success(f"💰 Total Cost: Rp {total_cost:,.0f}")
-        st.warning(f"📦 Freight Cost: Rp {freight_cost_mt:,.0f} / {type_cargo.split()[1]}")
+        summary_total = (
+            variable_total +
+            owner_total +
+            opex_total +
+            additional_total
+        )
+        
+        st.markdown(f"""
+        <div style="
+            background:linear-gradient(135deg, #0f172a, #1e293b);
+            padding:14px;
+            border-radius:14px;
+            margin-bottom:10px;
+            color:white;
+            border-left:5px solid #22c55e;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4);
+        ">
+        <h4 style="color:#22c55e;">📊 Summary Cost</h4>
+        
+        • Variable Cost : Rp {variable_total:,.0f}<br>
+        • Mode Cost : Rp {owner_total:,.0f}<br>
+        • Opex Cost : Rp {opex_total:,.0f}<br>
+        • Additional Cost : Rp {additional_total:,.0f}<br>
+        
+        <hr>
+        
+        <h3>Total : Rp {summary_total:,.0f}</h3>
+        
+        </div>
+        """, unsafe_allow_html=True)
 
 
         # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
