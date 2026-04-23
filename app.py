@@ -1419,24 +1419,43 @@ if calculate:
         (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
         </span><br>
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
+        • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
 
-        if freight_price_input > 0:
-            st.markdown(f"""
+        {f"""
+        <div style="
+            margin-top:14px;
+            padding-top:12px;
+            border-top:1px dashed #cbd5e1;
+            font-size:12px;
+            line-height:1.7;
+        ">
+
             <div style="
-                margin-top:8px;
-                padding-top:8px;
-                border-top:1px dashed #cbd5e1;
-                font-size:12px;
+                font-weight:600;
+                margin-bottom:6px;
+                color:#64748B;
             ">
+            📊 Target & Recommendation
+            </div>
+
             • Target Profit: <b style="color:#16a34a;">
             Rp {profit_per_mt:,.0f} / {type_cargo.split()[1]}
             </b><br>
 
             • Recommended Freight: <b style="color:#2563eb;">
             Rp {recommended_freight:,.0f} / {type_cargo.split()[1]}
+            </b><br><br>
+
+            • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
+            • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
+
+            • Total Profit: 
+            <b style="color:{'#16a34a' if profit_user >= 0 else '#dc2626'};">
+            Rp {profit_user:,.0f}
             </b>
-            </div>
-            """, unsafe_allow_html=True)
+            <span style="color:#64748B;">
+            ({profit_percent_user:.2f}%)
+            </span>
 
         </div>
         """, unsafe_allow_html=True)
