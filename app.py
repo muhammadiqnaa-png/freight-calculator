@@ -1227,6 +1227,25 @@ st.markdown("### 💸 Freight Pricing")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
+# ===== TARGET PROFIT MODE =====
+if freight_price_input > 0:
+
+    margin_mode = st.radio(
+        "Target Profit Mode",
+        ["Nominal (Rp)", "Persen (%)"],
+        horizontal=True
+    )
+
+    if margin_mode == "Nominal (Rp)":
+        target_profit = st.number_input(
+            f"Target Profit (Rp/{type_cargo.split()[1]})",
+            value=15000
+        )
+    else:
+        target_margin_percent = st.number_input(
+            "Target Margin (%)",
+            value=10.0
+        )
 
 # ===== BUTTON =====
 st.markdown("<br>", unsafe_allow_html=True)
@@ -1353,6 +1372,20 @@ if calculate:
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
+        # ===== RECOMMENDED FREIGHT =====
+        recommended_freight = 0
+        profit_per_mt = 0
+
+        if freight_price_input > 0:
+
+            if margin_mode == "Nominal (Rp)":
+                recommended_freight = freight_cost_mt + target_profit
+                profit_per_mt = target_profit
+
+            else:
+                recommended_freight = freight_cost_mt / (1 - target_margin_percent / 100)
+                profit_per_mt = recommended_freight - freight_cost_mt
+
         # ===== TCE CALCULATION =====
         tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
 
@@ -1390,6 +1423,24 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
 
+        if freight_price_input > 0:
+            st.markdown(f"""
+            <div style="
+                margin-top:8px;
+                padding-top:8px;
+                border-top:1px dashed #cbd5e1;
+                font-size:12px;
+            ">
+            • Target Profit: <b style="color:#16a34a;">
+            Rp {profit_per_mt:,.0f} / {type_cargo.split()[1]}
+            </b><br>
+
+            • Recommended Freight: <b style="color:#2563eb;">
+            Rp {recommended_freight:,.0f} / {type_cargo.split()[1]}
+            </b>
+            </div>
+            """, unsafe_allow_html=True)
+            
         if freight_price_input > 0:
 
             profit_color = "#16a34a" if profit_user >= 0 else "#dc2626"
