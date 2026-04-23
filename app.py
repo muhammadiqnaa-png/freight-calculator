@@ -1227,31 +1227,24 @@ st.markdown("### 💸 Freight Costumer")
 
 freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
 
-st.markdown("""
-<div style="
-    background:#f8fafc;
-    padding:12px;
-    border-radius:12px;
-    border:1px solid #e2e8f0;
-    margin-bottom:10px;
-">
-""", unsafe_allow_html=True)
-
 st.markdown("### 🎯 Target Margin")
 
-margin_type = st.radio(
-    "Type",
-    ["%", "Rp"],
-    horizontal=True,
-    label_visibility="collapsed"
-)
+col1, col2 = st.columns([3,1])
 
-if margin_type == "%":
-    target_margin = st.number_input("Margin (%)", 0.0, step=0.1)
-else:
-    target_margin = st.number_input("Margin (Rp)", 0.0, step=1000.0)
+with col1:
+    target_margin = st.number_input(
+        "Margin",
+        min_value=0.0,
+        step=0.1,
+        label_visibility="collapsed"
+    )
 
-st.markdown("</div>", unsafe_allow_html=True)
+with col2:
+    margin_type = st.selectbox(
+        "",
+        ["%", "Rp"],
+        label_visibility="collapsed"
+    )
 
 
 # ===== BUTTON =====
