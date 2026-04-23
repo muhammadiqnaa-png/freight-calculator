@@ -1406,7 +1406,7 @@ if calculate:
                 margin-top:12px;
                 padding-top:10px;
                 border-top:1px solid rgba(0,0,0,0.1);
-            ">
+        ">
 
             <div style="
                 background:#fff7ed;
@@ -1415,21 +1415,21 @@ if calculate:
                 border-left:4px solid #f97316;
                 font-size:13px;
                 line-height:1.6;
-            ">
+        ">
 
-            <div style="color:#f97316; font-weight:700; margin-bottom:6px;">
+        <div style="color:#f97316; font-weight:700; margin-bottom:6px;">
             🎯 Pricing Recommendation
-            </div>
+        </div>
 
-            <div>• Target Margin: <b>{target_margin} {margin_type}</b></div>
-            <div>• Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b></div>
-            <div>• Revenue: <b>Rp {ideal_revenue:,.0f}</b></div>
-            <div>• PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b></div>
-            <div>• Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b></div>
+        <div>• Target Margin: <b>{target_margin} {margin_type}</b></div>
+        <div>• Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b></div>
+        <div>• Revenue: <b>Rp {ideal_revenue:,.0f}</b></div>
+        <div>• PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b></div>
+        <div>• Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b></div>
 
-            </div>
-            </div>
-            """
+        </div>
+        </div>
+        """
         else:
             pricing_block = ""
 
