@@ -1391,6 +1391,22 @@ if calculate:
             ideal_pph = ideal_revenue * 0.012
             ideal_profit = ideal_revenue - total_cost
 
+        if freight_cost_mt > 0:
+
+            # ===== % INPUT =====
+            if margin_type == "%":
+                margin_value_pct = target_margin
+                margin_value_rp = freight_cost_mt * (target_margin / 100)
+
+            # ===== Rp INPUT =====
+            else:
+                margin_value_rp = target_margin
+                margin_value_pct = (target_margin / freight_cost_mt) * 100
+
+else:
+    margin_value_rp = 0
+    margin_value_pct = 0
+
     
         # ===== REVENUE CALC =====
         revenue_user = freight_price_input * qyt_cargo
