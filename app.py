@@ -1445,7 +1445,9 @@ if calculate:
         </span><br>
         • Freight Cost: <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
-        st.markdown(pricing_block, unsafe_allow_html=True)
+        # ===== PRICING BLOCK =====
+        if target_margin > 0:
+            st.markdown(pricing_block, unsafe_allow_html=True)
         
         </div>
         """, unsafe_allow_html=True)
