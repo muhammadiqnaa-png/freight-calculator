@@ -1607,7 +1607,6 @@ if calculate:
             owner_total = charter_cost
 
         opex_total = total_general_overhead + other_cost
-                )
         
         st.markdown(f"""
         <div style="
