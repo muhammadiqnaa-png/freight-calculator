@@ -1422,11 +1422,11 @@ if calculate:
             🎯 Pricing Recommendation
         </div>
 
-        <div>• Target Margin: <b>{target_margin} {margin_type}</b></div>
+        <div>• Target Margin: <b>{target_margin:,.0f} {margin_type}</b>
         <div>• Recommended Freight: <b>Rp {ideal_freight:,.0f} / {type_cargo.split()[1]}</b></div>
         <div>• Revenue: <b>Rp {ideal_revenue:,.0f}</b></div>
         <div>• PPH 1.2%: <b>Rp {ideal_pph:,.0f}</b></div>
-        <div>• Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b></div>
+        <div>• Gross Profit: <b style="color:{profit_color};">Rp {ideal_profit:,.0f}</b>
 
         </div>
         </div>
