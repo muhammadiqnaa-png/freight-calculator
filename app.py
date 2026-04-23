@@ -1233,16 +1233,26 @@ col1, col2 = st.columns(2)
 
 with col1:
     margin_type = st.radio(
-        "Type",
+        "Target Margin Type",
         ["%", "Rp"],
-        horizontal=True
+        horizontal=True,
+        label_visibility="collapsed"
     )
 
 with col2:
-    target_margin = st.number_input(
-        "Target",
-        min_value=0.0
-    )
+    if margin_type == "%":
+        target_margin = st.number_input(
+            "Target Margin (%)",
+            min_value=0.0,
+            step=0.1
+        )
+    else:
+        target_margin = st.number_input(
+            "Target Margin (Rp)",
+            min_value=0.0,
+            step=1000.0,
+            format="%.0f"
+        )
 
 
 # ===== BUTTON =====
