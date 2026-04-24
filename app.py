@@ -1522,28 +1522,30 @@ if calculate:
         else:
             owner_total = charter_cost  # 🔥 FIX ERROR DI SINI
 
-            st.markdown(f"""
-            <div style="
-                background:linear-gradient(135deg, #eff6ff, #ffffff);
-                padding:12px;
-                border-radius:12px;
-                margin-bottom:10px;
-                border-left:5px solid #2563eb;
-            ">
-            <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
+            if mode == "Owner":
+
+                st.markdown(f"""
+                <div>
+                <h4>🏗️ Owner Cost</h4>
+                • Installment : Rp {charter_cost:,.0f}<br>
+                • Crew : Rp {crew_cost:,.0f}<br>
+                • Insurance : Rp {insurance_cost:,.0f}<br>
+                • Docking : Rp {docking_cost:,.0f}<br>
+                • Maintenance : Rp {maintenance_cost:,.0f}<br>
+                • Certificate : Rp {certificate_cost:,.0f}<br>
+                <b>Total : Rp {owner_total:,.0f}</b>
+                </div>
+                """, unsafe_allow_html=True)
             
-            • Installment : <b>Rp {charter_cost:,.0f}</b><br>
-            • Crew : <b>Rp {crew_cost:,.0f}</b><br>
-            • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
-            • Docking : <b>Rp {docking_cost:,.0f}</b><br>
-            • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
-            • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
+            elif mode == "Charter":
             
-            <hr style="margin:2px 0; opacity:0.2;">
-            
-            <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
-            </div>
-            """, unsafe_allow_html=True)
+                st.markdown(f"""
+                <div>
+                <h4>🚢 Charter Cost</h4>
+                • Charter Hire : Rp {charter_cost:,.0f}<br>
+                <b>Total : Rp {owner_total:,.0f}</b>
+                </div>
+                """, unsafe_allow_html=True)
         
             st.markdown(f"""
             <div style="
