@@ -1600,9 +1600,9 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        additional_total = add_total if additional_breakdown else 0
+            additional_total = add_total if additional_breakdown else 0
 
-        summary_total = variable_total + owner_total + opex_total + additional_total
+            summary_total = variable_total + owner_total + opex_total + additional_total
         
             st.markdown(f"""
             <div style="
