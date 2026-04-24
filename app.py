@@ -1566,7 +1566,7 @@ if calculate:
             margin-bottom:10px;
             border-left:5px solid #64748b;
         ">
-        <h4 style="color:#64748b;">🏢 Opex</h4>
+        <h4 style="color:#64748b;">🏢 General & Administrative Cost (G&A)</h4>
         
         • General Overhead : <b>Rp {total_general_overhead:,.0f}</b><br>
         • Depreciation Kapal : <b>Rp {depreciation_cost:,.0f}</b><br>
