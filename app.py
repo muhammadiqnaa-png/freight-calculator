@@ -1608,26 +1608,29 @@ if calculate:
         
         st.markdown(f"""
         <div style="
-            background:linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #eff6ff, #ffffff);
             padding:16px;
             border-radius:14px;
             margin-bottom:10px;
-            color:white;
-            border-left:5px solid #22c55e;
+            color:#0f172a;
+            border-left:5px solid #2563eb;
+            box-shadow:0 6px 16px rgba(0,0,0,0.08);
         ">
-            <h4>📊 Summary Cost</h4>
+        <h4 style="color:#2563eb;">📊 Summary Cost</h4>
         
-            • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
-            • Owner/Charter : <b>Rp {owner_total:,.0f}</b><br>
-            • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
-            • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
+        • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
+        • Owner/Charter : <b>Rp {owner_total:,.0f}</b><br>
+        • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
+        • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
         
-            <hr style="opacity:0.2;">
+        <hr style="opacity:0.15;">
         
-            <h3>Total : Rp {summary_total:,.0f}</h3>
+        <h3 style="margin:0; color:#0f172a;">
+            Total : Rp {summary_total:,.0f}
+        </h3>
         </div>
         """, unsafe_allow_html=True)
-
+        
         # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
         if freight_price_input > 0:
             st.markdown(f"""
