@@ -1581,7 +1581,7 @@ if calculate:
         
         <hr style="margin:2px 0; opacity:0.2;">
         
-        <b>Total Opex : Rp {(total_general_overhead + depreciation_kapal + other_cost):,.0f}</b>
+        <b>Total Opex : Rp {(total_general_overhead + depreciation_cost + other_cost):,.0f}</b>
         </div>
         """, unsafe_allow_html=True)
 
