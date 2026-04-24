@@ -1549,9 +1549,9 @@ if calculate:
         
             • Charter Hire : Rp {charter_cost:,.0f}<br>
         
-                <hr style="opacity:0.2;">
+            <hr style="opacity:0.2;">
         
-                <b>Total Charter Cost : Rp {charter_total:,.0f}</b>
+            <b>Total Charter Cost : Rp {charter_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
     
