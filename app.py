@@ -1304,8 +1304,9 @@ if calculate:
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
-        # ===== COST DICTIONARY =====
-
+        # =========================
+        # COST DICTIONARY (FIX ERROR LU)
+        # =========================
         if mode == "Owner":
             owner_data = {
                 "Angsuran": charter_cost,
@@ -1318,6 +1319,10 @@ if calculate:
                 "Port Costs": port_cost,
                 "Other Cost": other_cost
             }
+            owner_total = (
+                charter_cost + crew_cost + insurance_cost +
+                docking_cost + maintenance_cost + certificate_cost
+            )
         else:
             owner_data = {
                 "Charter Hire": charter_cost,
@@ -1325,6 +1330,8 @@ if calculate:
                 "Port Costs": port_cost,
                 "Other Cost": other_cost
             }
+            owner_total = charter_cost
+
 
         # ===== ADDITIONAL COST CALCULATION =====
         additional_total = 0
