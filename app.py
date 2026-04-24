@@ -1305,7 +1305,8 @@ if calculate:
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
         # ===== COST DICTIONARY =====
-        
+
+        if mode == "Owner":
             owner_data = {
                 "Angsuran": charter_cost,
                 "Crew": crew_cost,
