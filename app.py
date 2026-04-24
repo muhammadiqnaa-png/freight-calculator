@@ -1472,7 +1472,7 @@ if calculate:
                 border-left:5px solid {profit_color};
                 box-shadow:0 4px 12px rgba(0,0,0,0.35);
             ">
-            <h4 style="color:{profit_color};">💼 Budget Customer</h4>
+            <h4 style="color:{profit_color};">💼 Revenue & Profit Analysis </h4>
 
             • Freight Input User: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
             • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
@@ -1566,7 +1566,7 @@ if calculate:
             margin-bottom:10px;
             border-left:5px solid #64748b;
         ">
-        <h4 style="color:#64748b;">🏢 Opex</h4>
+        <h4 style="color:#64748b;">🏢 General & Administrative Cost (G&A)</h4>
         
         • General Overhead : <b>Rp {total_general_overhead:,.0f}</b><br>
         • Depreciation Kapal : Rp {depreciation_cost:,.0f}
