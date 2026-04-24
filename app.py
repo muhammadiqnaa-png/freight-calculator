@@ -1602,6 +1602,9 @@ if calculate:
 
             additional_total = add_total if additional_breakdown else 0
 
+            variable_total = cost_fuel + cost_fw + premi_cost + port_cost
+            opex_total = total_general_overhead + other_cost
+
             summary_total = variable_total + owner_total + opex_total + additional_total
         
             st.markdown(f"""
