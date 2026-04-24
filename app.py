@@ -1522,6 +1522,7 @@ if calculate:
             ">
             <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
             
+            • Installment : <b>Rp {charter_cost:,.0f}</b><br>
             • Crew : <b>Rp {crew_cost:,.0f}</b><br>
             • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
             • Docking : <b>Rp {docking_cost:,.0f}</b><br>
@@ -1567,11 +1568,12 @@ if calculate:
         <h4 style="color:#64748b;">🏢 Opex</h4>
         
         • General Overhead : <b>Rp {total_general_overhead:,.0f}</b><br>
+        • Depreciation Kapal : <b>Rp {depreciation_kapal:,.0f}</b><br>
         • Other Cost : <b>Rp {other_cost:,.0f}</b><br>
         
         <hr style="margin:2px 0; opacity:0.2;">
         
-        <b>Total Opex : Rp {(total_general_overhead + other_cost):,.0f}</b>
+        <b>Total Opex : Rp {(total_general_overhead + depreciation_kapal + other_cost):,.0f}</b>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1610,7 +1612,7 @@ if calculate:
             
 
         variable_total = cost_fuel + cost_fw + premi_cost + port_cost
-        opex_total = total_general_overhead + other_cost
+        opex_total = total_general_overhead + depreciation_kapal + other_cost
         additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
 
         summary_total = variable_total + owner_total + opex_total + additional_total
