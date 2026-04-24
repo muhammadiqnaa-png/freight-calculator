@@ -1370,7 +1370,7 @@ if calculate:
 
         # ===== TOTAL COST FINAL =====
         total_cost = sum([
-            charter_cost, crew_cost, insurance_cost, docking_cost, maintenance_cost, certificate_cost,total_general_overhead, 
+            charter_cost, crew_cost, insurance_cost, docking_cost, maintenance_cost, certificate_cost,total_general_overhead,depreciation_cost, 
             premi_cost, port_cost, cost_fuel, cost_fw, other_cost, additional_total
         ])
 
