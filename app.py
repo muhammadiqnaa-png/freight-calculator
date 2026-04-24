@@ -1252,6 +1252,10 @@ else:
     st.caption("📌 Mode Rp = Target profit dihitung dari Freight Cost dengan nominal")
 
 
+if not port_pol or not port_pod:
+    st.error("⚠️ Pilih POL & POD")
+    st.stop()
+
 # ===== BUTTON =====
 st.markdown("<br>", unsafe_allow_html=True)
 
