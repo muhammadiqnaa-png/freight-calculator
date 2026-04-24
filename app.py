@@ -1645,7 +1645,7 @@ if calculate:
             • Profit: <b>Rp {profit_user:,.0f}</b><br>
             • Margin: <b>{profit_percent_user:.2f}%</b>
             </div>
-            """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div style="
