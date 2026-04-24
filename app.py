@@ -1520,7 +1520,7 @@ if calculate:
                 margin-bottom:10px;
                 border-left:5px solid #2563eb;
             ">
-                <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
+            <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
         
                 • Crew : Rp {crew_cost:,.0f}<br>
                 • Insurance : Rp {insurance_cost:,.0f}<br>
@@ -1530,7 +1530,7 @@ if calculate:
         
             <hr style="opacity:0.2;">
         
-                <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
+            <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
         
