@@ -1537,7 +1537,7 @@ if calculate:
             ">
             <h4 style="color:#64748b;">🏗️ Owner Cost</h4>
             • Installment : <b>Rp {charter_cost:,.0f}</b><br>
-            • Crew : <b>Rp {crew_cost:,.0f}<br>
+            • Crew : <b>Rp {crew_cost:,.0f}</b><br>
             • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
             • Docking : <b>Rp {docking_cost:,.0f}</b><br>
             • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
