@@ -1511,7 +1511,16 @@ if calculate:
         """, unsafe_allow_html=True)
         
         if mode == "Owner":
-            owner_total = crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
+            owner_total = (
+                charter_cost +
+                crew_cost +
+                insurance_cost +
+                docking_cost +
+                maintenance_cost +
+                certificate_cost
+            )
+        else:
+            owner_total = charter_cost  # 🔥 FIX ERROR DI SINI
 
             st.markdown(f"""
             <div style="
