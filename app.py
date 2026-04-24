@@ -1599,14 +1599,14 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        variable_total = cost_fuel + cost_fw + premi_cost + port_cost
-
-        if mode == "Owner":
-            owner_total = crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
-        else:
-            owner_total = charter_cost
-
-        opex_total = total_general_overhead + other_cost
+            variable_total = cost_fuel + cost_fw + premi_cost + port_cost
+    
+            if mode == "Owner":
+                owner_total = crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
+            else:
+                owner_total = charter_cost
+    
+            opex_total = total_general_overhead + other_cost
         
             st.markdown(f"""
             <div style="
