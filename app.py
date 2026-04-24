@@ -1305,7 +1305,7 @@ if calculate:
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
         # ===== COST DICTIONARY =====
-        if mode == "Owner":
+        
             owner_data = {
                 "Angsuran": charter_cost,
                 "Crew": crew_cost,
@@ -1537,7 +1537,7 @@ if calculate:
             """, unsafe_allow_html=True)
         
         else:
-            charter_total = charter_cost
+            owner_total = charter_cost
         
             st.markdown(f"""
             <div style="
@@ -1616,7 +1616,14 @@ if calculate:
         opex_total = total_general_overhead + depreciation_cost + other_cost
         additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
 
-        summary_total = variable_total + owner_total + opex_total + additional_total
+        summary_total = (
+            variable_total +
+            owner_total +
+            total_general_overhead +
+            depreciation_cost +
+            other_cost +
+            additional_total
+        )
         
         st.markdown(f"""
         <div style="
