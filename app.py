@@ -1512,27 +1512,27 @@ if calculate:
         if mode == "Owner":
             owner_total = crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
 
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #eff6ff, #ffffff);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            border-left:5px solid #2563eb;
-        ">
-        <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
-        
-        • Crew : Rp {crew_cost:,.0f}<br>
-        • Insurance : Rp {insurance_cost:,.0f}<br>
-        • Docking : Rp {docking_cost:,.0f}<br>
-        • Maintenance : Rp {maintenance_cost:,.0f}<br>
-        • Certificate : Rp {certificate_cost:,.0f}<br>
-        
-        <hr style="opacity:0.2;">
-        
-        <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
-        </div>
-        """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #eff6ff, #ffffff);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #2563eb;
+            ">
+            <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
+            
+            • Crew : Rp {crew_cost:,.0f}<br>
+            • Insurance : Rp {insurance_cost:,.0f}<br>
+            • Docking : Rp {docking_cost:,.0f}<br>
+            • Maintenance : Rp {maintenance_cost:,.0f}<br>
+            • Certificate : Rp {certificate_cost:,.0f}<br>
+            
+            <hr style="opacity:0.2;">
+            
+            <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
         
         else:
             charter_total = charter_cost
