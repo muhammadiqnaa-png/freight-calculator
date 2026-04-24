@@ -1583,10 +1583,10 @@ if calculate:
         
             for k, v in additional_breakdown.items():
                 items_html += f"""
-                <div style="margin-bottom:4px;">
+            <div style="margin-bottom:4px;">
                     • {k} : <b>Rp {v:,.0f}</b>
-                </div>
-                """
+            </div>
+            """
         
             st.markdown(f"""
             <div style="
