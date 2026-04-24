@@ -1608,28 +1608,28 @@ if calculate:
 
         opex_total = total_general_overhead + other_cost
         
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #0f172a, #1e293b);
-            padding:16px;
-            border-radius:14px;
-            margin-bottom:10px;
-            color:white;
-            border-left:5px solid #22c55e;
-            box-shadow:0 6px 14px rgba(0,0,0,0.3);
-        ">
-            <h4 style="color:#22c55e; margin-bottom:10px;">📊 Summary Cost</h4>
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #0f172a, #1e293b);
+                padding:16px;
+                border-radius:14px;
+                margin-bottom:10px;
+                color:white;
+                border-left:5px solid #22c55e;
+                box-shadow:0 6px 14px rgba(0,0,0,0.3);
+            ">
+                <h4 style="color:#22c55e; margin-bottom:10px;">📊 Summary Cost</h4>
         
-            • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
-            • Mode Cost : <b>Rp {owner_total:,.0f}</b><br>
-            • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
-            • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
+                • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
+                • Mode Cost : <b>Rp {owner_total:,.0f}</b><br>
+                • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
+                • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
         
-        <hr style="opacity:0.2;">
+            <hr style="opacity:0.2;">
         
             <h3 style="margin:0;">Total : Rp {summary_total:,.0f}</h3>
-        </div>
-        """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
 
         # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
         if freight_price_input > 0:
