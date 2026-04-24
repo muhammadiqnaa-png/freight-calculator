@@ -1528,7 +1528,7 @@ if calculate:
             • Maintenance : Rp {maintenance_cost:,.0f}<br>
             • Certificate : Rp {certificate_cost:,.0f}<br>
             
-            <hr style="opacity:0.2;">
+            <hr style="margin:2px 0; opacity:0.2;">
             
             <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
             </div>
@@ -1549,7 +1549,7 @@ if calculate:
         
             • Charter Hire : Rp {charter_cost:,.0f}<br>
         
-            <hr style="opacity:0.2;">
+            <hr style="margin:2px 0; opacity:0.2;">
         
             <b>Total Charter Cost : Rp {charter_total:,.0f}</b>
             </div>
@@ -1569,7 +1569,7 @@ if calculate:
         • General Overhead : Rp {total_general_overhead:,.0f}<br>
         • Other Cost : Rp {other_cost:,.0f}<br>
         
-        <hr style="opacity:0.2;">
+        <hr style="margin:2px 0; opacity:0.2;">
         
         <b>Total Opex : Rp {(total_general_overhead + other_cost):,.0f}</b>
         </div>
@@ -1595,7 +1595,7 @@ if calculate:
                 st.markdown(f"• {k} : Rp {v:,.0f}")
         
             st.markdown(f"""
-                <hr style="opacity:0.2;">
+                <hr style="margin:2px 0; opacity:0.2;">
                 <b>Total Additional Cost : Rp {add_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
@@ -1623,7 +1623,7 @@ if calculate:
         • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
         • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
         
-        <hr style="opacity:0.15;">
+        <hr style="margin:2px 0; opacity:0.2;">
         
         <h3 style="margin:0; color:#0f172a;">
             Total : Rp {summary_total:,.0f}
