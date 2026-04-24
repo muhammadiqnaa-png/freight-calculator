@@ -1575,29 +1575,29 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
 
-    if additional_breakdown:
+        if additional_breakdown:
 
-        add_total = sum(additional_breakdown.values())
+            add_total = sum(additional_breakdown.values())
         
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #fdf2f8, #ffffff);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            border-left:5px solid #ec4899;
-        ">
-        <h4 style="color:#ec4899;">➕ Additional Cost</h4>
-        """)
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #fdf2f8, #ffffff);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #ec4899;
+            ">
+            <h4 style="color:#ec4899;">➕ Additional Cost</h4>
+            """)
         
-        for k, v in additional_breakdown.items():
-        st.markdown(f"• {k} : Rp {v:,.0f}")
+                for k, v in additional_breakdown.items():
+                st.markdown(f"• {k} : Rp {v:,.0f}")
         
-        st.markdown(f"""
-        <hr style="opacity:0.2;">
-        <b>Total Additional Cost : Rp {add_total:,.0f}</b>
-        </div>
-        """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <hr style="opacity:0.2;">
+            <b>Total Additional Cost : Rp {add_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
 
             variable_total = cost_fuel + cost_fw + premi_cost + port_cost
     
