@@ -1528,7 +1528,7 @@ if calculate:
                 • Maintenance : Rp {maintenance_cost:,.0f}<br>
                 • Certificate : Rp {certificate_cost:,.0f}<br>
         
-                <hr style="opacity:0.2;">
+            <hr style="opacity:0.2;">
         
                 <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
             </div>
