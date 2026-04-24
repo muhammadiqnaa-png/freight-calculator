@@ -1578,7 +1578,7 @@ if calculate:
         if additional_breakdown:
 
             add_total = sum(additional_breakdown.values())
-        
+
             st.markdown(f"""
             <div style="
                 background:linear-gradient(135deg, #fdf2f8, #ffffff);
@@ -1588,17 +1588,19 @@ if calculate:
                 border-left:5px solid #ec4899;
             ">
             <h4 style="color:#ec4899;">➕ Additional Cost</h4>
-            """)
+            """, unsafe_allow_html=True)
         
-                for k, v in additional_breakdown.items():
+            # ✅ FIX: FOR HARUS DI LEVEL INI (SEJAJAR DENGAN LOOP ATAS)
+            for k, v in additional_breakdown.items():
                 st.markdown(f"• {k} : Rp {v:,.0f}")
         
             st.markdown(f"""
-            <hr style="opacity:0.2;">
-            <b>Total Additional Cost : Rp {add_total:,.0f}</b>
+                <hr style="opacity:0.2;">
+                <b>Total Additional Cost : Rp {add_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
 
+    
             variable_total = cost_fuel + cost_fw + premi_cost + port_cost
     
             if mode == "Owner":
