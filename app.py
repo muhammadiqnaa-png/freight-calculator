@@ -1569,7 +1569,7 @@ if calculate:
         <h4 style="color:#64748b;">🏢 Opex</h4>
         
         • General Overhead : <b>Rp {total_general_overhead:,.0f}</b><br>
-        • Depreciation Kapal : Rp {depreciation_cost:,.0f}
+        • Depreciation Kapal : <b>Rp {depreciation_cost:,.0f}</b><br>
         • Other Cost : <b>Rp {other_cost:,.0f}</b><br>
         
         <hr style="margin:2px 0; opacity:0.2;">
