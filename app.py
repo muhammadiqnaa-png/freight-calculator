@@ -1304,9 +1304,7 @@ if calculate:
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
-        # =========================
-        # COST DICTIONARY (FIX ERROR LU)
-        # =========================
+        # ===== COST DICTIONARY =====
         if mode == "Owner":
             owner_data = {
                 "Angsuran": charter_cost,
@@ -1319,10 +1317,6 @@ if calculate:
                 "Port Costs": port_cost,
                 "Other Cost": other_cost
             }
-            owner_total = (
-                charter_cost + crew_cost + insurance_cost +
-                docking_cost + maintenance_cost + certificate_cost
-            )
         else:
             owner_data = {
                 "Charter Hire": charter_cost,
@@ -1330,8 +1324,6 @@ if calculate:
                 "Port Costs": port_cost,
                 "Other Cost": other_cost
             }
-            owner_total = charter_cost
-
 
         # ===== ADDITIONAL COST CALCULATION =====
         additional_total = 0
@@ -1480,7 +1472,7 @@ if calculate:
                 border-left:5px solid {profit_color};
                 box-shadow:0 4px 12px rgba(0,0,0,0.35);
             ">
-            <h4 style="color:{profit_color};">💼 Revenue & Profit Analysis </h4>
+            <h4 style="color:{profit_color};">💼 Budget Customer</h4>
 
             • Freight Input User: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
             • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
@@ -1518,52 +1510,52 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
         
-if mode == "Owner":
-    owner_total = crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
+        if mode == "Owner":
+            owner_total = crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
 
-    st.markdown(f"""
-    <div style="
-        background:linear-gradient(135deg, #eff6ff, #ffffff);
-        padding:12px;
-        border-radius:12px;
-        margin-bottom:10px;
-        border-left:5px solid #2563eb;
-    ">
-    <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #eff6ff, #ffffff);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #2563eb;
+            ">
+            <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
             
-        • Installment : <b>Rp {charter_cost:,.0f}</b><br>
-        • Crew : <b>Rp {crew_cost:,.0f}</b><br>
-        • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
-        • Docking : <b>Rp {docking_cost:,.0f}</b><br>
-        • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
-        • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
+            • Installment : <b>Rp {charter_cost:,.0f}</b><br>
+            • Crew : <b>Rp {crew_cost:,.0f}</b><br>
+            • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
+            • Docking : <b>Rp {docking_cost:,.0f}</b><br>
+            • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
+            • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
             
-    <hr style="margin:2px 0; opacity:0.2;">
+            <hr style="margin:2px 0; opacity:0.2;">
             
-    <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
-    </div>
-    """, unsafe_allow_html=True)
+            <b>Total Owner Cost : Rp {owner_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
         
-else:
-    owner_total = charter_cost
+        else:
+            charter_total = charter_cost
         
-    st.markdown(f"""
-    <div style="
-        background:linear-gradient(135deg, #f0fdf4, #ffffff);
-        padding:12px;
-        border-radius:12px;
-        margin-bottom:10px;
-        border-left:5px solid #16a34a;
-    ">
-    <h4 style="color:#16a34a;">🚢 Charter Cost</h4>
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #f0fdf4, #ffffff);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #16a34a;
+            ">
+            <h4 style="color:#16a34a;">🚢 Charter Cost</h4>
         
-    • Charter Hire : Rp {charter_cost:,.0f}<br>
+            • Charter Hire : Rp {charter_cost:,.0f}<br>
         
-    <hr style="margin:2px 0; opacity:0.2;">
+            <hr style="margin:2px 0; opacity:0.2;">
         
-    <b>Total Charter Cost : Rp {charter_total:,.0f}</b>
-    </div>
-    """, unsafe_allow_html=True)
+            <b>Total Charter Cost : Rp {charter_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
     
 
         st.markdown(f"""
@@ -1574,10 +1566,10 @@ else:
             margin-bottom:10px;
             border-left:5px solid #64748b;
         ">
-        <h4 style="color:#64748b;">🏢 General & Administrative Cost (G&A)</h4>
+        <h4 style="color:#64748b;">🏢 Opex</h4>
         
         • General Overhead : <b>Rp {total_general_overhead:,.0f}</b><br>
-        • Depreciation Kapal : <b>Rp {depreciation_cost:,.0f}</b><br>
+        • Depreciation Kapal : Rp {depreciation_cost:,.0f}
         • Other Cost : <b>Rp {other_cost:,.0f}</b><br>
         
         <hr style="margin:2px 0; opacity:0.2;">
@@ -1624,14 +1616,7 @@ else:
         opex_total = total_general_overhead + depreciation_cost + other_cost
         additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
 
-        summary_total = (
-            variable_total +
-            owner_total +
-            total_general_overhead +
-            depreciation_cost +
-            other_cost +
-            additional_total
-        )
+        summary_total = variable_total + owner_total + opex_total + additional_total
         
         st.markdown(f"""
         <div style="
