@@ -1586,13 +1586,15 @@ if calculate:
                 border-radius:12px;
                 margin-bottom:10px;
                 border-left:5px solid #ec4899;
+                box-shadow:0 4px 12px rgba(0,0,0,0.08);
+                color:#0f172a;
             ">
             <h4 style="color:#ec4899;">➕ Additional Cost</h4>
             """, unsafe_allow_html=True)
         
             # ✅ FIX: FOR HARUS DI LEVEL INI (SEJAJAR DENGAN LOOP ATAS)
             for k, v in additional_breakdown.items():
-                st.markdown(f"• {k} : Rp {v:,.0f}")
+                st.markdown(f"• {k} : <b>Rp {v:,.0f}</b>", unsafe_allow_html=True)
         
             st.markdown(f"""
                 <hr style="margin:2px 0; opacity:0.2;">
