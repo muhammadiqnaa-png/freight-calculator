@@ -1559,7 +1559,7 @@ if calculate:
         
             <hr style="margin:2px 0; opacity:0.2;">
         
-            <b>Total Charter Cost : Rp {charter_total:,.0f}</b>
+            <b>Total Charter Cost : Rp {owner_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
     
