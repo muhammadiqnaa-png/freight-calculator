@@ -1579,9 +1579,18 @@ if calculate:
 
             add_total = sum(additional_breakdown.values())
 
+            items_html = ""
+        
+            for k, v in additional_breakdown.items():
+                items_html += f"""
+                <div style="margin-bottom:4px;">
+                    • {k} : <b>Rp {v:,.0f}</b>
+                </div>
+                """
+        
             st.markdown(f"""
             <div style="
-                background:linear-gradient(135deg, #fdf2f8, #ffffff);
+                background: linear-gradient(135deg, #fdf2f8, #ffffff);
                 padding:12px;
                 border-radius:12px;
                 margin-bottom:10px;
@@ -1590,17 +1599,14 @@ if calculate:
                 color:#0f172a;
             ">
             <h4 style="color:#ec4899;">➕ Additional Cost</h4>
-            """, unsafe_allow_html=True)
         
-            # ✅ FIX: FOR HARUS DI LEVEL INI (SEJAJAR DENGAN LOOP ATAS)
-            for k, v in additional_breakdown.items():
-                st.markdown(f"• {k} : <b>Rp {v:,.0f}</b>", unsafe_allow_html=True)
+            {items_html}
         
-            st.markdown(f"""
-                <hr style="margin:2px 0; opacity:0.2;">
-                <b>Total Additional Cost : Rp {add_total:,.0f}</b>
+            <hr style="opacity:0.15;">
+            <b>Total Additional Cost : Rp {add_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
+            
 
         variable_total = cost_fuel + cost_fw + premi_cost + port_cost
         opex_total = total_general_overhead + other_cost
