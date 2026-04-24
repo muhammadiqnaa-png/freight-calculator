@@ -1564,14 +1564,14 @@ if calculate:
             margin-bottom:10px;
             border-left:5px solid #64748b;
         ">
-            <h4 style="color:#64748b;">🏢 Opex</h4>
+        <h4 style="color:#64748b;">🏢 Opex</h4>
         
-            • General Overhead : Rp {total_general_overhead:,.0f}<br>
-            • Other Cost : Rp {other_cost:,.0f}<br>
+        • General Overhead : Rp {total_general_overhead:,.0f}<br>
+        • Other Cost : Rp {other_cost:,.0f}<br>
         
-            <hr style="opacity:0.2;">
+        <hr style="opacity:0.2;">
         
-            <b>Total Opex : Rp {(total_general_overhead + other_cost):,.0f}</b>
+        <b>Total Opex : Rp {(total_general_overhead + other_cost):,.0f}</b>
         </div>
         """, unsafe_allow_html=True)
 
