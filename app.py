@@ -1602,7 +1602,8 @@ if calculate:
         
             {items_html}
         
-            <hr style="opacity:0.15;">
+            <hr style="margin:2px 0; opacity:0.2;">
+            
             <b>Total Additional Cost : Rp {add_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
