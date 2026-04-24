@@ -1546,24 +1546,6 @@ if calculate:
                 <b>Total : Rp {owner_total:,.0f}</b>
                 </div>
                 """, unsafe_allow_html=True)
-        
-            st.markdown(f"""
-            <div style="
-                background:linear-gradient(135deg, #f0fdf4, #ffffff);
-                padding:12px;
-                border-radius:12px;
-                margin-bottom:10px;
-                border-left:5px solid #16a34a;
-            ">
-            <h4 style="color:#16a34a;">🚢 Charter Cost</h4>
-        
-            • Charter Hire : Rp {charter_cost:,.0f}<br>
-        
-            <hr style="margin:2px 0; opacity:0.2;">
-        
-            <b>Total Charter Cost : Rp {owner_total:,.0f}</b>
-            </div>
-            """, unsafe_allow_html=True)
     
 
         st.markdown(f"""
