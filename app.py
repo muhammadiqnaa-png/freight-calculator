@@ -1533,13 +1533,13 @@ if calculate:
         
             st.markdown(f"""
             <div style="
-            background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            border-left:5px solid #64748b;
+            border-left:5px solid #7c3aed;
             ">
-            <h4 style="color:#64748b;">🏗️ Owner Cost</h4>
+            <h4 style="color:#7c3aed;">🏗️ Owner Cost</h4>
             • Installment : <b>Rp {charter_cost:,.0f}</b><br>
             • Crew : <b>Rp {crew_cost:,.0f}</b><br>
             • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
@@ -1555,13 +1555,13 @@ if calculate:
         
             st.markdown(f"""
             <div style="
-            background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
             padding:12px;
             border-radius:12px;
             margin-bottom:10px;
-            border-left:5px solid #64748b;
+            border-left:5px solid #7c3aed;
             ">
-            <h4 style="color:#64748b;">🏗️ Charter Cost</h4>
+            <h4 style="color:#7c3aed;">🏗️ Charter Cost</h4>
             • Charter Hire : <b>Rp {charter_cost:,.0f}</b><br>
             <hr style="margin:2px 0; opacity:0.2;">
             <b>Total : Rp {owner_total:,.0f}</b>
