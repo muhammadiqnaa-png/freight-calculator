@@ -1510,6 +1510,7 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
         
+        # ===== OWNER / CHARTER TOTAL =====
         if mode == "Owner":
             owner_total = (
                 charter_cost +
@@ -1520,46 +1521,48 @@ if calculate:
                 certificate_cost
             )
         else:
-            owner_total = charter_cost  # 🔥 FIX ERROR DI SINI
-
-            if mode == "Owner":
-
-                st.markdown(f"""
-                <div style="
-                background:linear-gradient(135deg, #f8fafc, #f1f5f9);
-                padding:12px;
-                border-radius:12px;
-                margin-bottom:10px;
-                border-left:5px solid #64748b;
-                ">
-                <h4 style="color:#64748b;">🏗️ Owner Cost</h4>
-                • Installment : Rp {charter_cost:,.0f}<br>
-                • Crew : Rp {crew_cost:,.0f}<br>
-                • Insurance : Rp {insurance_cost:,.0f}<br>
-                • Docking : Rp {docking_cost:,.0f}<br>
-                • Maintenance : Rp {maintenance_cost:,.0f}<br>
-                • Certificate : Rp {certificate_cost:,.0f}<br>
-                <hr style="margin:2px 0; opacity:0.2;">
-                <b>Total : Rp {owner_total:,.0f}</b>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            elif mode == "Charter":
-            
-                st.markdown(f"""
-                <div style="
-                background:linear-gradient(135deg, #f8fafc, #f1f5f9);
-                padding:12px;
-                border-radius:12px;
-                margin-bottom:10px;
-                border-left:5px solid #64748b;
-                ">
-                <h4 style="color:#64748b;">🏗️ Charter Cost</h4>
-                • Charter Hire : Rp {charter_cost:,.0f}<br>
-                <hr style="margin:2px 0; opacity:0.2;">
-                <b>Total : Rp {owner_total:,.0f}</b>
-                </div>
-                """, unsafe_allow_html=True)
+            owner_total = charter_cost
+        
+        
+        # ===== TAMPILAN =====
+        if mode == "Owner":
+        
+            st.markdown(f"""
+            <div style="
+            background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-left:5px solid #64748b;
+            ">
+            <h4 style="color:#64748b;">🏗️ Owner Cost</h4>
+            • Installment : Rp {charter_cost:,.0f}<br>
+            • Crew : Rp {crew_cost:,.0f}<br>
+            • Insurance : Rp {insurance_cost:,.0f}<br>
+            • Docking : Rp {docking_cost:,.0f}<br>
+            • Maintenance : Rp {maintenance_cost:,.0f}<br>
+            • Certificate : Rp {certificate_cost:,.0f}<br>
+            <hr style="margin:2px 0; opacity:0.2;">
+            <b>Total : Rp {owner_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        else:
+        
+            st.markdown(f"""
+            <div style="
+            background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-left:5px solid #64748b;
+            ">
+            <h4 style="color:#64748b;">🏗️ Charter Cost</h4>
+            • Charter Hire : Rp {charter_cost:,.0f}<br>
+            <hr style="margin:2px 0; opacity:0.2;">
+            <b>Total : Rp {owner_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
     
 
         st.markdown(f"""
