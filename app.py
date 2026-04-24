@@ -1545,9 +1545,6 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
         
-        else:
-            charter_total = charter_cost
-        
             st.markdown(f"""
             <div style="
                 background:linear-gradient(135deg, #f0fdf4, #ffffff);
