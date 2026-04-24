@@ -1539,6 +1539,7 @@ if calculate:
                 • Docking : Rp {docking_cost:,.0f}<br>
                 • Maintenance : Rp {maintenance_cost:,.0f}<br>
                 • Certificate : Rp {certificate_cost:,.0f}<br>
+                <hr style="margin:2px 0; opacity:0.2;">
                 <b>Total : Rp {owner_total:,.0f}</b>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1555,6 +1556,7 @@ if calculate:
                 ">
                 <h4 style="color:#64748b;">🏗️ Charter Cost</h4>
                 • Charter Hire : Rp {charter_cost:,.0f}<br>
+                <hr style="margin:2px 0; opacity:0.2;">
                 <b>Total : Rp {owner_total:,.0f}</b>
                 </div>
                 """, unsafe_allow_html=True)
