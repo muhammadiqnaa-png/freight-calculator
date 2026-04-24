@@ -1588,7 +1588,6 @@ if calculate:
                 border-left:5px solid #ec4899;
             ">
             <h4 style="color:#ec4899;">➕ Additional Cost</h4>
-            """, unsafe_allow_html=True)
         
             # ✅ FIX: FOR HARUS DI LEVEL INI (SEJAJAR DENGAN LOOP ATAS)
             for k, v in additional_breakdown.items():
