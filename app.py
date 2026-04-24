@@ -1625,7 +1625,7 @@ if calculate:
             • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
             • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
         
-            <hr style="opacity:0.2;">
+        <hr style="opacity:0.2;">
         
             <h3 style="margin:0;">Total : Rp {summary_total:,.0f}</h3>
         </div>
