@@ -1450,7 +1450,7 @@ if calculate:
         </span><br>
         • Freight Cost : <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
         
-        {"• Recommended Freight : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
+        {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
          if float(target_margin or 0) > 0 else ""}
         
         </div>
