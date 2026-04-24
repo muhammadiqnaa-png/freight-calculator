@@ -1522,11 +1522,11 @@ if calculate:
             ">
             <h4 style="color:#2563eb;">🏗️ Owner Cost</h4>
         
-                • Crew : Rp {crew_cost:,.0f}<br>
-                • Insurance : Rp {insurance_cost:,.0f}<br>
-                • Docking : Rp {docking_cost:,.0f}<br>
-                • Maintenance : Rp {maintenance_cost:,.0f}<br>
-                • Certificate : Rp {certificate_cost:,.0f}<br>
+            • Crew : Rp {crew_cost:,.0f}<br>
+            • Insurance : Rp {insurance_cost:,.0f}<br>
+            • Docking : Rp {docking_cost:,.0f}<br>
+            • Maintenance : Rp {maintenance_cost:,.0f}<br>
+            • Certificate : Rp {certificate_cost:,.0f}<br>
         
             <hr style="opacity:0.2;">
         
