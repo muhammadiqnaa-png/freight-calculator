@@ -1525,8 +1525,14 @@ if calculate:
             if mode == "Owner":
 
                 st.markdown(f"""
-                <div>
-                <h4>🏗️ Owner Cost</h4>
+                <div style="
+                background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #64748b;
+                ">
+                <h4 style="color:#64748b;">🏗️ Owner Cost</h4>
                 • Installment : Rp {charter_cost:,.0f}<br>
                 • Crew : Rp {crew_cost:,.0f}<br>
                 • Insurance : Rp {insurance_cost:,.0f}<br>
@@ -1540,8 +1546,14 @@ if calculate:
             elif mode == "Charter":
             
                 st.markdown(f"""
-                <div>
-                <h4>🚢 Charter Cost</h4>
+                <div style="
+                background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #64748b;
+                ">
+                <h4 style="color:#64748b;">🏗️ Charter Cost</h4>
                 • Charter Hire : Rp {charter_cost:,.0f}<br>
                 <b>Total : Rp {owner_total:,.0f}</b>
                 </div>
