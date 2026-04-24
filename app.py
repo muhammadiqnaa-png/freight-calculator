@@ -1591,11 +1591,11 @@ if calculate:
             """)
         
             for k, v in additional_breakdown.items():
-                st.markdown(f"• {k} : Rp {v:,.0f}")
+            st.markdown(f"• {k} : Rp {v:,.0f}")
         
             st.markdown(f"""
-                <hr style="opacity:0.2;">
-                <b>Total Additional Cost : Rp {add_total:,.0f}</b>
+            <hr style="opacity:0.2;">
+            <b>Total Additional Cost : Rp {add_total:,.0f}</b>
             </div>
             """, unsafe_allow_html=True)
 
