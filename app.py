@@ -1411,7 +1411,7 @@ if calculate:
             # ===== OUTPUT CALC =====
             ideal_revenue = ideal_freight * qyt_cargo
             ideal_pph = ideal_revenue * 0.012
-            ideal_profit = ideal_revenue - total_cost
+            ideal_profit = ideal_revenue - total_cost - ideal_pph
 
     
         # ===== REVENUE CALC =====
