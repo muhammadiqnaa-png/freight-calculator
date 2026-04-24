@@ -1630,22 +1630,6 @@ if calculate:
         </h3>
         </div>
         """, unsafe_allow_html=True)
-        
-        # ===== FREIGHT PRICE CALCULATION USER (Conditional) =====
-        if freight_price_input > 0:
-            st.markdown(f"""
-            <div style="
-                background:#e8f5e9;
-                padding:12px;
-                border-radius:12px;
-                margin-bottom:10px;
-            ">
-            <h4>💰 Profit</h4>
-            • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
-            • Profit: <b>Rp {profit_user:,.0f}</b><br>
-            • Margin: <b>{profit_percent_user:.2f}%</b>
-            </div>
-        """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div style="
