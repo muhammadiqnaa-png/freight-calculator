@@ -1625,7 +1625,7 @@ if calculate:
         opex_total = total_general_overhead + depreciation_cost + other_cost
         additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
 
-        summary_total = variable_total + owner_total + opex_total + additional_total
+        summary_total = total_cost
         
         st.markdown(f"""
         <div style="
