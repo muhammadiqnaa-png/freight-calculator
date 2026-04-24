@@ -1587,7 +1587,7 @@ if calculate:
                 margin-bottom:10px;
                 border-left:5px solid #ec4899;
             ">
-                <h4 style="color:#ec4899;">➕ Additional Cost</h4>
+            <h4 style="color:#ec4899;">➕ Additional Cost</h4>
             """)
         
             for k, v in additional_breakdown.items():
