@@ -1299,7 +1299,8 @@ if calculate:
         docking_cost = (docking / 30) * total_voyage_days if mode == "Owner" else 0
         maintenance_cost = (maintenance / 30) * total_voyage_days if mode == "Owner" else 0
         certificate_cost = (certificate / 30) * total_voyage_days if mode == "Owner" else 0
-        total_general_overhead = ((opex_office + depreciation_kapal) / 30) * total_voyage_days
+        total_general_overhead = (opex_office / 30) * total_voyage_days
+        depreciation_cost = (depreciation_kapal / 30) * total_voyage_days
         premi_cost = distance_pol_pod * premi_nm
         port_cost = port_cost_pol + port_cost_pod + asist_tug
 
@@ -1568,7 +1569,7 @@ if calculate:
         <h4 style="color:#64748b;">🏢 Opex</h4>
         
         • General Overhead : <b>Rp {total_general_overhead:,.0f}</b><br>
-        • Depreciation Kapal : <b>Rp {depreciation_kapal:,.0f}</b><br>
+        • Depreciation Kapal : Rp {depreciation_cost:,.0f}
         • Other Cost : <b>Rp {other_cost:,.0f}</b><br>
         
         <hr style="margin:2px 0; opacity:0.2;">
@@ -1612,7 +1613,7 @@ if calculate:
             
 
         variable_total = cost_fuel + cost_fw + premi_cost + port_cost
-        opex_total = total_general_overhead + depreciation_kapal + other_cost
+        opex_total = total_general_overhead + depreciation_cost + other_cost
         additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
 
         summary_total = variable_total + owner_total + opex_total + additional_total
