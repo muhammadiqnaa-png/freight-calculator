@@ -4,7 +4,6 @@ from io import BytesIO
 from distance import *
 from auth import *
 from presets import *
-from pdf_generator import create_pdf
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib import colors
