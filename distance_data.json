@@ -13,7 +13,6 @@
   "SIP, Kuala Cenaku - Awar-awar": 725,
   "SIP, Kuala Cenaku - Cilacap": 810,
   "SIP, Kuala Cenaku - Paiton": 850,
-  
 
   "KBS, Kuala Tungkal - Suralaya": 475,
   "KBS, Kuala Tungkal - Labuan": 505,
@@ -35,6 +34,8 @@
   "EWF, Jambi - Pangkalan Susu": 565,
 
   "MUB, Jambi - IKPP Merak": 440,
+
+  "TEAP, Jambi - Muara Sabak": 95,
 
   "Tempirai, Sungai Lilin - Tanjung Kampeh": 60,
   "Tempirai, Sungai Lilin - Merak": 325,
@@ -70,6 +71,8 @@
   "Tarahan, Lampung - Indramayu": 185,
   "Tarahan, Lampung - Awar Awar": 430,
   "Tarahan, Lampung - Pacitan": 480,
+
+  "Pelabuhan Panjang, Lampung - Marunda": 120,
 
   "Lampung, Muara Teladas - Marunda": 125,
 
@@ -116,7 +119,10 @@
   "SBT, Batulicin - Marunda": 590,
   "SBT, Batulicin - Taboneo": 150,
 
+  "KPC, Sangatta - Celukan Bawang": 565,
+
   "MBL, Samarinda - Southport, Klang Malaysia": 1435,
+  
   "ABN, Samarinda - Cirebon": 710,
 
   "Trias Sebulu, Samarinda - Gresik": 570,
@@ -126,6 +132,9 @@
   "RMB, Bukit Jering - Pulau Obi": 860,
 
   "Kideco, Grogot - Tanjung Kasam, Batam": 995,
+  "Kideco, Grogot - Cilegon": 825,
+  "Kideco, Grogot - Rembang": 510,
+  "Kideco, Grogot - Paiton": 445,
   
   "Madhucon, Grogot - Ciwandan, Banten": 825,
   "Madhucon, Grogot - IMIP, Morowali": 675,
@@ -133,6 +142,9 @@
   
   "TIA, Bunati - Ciwandan": 610,
   "BIB, Bunati - Jawa 7": 605,
+
+  "A3M, Asam-Asam - BAI, Bintan": 730,
+  "A3M, Asam-Asam - Cilacap": 705,
   
   "PMS, Pomala - OSS, Morosi": 205,
   "PMS, Pomala - IMIP, Morowali": 275,
@@ -149,8 +161,12 @@
   "SPJ, Suralaya - Pelabuhan Ratu": 165,
 
   "Bojonegara - Paramarta, Palembang": 395,
-  "Bojonegara - Marunda": 70,
+  "Bojonegara - Marunda": 60,
+  "Bojonegara - Rembang": 300,
   "Bojonegara - Jelapat, Kalteng": 725,
+  "Bojonegara - BAP, Kendawangan": 385,
+  
+  "Marunda - Bangka": 290,
 
   "Sluke, Rembang - Marunda": 300,
 
