@@ -1,3 +1,7 @@
+import os
+import json
+
+
 DATA_FILE = "distance_data.json"
 
 def find_distance(pol, pod):
