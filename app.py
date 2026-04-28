@@ -1831,10 +1831,10 @@ if calculate:
 
             # ===== NOTES SIMPLE =====
             notes_text = f"""
-            • Fuel Price : Rp {price_fuel:,.0f} / Ltr
-            • Port Stay POL : {port_stay_pol} Days
-            • Port Stay POD : {port_stay_pod} Days
-            • Speed Laden : {speed_laden} Knot
+            • Fuel Price : Rp {price_fuel:,.0f} / Ltr<br/>
+            • Port Stay POL : {port_stay_pol} Days<br/>
+            • Port Stay POD : {port_stay_pod} Days<br/>
+            • Speed Laden : {speed_laden} Knot<br/>
             • Speed Ballast : {speed_ballast} Knot
             """
 
