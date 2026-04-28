@@ -3,11 +3,17 @@
   "SIP, Kuala Cenaku - Bangka": 275,
   "SIP, Kuala Cenaku - Merak": 475,
   "SIP, Kuala Cenaku - Lontar": 490,
+  "SIP, Kuala Cenaku - Marunda": 495,
   "SIP, Kuala Cenaku - Labuan": 515,
+  "SIP, Kuala Cenaku - Sebalang": 515,
   "SIP, Kuala Cenaku - Indramayu": 525,
   "SIP, Kuala Cenaku - Pangkalan Susu": 540,
   "SIP, Kuala Cenaku - Pelabuhan Ratu": 640,
   "SIP, Kuala Cenaku - Rembang": 690,
+  "SIP, Kuala Cenaku - Awar-awar": 725,
+  "SIP, Kuala Cenaku - Cilacap": 810,
+  "SIP, Kuala Cenaku - Paiton": 850,
+  
 
   "KBS, Kuala Tungkal - Suralaya": 475,
   "KBS, Kuala Tungkal - Labuan": 505,
@@ -28,6 +34,8 @@
   "EWF, Jambi - Indramayu": 485,
   "EWF, Jambi - Pangkalan Susu": 565,
 
+  "MUB, Jambi - IKPP Merak": 440,
+
   "Tempirai, Sungai Lilin - Tanjung Kampeh": 60,
   "Tempirai, Sungai Lilin - Merak": 325,
   "Tempirai, Sungai Lilin - Lontar": 335,
@@ -43,6 +51,8 @@
   "SBL, Palembang - BAP, Kendawangan": 435,
   "SBL, Palembang - WHW, Kendawangan": 440,
   "SBL, Palembang - Cemindo, Bayah": 525,
+
+  "Paramarta, Palembang - Bojonegara": 395,
 
   "SDJ, Palembang - Bangka": 210,
   "SDJ, Palembang - MEI, Banten": 365,
@@ -67,6 +77,11 @@
 
   "Bima, Bintang Ninggi, Kalteng - Taboneo": 250,
   "Bima, Bintang Ninggi, Kalteng - Cirebon": 650,
+
+  "SRE, Kalteng - Taboneo": 255,
+  "SRE, Kalteng - Paiton": 510,
+  "SRE, Kalteng - Paiton": 490,
+  "SRE, Kalteng - BAP, Kendawangan": 580,
 
   "Mitra Barito, Kalteng - Taboneo": 240,
 
