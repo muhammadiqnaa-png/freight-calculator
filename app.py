@@ -1420,6 +1420,9 @@ if calculate:
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
+        # ===== TCE BASE COST (WAJIB DI SINI) =====
+        tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
+
         # ===== TCE CALCULATION (SMART MODE) =====
 
         voyage_cost = cost_fuel + cost_fw + port_cost + premi_cost
