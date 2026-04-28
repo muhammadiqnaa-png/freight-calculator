@@ -1420,14 +1420,26 @@ if calculate:
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
-        # ===== TCE CALCULATION =====
-        tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
+        # ===== TCE CALCULATION (SMART MODE) =====
 
-        tce_per_day = (
-            tce_base_cost / total_voyage_days
-            if total_voyage_days > 0 else 0
-        )
-
+        voyage_cost = cost_fuel + cost_fw + port_cost + premi_cost
+        
+        if freight_price_input > 0 and total_voyage_days > 0:
+        
+            # ===== REAL TCE (pakai harga user) =====
+            net_revenue = revenue_user - pph_user
+            tce_profit = net_revenue - voyage_cost
+            label_tce = "TCE (Actual)"
+        
+        else:
+        
+            # ===== MINIMUM TCE (pakai freight cost) =====
+            breakeven_revenue = freight_cost_mt * qyt_cargo
+            tce_profit = breakeven_revenue - voyage_cost
+            label_tce = "TCE (Minimum)"
+        
+        # ===== FINAL =====
+        tce_per_day = tce_profit / total_voyage_days if total_voyage_days > 0 else 0
         tce_per_month = tce_per_day * 30
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
@@ -1664,13 +1676,19 @@ if calculate:
             border-left:5px solid #03a9f4;
             box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
-        <h4 style="color:#03a9f4;">⏱️ TCE (Time Charter Equivalent)</h4>
-
+        <h4 style="color:#03a9f4;">⏱️ {label_tce}</h4>
+        
         • Per Day: <b>Rp {tce_per_day:,.0f}</b><br>
         • Per Month: <b>Rp {tce_per_month:,.0f}</b>
-
+        
         </div>
         """, unsafe_allow_html=True)
+
+        # NOTE TCE (kecil & simple)
+        if freight_price_input == 0:
+            st.caption("📌 TCE dihitung dari break-even (tanpa revenue / freight belum diinput)")
+        else:
+            st.caption("📌 TCE dihitung dari performa aktual berdasarkan freight input user")
 
 
         # ===== PROFIT SCENARIO =====
