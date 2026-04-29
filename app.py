@@ -30,39 +30,50 @@ def is_admin():
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    ref.child("freight_input").push({
+    new_data = {
         "email": email,
         "pol": pol,
         "pod": pod,
         "freight": freight_input,
         "date": datetime.now().strftime("%Y-%m-%d")
-    })
+    }
+
+    # Firebase save
+    ref.child("freight_input").push(new_data)
+
+    # Session safety init
+    if "freight_history" not in st.session_state:
+        st.session_state.freight_history = []
 
     history = st.session_state.freight_history
 
-    # 🔥 CEK DUPLIKAT: user + tanggal saja
+    # anti duplicate (email + tanggal)
     for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["date"] == new_data["date"]
-        ):
-            return  # ❌ STOP kalau sudah ada di hari yang sama
+        if item["email"] == new_data["email"] and item["date"] == new_data["date"]:
+            return
 
     history.append(new_data)
-
+    
 def save_pdf_history(pol, pod, email, file_name):
 
-    ref.child("pdf_history").push({
+    new_data = {
         "email": email,
         "pol": pol,
         "pod": pod,
         "file_name": file_name,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    })
+    }
+
+    # Firebase save
+    ref.child("pdf_history").push(new_data)
+
+    # Session safety init
+    if "pdf_history" not in st.session_state:
+        st.session_state.pdf_history = []
 
     history = st.session_state.pdf_history
 
-    # 🔥 anti duplicate (user + tanggal + file)
+    # anti duplicate
     for item in history:
         if (
             item["email"] == new_data["email"] and
@@ -72,7 +83,6 @@ def save_pdf_history(pol, pod, email, file_name):
             return
 
     history.append(new_data)
-
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
@@ -353,6 +363,13 @@ if "last_route" not in st.session_state:
 # ===== POPUP INFO =====
 if "show_info" not in st.session_state:
     st.session_state.show_info = False
+
+# ===== HISTORY INIT FIX =====
+if "freight_history" not in st.session_state:
+    st.session_state.freight_history = []
+
+if "pdf_history" not in st.session_state:
+    st.session_state.pdf_history = []
 
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
