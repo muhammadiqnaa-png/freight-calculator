@@ -816,60 +816,81 @@ with st.sidebar.expander("➕ Additional Cost"):
     st.session_state.additional_costs = updated_costs
 
 # =========================
-# 🧑‍💼 ADMIN PANEL (SIDEBAR ONLY)
+# 🧑‍💼 ADMIN PANEL (PRO VERSION)
 # =========================
 if is_admin():
 
     st.sidebar.markdown("## 🧑‍💼 Admin Panel")
 
-    menu_admin = st.sidebar.selectbox(
-        "Admin Menu",
-        ["None", "📥 History Freight Input", "📄 History Freight Calculate"]
+    menu = st.sidebar.radio(
+        "Menu",
+        ["📥 Freight Input History", "📄 Calculate History (PDF)"]
     )
 
     # =========================
-    # 📥 INPUT HISTORY
+    # 📥 FREIGHT INPUT HISTORY
     # =========================
-    if menu_admin == "📥 History Freight Input":
+    if menu == "📥 Freight Input History":
 
-        st.sidebar.markdown("### 📥 Freight Input History")
+        st.sidebar.markdown("### 📥 Input History")
 
         url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
         res = requests.get(url).json()
 
         if res:
-            for k, v in reversed(list(res.items())):
-                st.sidebar.markdown(f"""
-                **POL:** {v.get('pol')}  
-                **POD:** {v.get('pod')}  
-                **Freight:** {v.get('freight_input')}  
-                **Date:** {v.get('date')}
-                """)
-                st.sidebar.markdown("---")
+
+            with st.sidebar.container():
+
+                for k, v in reversed(list(res.items())):
+
+                    with st.sidebar.expander(f"🚢 {v.get('pol')} → {v.get('pod')}"):
+
+                        st.markdown(f"""
+                        **POL:** {v.get('pol')}  
+                        **POD:** {v.get('pod')}  
+                        **Freight Input:** Rp {v.get('freight_input', 0):,.0f}  
+                        **Tanggal:** {v.get('date')}  
+                        **User:** {v.get('email')}
+                        """)
+
         else:
-            st.sidebar.info("No data")
+            st.sidebar.info("No Input History")
 
     # =========================
-    # 📄 CALC HISTORY (PDF)
+    # 📄 CALCULATE HISTORY (PDF)
     # =========================
-    elif menu_admin == "📄 History Freight Calculate":
+    elif menu == "📄 Calculate History (PDF)":
 
-        st.sidebar.markdown("### 📄 Calculate History")
+        st.sidebar.markdown("### 📄 PDF History")
 
         url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_pdf_history.json"
         res = requests.get(url).json()
 
         if res:
-            for k, v in reversed(list(res.items())):
-                st.sidebar.markdown(f"""
-                **File:** {v.get('file_name')}  
-                **Route:** {v.get('route')}  
-                **Date:** {v.get('date')}
-                """)
-                st.sidebar.markdown("---")
-        else:
-            st.sidebar.info("No data")
 
+            with st.sidebar.container():
+
+                for k, v in reversed(list(res.items())):
+
+                    with st.sidebar.expander(f"📄 {v.get('file_name', 'PDF Report')}"):
+
+                        st.markdown(f"""
+                        **Route:** {v.get('route')}  
+                        **File Name:** {v.get('file_name')}  
+                        **Date:** {v.get('date')}  
+                        **User:** {v.get('email')}
+                        """)
+
+                        # kalau kamu simpan link PDF
+                        if v.get("pdf_url"):
+                            st.download_button(
+                                "⬇️ Download PDF",
+                                v["pdf_url"],
+                                file_name=v.get("file_name", "report.pdf")
+                            )
+
+        else:
+            st.sidebar.info("No PDF History")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
