@@ -29,7 +29,7 @@ def is_admin():
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
+    history = st.session_state.get("freight_history", [])
 
     data = {
         "pol": pol,
