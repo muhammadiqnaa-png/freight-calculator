@@ -1861,19 +1861,19 @@ if calculate:
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
 
-        if st.download_button(
+        st.download_button(
             label="📥 Download PDF Report",
             data=pdf_buffer,
             file_name=file_name,
             mime="application/pdf"
-        ):
+        )
         
-            save_pdf_history(
-                port_pol,
-                port_pod,
-                st.session_state.email,
-                file_name
-            )
+        save_pdf_history(
+            port_pol,
+            port_pod,
+            st.session_state.email,
+            file_name
+        )
 
     except Exception as e:
         st.error(f"Error: {e}")
