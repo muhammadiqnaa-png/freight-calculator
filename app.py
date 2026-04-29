@@ -815,6 +815,52 @@ with st.sidebar.expander("➕ Additional Cost"):
             })
     st.session_state.additional_costs = updated_costs
 
+# =========================
+# 📊 ADMIN PANEL (EXPANDER)
+# =========================
+if is_admin():
+
+    st.sidebar.markdown("---")
+
+    with st.sidebar.expander("📊 Admin Panel", expanded=False):
+
+        tab = st.selectbox(
+            "Menu Admin",
+            [
+                "📥 History Freight Input",
+                "📊 History Calculate (PDF)"
+            ]
+        )
+
+        # ===== HISTORY FREIGHT INPUT =====
+        if tab == "📥 History Freight Input":
+
+            url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
+            res = requests.get(url)
+            data = res.json()
+
+            st.markdown("### 📥 Freight Input Log")
+
+            if data:
+
+                df = pd.DataFrame.from_dict(data, orient="index")
+                df = df.sort_values("date", ascending=False)
+
+                st.dataframe(
+                    df[["date", "email", "pol", "pod", "freight_input"]],
+                    use_container_width=True,
+                    height=300
+                )
+
+            else:
+                st.info("Belum ada data")
+
+        # ===== HISTORY CALCULATE (PDF) =====
+        elif tab == "📊 History Calculate (PDF)":
+
+            st.markdown("### 📊 Calculate History")
+            st.info("Coming soon 🚀 (butuh tracking PDF download)")
+
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
