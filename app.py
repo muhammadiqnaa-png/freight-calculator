@@ -899,9 +899,9 @@ if is_admin():
             pdf_history = st.session_state.get("pdf_history", [])
 
             if pdf_history:
-                st.dataframe(pd.DataFrame(pdf_history), use_container_width=True)
+                st.dataframe(pd.DataFrame(pdf_history))
             else:
-                st.info("Belum ada data PDF history")
+                st.info("Belum ada data PDF")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
