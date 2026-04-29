@@ -1149,8 +1149,17 @@ calculate = st.button(
     use_container_width=True,
     type="primary"
 )
-        
 
+        # =========================
+        # 💾 SAVE INPUT HISTORY
+        # =========================
+        save_input_history(
+            port_pol,
+            port_pod,
+            freight_price_input,
+            st.session_state.email
+        )
+        
 # ===== PERHITUNGAN =====
 
 
