@@ -15,6 +15,11 @@ import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
 
+ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
+
+def is_admin():
+    return st.session_state.get("email") == ADMIN_EMAIL
+
 cookies = EncryptedCookieManager(
     prefix="freight_app",
     password="abc123"
