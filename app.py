@@ -815,6 +815,60 @@ with st.sidebar.expander("➕ Additional Cost"):
             })
     st.session_state.additional_costs = updated_costs
 
+# =========================
+# 🔐 ADMIN PANEL (ONLY ADMIN)
+# =========================
+if is_admin():
+
+    st.sidebar.markdown("### 🔐 Admin Panel")
+
+    admin_menu = st.sidebar.selectbox(
+        "Menu Admin",
+        ["None", "📊 History Freight Input", "📄 History Calculate"]
+    )
+
+    # =========================
+    # 📊 HISTORY INPUT FREIGHT
+    # =========================
+    if admin_menu == "📊 History Freight Input":
+
+        st.subheader("📊 Freight Input History (Admin Only)")
+
+        url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
+        res = requests.get(url).json()
+
+        if res:
+
+            rows = []
+
+            for k, v in res.items():
+                rows.append([
+                    v.get("date"),
+                    v.get("email"),
+                    v.get("pol"),
+                    v.get("pod"),
+                    v.get("freight_input")
+                ])
+
+            df = pd.DataFrame(
+                rows,
+                columns=["Date", "User", "POL", "POD", "Freight"]
+            )
+
+            st.dataframe(df, use_container_width=True)
+
+        else:
+            st.info("Belum ada data history")
+
+    # =========================
+    # 📄 HISTORY CALCULATE
+    # =========================
+    if admin_menu == "📄 History Calculate":
+
+        st.subheader("📄 Calculation History")
+
+        st.info("🚧 Phase 2: nanti kita simpan PDF + result calculation ke sini")
+
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
