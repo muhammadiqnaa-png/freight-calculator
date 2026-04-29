@@ -32,15 +32,25 @@ def save_input_history(pol, pod, freight_input, email):
     if "freight_history" not in st.session_state:
         st.session_state.freight_history = []
 
-    data = {
+    new_data = {
         "pol": pol,
         "pod": pod,
         "freight_input": freight_input,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "date": datetime.now().strftime("%Y-%m-%d"),
         "email": email
     }
 
-    st.session_state.freight_history.append(data)
+    history = st.session_state.freight_history
+
+    # 🔥 CEK DUPLIKAT: user + tanggal saja
+    for item in history:
+        if (
+            item["email"] == new_data["email"] and
+            item["date"] == new_data["date"]
+        ):
+            return  # ❌ STOP kalau sudah ada di hari yang sama
+
+    history.append(new_data)
 
 
 cookies = EncryptedCookieManager(
