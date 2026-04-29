@@ -816,7 +816,7 @@ with st.sidebar.expander("➕ Additional Cost"):
     st.session_state.additional_costs = updated_costs
 
 # =========================
-# 📊 ADMIN PANEL (EXPANDER)
+# 📊 ADMIN PANEL (TEMPORARY - NO FIREBASE)
 # =========================
 if is_admin():
 
@@ -832,34 +832,38 @@ if is_admin():
             ]
         )
 
-        # ===== HISTORY FREIGHT INPUT =====
+        # =========================
+        # 📥 TEMP FREIGHT INPUT LOG
+        # =========================
         if tab == "📥 History Freight Input":
 
-            url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
-            res = requests.get(url)
-            data = res.json()
+            st.markdown("### 📥 Freight Input Log (Local)")
 
-            st.markdown("### 📥 Freight Input Log")
+            history = st.session_state.get("freight_history", [])
 
-            if data:
+            if history:
 
-                df = pd.DataFrame.from_dict(data, orient="index")
+                df = pd.DataFrame(history)
                 df = df.sort_values("date", ascending=False)
 
-                st.dataframe(
-                    df[["date", "email", "pol", "pod", "freight_input"]],
-                    use_container_width=True,
-                    height=300
-                )
+                st.dataframe(df, use_container_width=True, height=300)
 
             else:
-                st.info("Belum ada data")
+                st.info("Belum ada data history")
 
-        # ===== HISTORY CALCULATE (PDF) =====
+        # =========================
+        # 📊 PDF HISTORY (TEMP)
+        # =========================
         elif tab == "📊 History Calculate (PDF)":
 
             st.markdown("### 📊 Calculate History")
-            st.info("Coming soon 🚀 (butuh tracking PDF download)")
+
+            pdf_history = st.session_state.get("pdf_history", [])
+
+            if pdf_history:
+                st.dataframe(pd.DataFrame(pdf_history), use_container_width=True)
+            else:
+                st.info("Belum ada data PDF history")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
