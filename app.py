@@ -816,58 +816,60 @@ with st.sidebar.expander("➕ Additional Cost"):
     st.session_state.additional_costs = updated_costs
 
 # =========================
-# 🔐 ADMIN PANEL (ONLY ADMIN)
+# 🧑‍💼 ADMIN PANEL (SIDEBAR ONLY)
 # =========================
 if is_admin():
 
-    st.sidebar.markdown("### 🔐 Admin Panel")
+    st.sidebar.markdown("## 🧑‍💼 Admin Panel")
 
-    admin_menu = st.sidebar.selectbox(
-        "Menu Admin",
-        ["None", "📊 History Freight Input", "📄 History Calculate"]
+    menu_admin = st.sidebar.selectbox(
+        "Admin Menu",
+        ["None", "📥 History Freight Input", "📄 History Freight Calculate"]
     )
 
     # =========================
-    # 📊 HISTORY INPUT FREIGHT
+    # 📥 INPUT HISTORY
     # =========================
-    if admin_menu == "📊 History Freight Input":
+    if menu_admin == "📥 History Freight Input":
 
-        st.subheader("📊 Freight Input History (Admin Only)")
+        st.sidebar.markdown("### 📥 Freight Input History")
 
         url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
         res = requests.get(url).json()
 
         if res:
-
-            rows = []
-
-            for k, v in res.items():
-                rows.append([
-                    v.get("date"),
-                    v.get("email"),
-                    v.get("pol"),
-                    v.get("pod"),
-                    v.get("freight_input")
-                ])
-
-            df = pd.DataFrame(
-                rows,
-                columns=["Date", "User", "POL", "POD", "Freight"]
-            )
-
-            st.dataframe(df, use_container_width=True)
-
+            for k, v in reversed(list(res.items())):
+                st.sidebar.markdown(f"""
+                **POL:** {v.get('pol')}  
+                **POD:** {v.get('pod')}  
+                **Freight:** {v.get('freight_input')}  
+                **Date:** {v.get('date')}
+                """)
+                st.sidebar.markdown("---")
         else:
-            st.info("Belum ada data history")
+            st.sidebar.info("No data")
 
     # =========================
-    # 📄 HISTORY CALCULATE
+    # 📄 CALC HISTORY (PDF)
     # =========================
-    if admin_menu == "📄 History Calculate":
+    elif menu_admin == "📄 History Freight Calculate":
 
-        st.subheader("📄 Calculation History")
+        st.sidebar.markdown("### 📄 Calculate History")
 
-        st.info("🚧 Phase 2: nanti kita simpan PDF + result calculation ke sini")
+        url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_pdf_history.json"
+        res = requests.get(url).json()
+
+        if res:
+            for k, v in reversed(list(res.items())):
+                st.sidebar.markdown(f"""
+                **File:** {v.get('file_name')}  
+                **Route:** {v.get('route')}  
+                **Date:** {v.get('date')}
+                """)
+                st.sidebar.markdown("---")
+        else:
+            st.sidebar.info("No data")
+
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
