@@ -47,9 +47,14 @@ def save_input_history(pol, pod, freight_input, email):
 
     history = st.session_state.freight_history
 
-    # anti duplicate (email + tanggal)
+    # anti duplicate (email + route + date)
     for item in history:
-        if item["email"] == new_data["email"] and item["date"] == new_data["date"]:
+        if (
+            item["email"] == new_data["email"] and
+            item["pol"].strip().upper() == new_data["pol"].strip().upper() and
+            item["pod"].strip().upper() == new_data["pod"].strip().upper() and
+            item["date"] == new_data["date"]
+        ):
             return
 
     history.append(new_data)
