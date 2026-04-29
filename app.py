@@ -10,6 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
+from firebase import ref
 import requests
 import json
 import os
@@ -29,16 +30,13 @@ def is_admin():
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    if "freight_history" not in st.session_state:
-        st.session_state.freight_history = []
-
-    new_data = {
+    ref.child("freight_input").push({
+        "email": email,
         "pol": pol,
         "pod": pod,
-        "freight_input": freight_input,
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "email": email
-    }
+        "freight": freight_input,
+        "date": datetime.now().strftime("%Y-%m-%d")
+    })
 
     history = st.session_state.freight_history
 
@@ -54,16 +52,13 @@ def save_input_history(pol, pod, freight_input, email):
 
 def save_pdf_history(pol, pod, email, file_name):
 
-    if "pdf_history" not in st.session_state:
-        st.session_state.pdf_history = []
-
-    new_data = {
+    ref.child("pdf_history").push({
+        "email": email,
         "pol": pol,
         "pod": pod,
-        "email": email,
         "file_name": file_name,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+    })
 
     history = st.session_state.pdf_history
 
@@ -877,17 +872,13 @@ if is_admin():
 
             st.markdown("### 📥 Freight Input Log (Local)")
 
-            history = st.session_state.get("freight_history", [])
+            data = ref.child("freight_input").get()
 
-            if history:
-
-                df = pd.DataFrame(history)
-                df = df.sort_values("date", ascending=False)
-
-                st.dataframe(df, use_container_width=True, height=300)
-
+            if data:
+                df = pd.DataFrame(data.values())
+                st.dataframe(df)
             else:
-                st.info("Belum ada data history")
+                st.info("Belum ada data")
 
         # =========================
         # 📊 PDF HISTORY (TEMP)
@@ -896,12 +887,13 @@ if is_admin():
 
             st.markdown("### 📊 Calculate History")
 
-            pdf_history = st.session_state.get("pdf_history", [])
+            pdf_data = ref.child("pdf_history").get()
 
-            if pdf_history:
-                st.dataframe(pd.DataFrame(pdf_history))
+            if pdf_data:
+                df = pd.DataFrame(pdf_data.values())
+                st.dataframe(df)
             else:
-                st.info("Belum ada data PDF")
+                st.info("Belum ada PDF")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
