@@ -15,10 +15,31 @@ import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
 
+# =========================
+# 🔐 ADMIN CONTROL
+# =========================
 ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
 
 def is_admin():
     return st.session_state.get("email") == ADMIN_EMAIL
+
+
+# =========================
+# 💾 SAVE FREIGHT INPUT HISTORY
+# =========================
+def save_input_history(pol, pod, freight_input, email):
+
+    url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
+
+    data = {
+        "pol": pol,
+        "pod": pod,
+        "freight_input": freight_input,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "email": email
+    }
+
+    requests.post(url, json=data)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
