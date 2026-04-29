@@ -29,7 +29,8 @@ def is_admin():
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    history = st.session_state.get("freight_history", [])
+    if "freight_history" not in st.session_state:
+        st.session_state.freight_history = []
 
     data = {
         "pol": pol,
@@ -39,7 +40,8 @@ def save_input_history(pol, pod, freight_input, email):
         "email": email
     }
 
-    requests.post(url, json=data)
+    st.session_state.freight_history.append(data)
+
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
