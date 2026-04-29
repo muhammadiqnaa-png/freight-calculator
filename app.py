@@ -52,6 +52,32 @@ def save_input_history(pol, pod, freight_input, email):
 
     history.append(new_data)
 
+def save_pdf_history(pol, pod, email, file_name):
+
+    if "pdf_history" not in st.session_state:
+        st.session_state.pdf_history = []
+
+    new_data = {
+        "pol": pol,
+        "pod": pod,
+        "email": email,
+        "file_name": file_name,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    history = st.session_state.pdf_history
+
+    # 🔥 anti duplicate (user + tanggal + file)
+    for item in history:
+        if (
+            item["email"] == new_data["email"] and
+            item["file_name"] == new_data["file_name"] and
+            item["date"][:10] == new_data["date"][:10]
+        ):
+            return
+
+    history.append(new_data)
+
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
