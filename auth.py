@@ -1,27 +1,24 @@
 import streamlit as st
+import firebase_admin
+from firebase_admin import credentials, auth, db
 
 # =========================
-# 🔐 FIREBASE CONFIG SAFE LOAD
+# 🔐 LOAD SECRETS
 # =========================
 firebase = st.secrets.get("firebase", None)
 
 if firebase is None:
-    st.error("❌ Firebase secrets tidak ditemukan. Cek Streamlit Secrets [firebase]")
+    st.error("❌ Firebase secrets tidak ditemukan")
     st.stop()
 
-FIREBASE_API_KEY = firebase.get("FIREBASE_API_KEY", "")
-FIREBASE_DB_URL = firebase.get("FIREBASE_DB_URL", "")
-FIREBASE_PROJECT_ID = firebase.get("FIREBASE_PROJECT_ID", "")
-FIREBASE_CLIENT_EMAIL = firebase.get("FIREBASE_CLIENT_EMAIL", "")
-FIREBASE_PRIVATE_KEY = firebase.get("FIREBASE_PRIVATE_KEY", "")
+FIREBASE_DB_URL = firebase.get("FIREBASE_DB_URL")
+FIREBASE_PROJECT_ID = firebase.get("FIREBASE_PROJECT_ID")
+FIREBASE_CLIENT_EMAIL = firebase.get("FIREBASE_CLIENT_EMAIL")
+FIREBASE_PRIVATE_KEY = firebase.get("FIREBASE_PRIVATE_KEY")
 
 # =========================
-# 🔥 FIREBASE INIT
+# 🔥 INIT FIREBASE
 # =========================
-import firebase_admin
-from firebase_admin import credentials, db
-
-# prevent double init (Streamlit reload safety)
 if not firebase_admin._apps:
     cred = credentials.Certificate({
         "type": "service_account",
@@ -40,7 +37,29 @@ if not firebase_admin._apps:
         "databaseURL": FIREBASE_DB_URL
     })
 
-# =========================
-# 📦 FIREBASE REF
-# =========================
 ref = db.reference("/")
+
+# =========================
+# 👤 REGISTER USER
+# =========================
+def register_user(email, password):
+    try:
+        user = auth.create_user(
+            email=email,
+            password=password
+        )
+        return True, user.uid
+    except Exception as e:
+        return False, str(e)
+
+# =========================
+# 🔐 LOGIN USER (SIMPLIFIED)
+# =========================
+def login_user(email, password):
+    try:
+        user = auth.get_user_by_email(email)
+        return True, user.uid
+    except auth.UserNotFoundError:
+        return False, "Email tidak ditemukan"
+    except Exception as e:
+        return False, str(e)
