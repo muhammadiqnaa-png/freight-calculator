@@ -1,26 +1,20 @@
 import streamlit as st
-import requests
+import firebase_admin
+from firebase_admin import credentials, db
 
-# ====== FIREBASE AUTH ======
+# ambil semua secrets dari section firebase
 firebase = st.secrets["firebase"]
 
-FIREBASE_API_KEY = firebase["FIREBASE_API_KEY"]
+cred = credentials.Certificate({
+    "type": "service_account",
+    "project_id": firebase["FIREBASE_PROJECT_ID"],
+    "private_key": firebase["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n"),
+    "client_email": firebase["FIREBASE_CLIENT_EMAIL"],
+})
 
-AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
-REGISTER_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
-
-def login_user(email, password):
-    res = requests.post(AUTH_URL, json={
-        "email": email,
-        "password": password,
-        "returnSecureToken": True
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred, {
+        "databaseURL": firebase["FIREBASE_DB_URL"]
     })
-    return res.ok, res.json()
 
-def register_user(email, password):
-    res = requests.post(REGISTER_URL, json={
-        "email": email,
-        "password": password,
-        "returnSecureToken": True
-    })
-    return res.ok, res.json()
+ref = db.reference("/")
