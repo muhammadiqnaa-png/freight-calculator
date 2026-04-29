@@ -34,6 +34,8 @@ def save_input_history(pol, pod, freight_input, email):
         "email": email,
         "pol": pol,
         "pod": pod,
+        "pod": type_cargo,
+        "Total Cargo": qyt_cargo:,.0f,
         "freight": freight_input,
         "date": datetime.now().strftime("%Y-%m-%d")
     }
