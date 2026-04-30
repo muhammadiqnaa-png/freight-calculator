@@ -18,8 +18,6 @@ import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
 
-wib = pytz.timezone("Asia/Jakarta")
-
 # =========================
 # 🔐 ADMIN CONTROL
 # =========================
