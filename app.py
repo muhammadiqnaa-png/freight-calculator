@@ -70,6 +70,7 @@ def save_input_history(
     history.append(new_data)
     
 def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
+    
 def generate_excel(df):
 
     wb = Workbook()
