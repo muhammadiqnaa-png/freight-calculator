@@ -70,7 +70,7 @@ def save_input_history(
 def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 
     new_data = {
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "date": datetime.now().strftime("%Y-%m-%d"),
         "pol": pol,
         "pod": pod,
         "email": email,
@@ -1933,13 +1933,19 @@ if calculate:
             mime="application/pdf"
         )
         
-        save_pdf_history(
-            port_pol,
-            port_pod,
-            st.session_state.email,
-            file_name,
-            pdf_buffer
-        )
+        pdf_id = f"{port_pol}-{port_pod}-{datetime.now().strftime('%Y-%m-%d')}"
+
+        if st.session_state.last_pdf_saved != pdf_id:
+        
+            save_pdf_history(
+                port_pol,
+                port_pod,
+                st.session_state.email,
+                file_name,
+                pdf_buffer
+            )
+        
+            st.session_state.last_pdf_saved = pdf_id
 
     except Exception as e:
         st.error(f"Error: {e}")
