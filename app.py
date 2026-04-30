@@ -18,8 +18,6 @@ import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
 
-st.write(st.secrets["firebase"])
-
 # =========================
 # 🔐 ADMIN CONTROL
 # =========================
