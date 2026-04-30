@@ -36,7 +36,7 @@ def save_input_history(
 ):
 
     new_data = {
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "date": datetime.now().strftime("%Y-%m-%d"),
         "pol": pol,
         "pod": pod,
         "cargo_type": cargo_type,
@@ -383,6 +383,9 @@ if "freight_history" not in st.session_state:
 
 if "pdf_history" not in st.session_state:
     st.session_state.pdf_history = []
+
+if "last_pdf_saved" not in st.session_state:
+    st.session_state.last_pdf_saved = None
 
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
