@@ -127,6 +127,29 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
     # ===== SAVE KE SESSION =====
     history.append(new_data)
 
+# =========================
+# 📊 USER TRACKING
+# =========================
+def track_login(email):
+
+    ref.child("user_activity").child(email.replace(".", "_")).update({
+        "last_login": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+
+
+def track_usage(email):
+
+    user_ref = ref.child("user_activity").child(email.replace(".", "_"))
+
+    data = user_ref.get() or {}
+
+    total = data.get("total_calculate", 0)
+
+    user_ref.update({
+        "total_calculate": total + 1,
+        "last_active": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+
 def generate_excel(df):
 
     wb = Workbook()
@@ -192,6 +215,8 @@ if not cookies.ready():
 if cookies.get("logged_in") == "true":
     st.session_state.logged_in = True
     st.session_state.email = cookies.get("email")
+    
+    track_login(st.session_state.email)
 
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
@@ -978,6 +1003,7 @@ if is_admin():
             [
                 "📊 Calculate History",
                 "📊 History Calculate (PDF)"
+                "👤 User Activity"
             ]
         )
 
@@ -1061,6 +1087,40 @@ if is_admin():
         
             else:
                 st.info("Belum ada PDF")
+
+        elif tab == "👤 User Activity":
+        
+            st.markdown("### 👤 User Activity")
+        
+            data = ref.child("user_activity").get() or {}
+        
+            if data:
+        
+                df = pd.DataFrame.from_dict(data, orient="index")
+        
+                df = df.reset_index().rename(columns={"index": "email"})
+        
+                df = df.sort_values("total_calculate", ascending=False)
+        
+                st.dataframe(df, use_container_width=True)
+        
+                # ===== SUMMARY =====
+                st.markdown("### 📊 Summary")
+        
+                st.metric("Total Users", len(df))
+                st.metric("Total Calculate", int(df["total_calculate"].sum()))
+                st.metric("Avg Usage", int(df["total_calculate"].mean()))
+        
+                # ===== TOP USER =====
+                top_user = df.iloc[0]
+        
+                st.success(
+                    f"🔥 Most Active: {top_user['email']} ({top_user['total_calculate']}x)"
+                )
+        
+            else:
+                st.info("Belum ada data user")
+                
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
@@ -1517,6 +1577,8 @@ if calculate:
             price_fuel,
             st.session_state.email
         )
+
+        track_usage(st.session_state.email)
 
         # ===== IDEAL PRICE CALC =====
         ideal_freight = 0
