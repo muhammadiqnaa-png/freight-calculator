@@ -4,19 +4,9 @@ import streamlit as st
 import json
 
 # =========================
-# LOAD SECRETS
+# LOAD RAW JSON STRING
 # =========================
-firebase_dict = dict(st.secrets["firebase"])
-
-# =========================
-# FIX PRIVATE KEY
-# =========================
-firebase_dict["private_key"] = firebase_dict["private_key"].replace("\\n", "\n").strip()
-
-# =========================
-# 🔥 CONVERT KE JSON CLEAN (FIX STABILITY ISSUE)
-# =========================
-firebase_json = json.loads(json.dumps(firebase_dict))
+firebase_json = json.loads(st.secrets["firebase_json"])
 
 # =========================
 # INIT FIREBASE
@@ -25,11 +15,8 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_json)
 
     firebase_admin.initialize_app(cred, {
-        "databaseURL": firebase_dict.get("databaseURL")
+        "databaseURL": firebase_json.get("databaseURL")
     })
 
-# =========================
-# REF FUNCTION
-# =========================
 def get_ref(path):
     return db.reference(path)
