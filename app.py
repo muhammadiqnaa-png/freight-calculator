@@ -49,15 +49,13 @@ def save_input_history(
         "email": email
     }
 
-    ref.child("calculate_history").push(new_data)
-
-    # Session safety init
+    # ===== INIT SESSION =====
     if "freight_history" not in st.session_state:
         st.session_state.freight_history = []
 
     history = st.session_state.freight_history
 
-    # anti duplicate (email + route + date)
+    # ===== CHECK DUPLICATE (SESSION) =====
     for item in history:
         if (
             item["email"] == new_data["email"] and
@@ -67,6 +65,22 @@ def save_input_history(
         ):
             return
 
+    # ===== CHECK DUPLICATE (FIREBASE) 🔥 OPTIONAL TAPI DISARANKAN =====
+    existing = ref.child("calculate_history").get() or {}
+
+    for item in existing.values():
+        if (
+            item.get("email") == new_data["email"] and
+            item.get("pol", "").strip().upper() == new_data["pol"].strip().upper() and
+            item.get("pod", "").strip().upper() == new_data["pod"].strip().upper() and
+            item.get("date") == new_data["date"]
+        ):
+            return
+
+    # ===== SAVE KE FIREBASE =====
+    ref.child("calculate_history").push(new_data)
+
+    # ===== SAVE KE SESSION =====
     history.append(new_data)
     
 def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
