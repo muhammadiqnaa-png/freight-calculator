@@ -1303,17 +1303,6 @@ calculate = st.button(
 
 if calculate:
     try:
-        save_input_history(
-            port_pol,
-            port_pod,
-            type_cargo,
-            qyt_cargo,
-            freight_price_input,
-            freight_cost_mt,
-            price_fuel,
-            st.session_state.email
-        )
-        
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
@@ -1418,6 +1407,17 @@ if calculate:
         ])
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
+
+        save_input_history(
+            port_pol,
+            port_pod,
+            type_cargo,
+            qyt_cargo,
+            freight_price_input,
+            freight_cost_mt,
+            price_fuel,
+            st.session_state.email
+        )
 
         # ===== IDEAL PRICE CALC =====
         ideal_freight = 0
