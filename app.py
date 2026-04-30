@@ -136,7 +136,7 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 def track_login(email):
 
     ref.child("user_activity").child(email.replace(".", "_")).update({
-        last_login = now.strftime("%Y-%m-%d %H:%M")
+        last_login = datetime.now().strftime("%Y-%m-%d %H:%M")
     })
 
 
