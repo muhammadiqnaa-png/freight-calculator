@@ -29,18 +29,25 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(pol, pod, freight_input, email):
+def save_input_history(
+    pol, pod, cargo_type, qty,
+    freight_input, freight_cost,
+    fuel_price, email
+):
 
     new_data = {
-        "email": email,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "pol": pol,
         "pod": pod,
-        "freight": freight_input,
-        "date": datetime.now().strftime("%Y-%m-%d")
+        "cargo_type": cargo_type,
+        "qty": qty,
+        "freight_input": freight_input,
+        "freight_cost": freight_cost,
+        "fuel_price": fuel_price,
+        "email": email
     }
 
-    # Firebase save
-    ref.child("freight_input").push(new_data)
+    ref.child("calculate_history").push(new_data)
 
     # Session safety init
     if "freight_history" not in st.session_state:
@@ -60,17 +67,17 @@ def save_input_history(pol, pod, freight_input, email):
 
     history.append(new_data)
     
-def save_pdf_history(pol, pod, email, file_name):
+def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 
     new_data = {
-        "email": email,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "pol": pol,
         "pod": pod,
+        "email": email,
         "file_name": file_name,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "file": pdf_bytes.getvalue().hex()
     }
 
-    # Firebase save
     ref.child("pdf_history").push(new_data)
 
     # Session safety init
@@ -883,7 +890,7 @@ if is_admin():
         tab = st.selectbox(
             "Menu Admin",
             [
-                "📥 History Freight Input",
+                "📊 Calculate History",
                 "📊 History Calculate (PDF)"
             ]
         )
@@ -891,30 +898,68 @@ if is_admin():
         # =========================
         # 📥 TEMP FREIGHT INPUT LOG
         # =========================
-        if tab == "📥 History Freight Input":
+        if tab == "📊 Calculate History":
 
-            st.markdown("### 📥 Freight Input Log (Local)")
-
-            data = ref.child("freight_input").get()
-
+            st.markdown("### 📊 Calculate History")
+        
+            data = ref.child("calculate_history").get() or {}
+        
             if data:
-                df = pd.DataFrame(data.values())
-                st.dataframe(df)
+                df = pd.DataFrame(list(data.values()))
+        
+                df = df.sort_values("date", ascending=False)
+        
+                st.dataframe(
+                    df[[
+                        "date",
+                        "pol",
+                        "pod",
+                        "cargo_type",
+                        "qty",
+                        "freight_input",
+                        "freight_cost",
+                        "fuel_price",
+                        "email"
+                    ]],
+                    use_container_width=True
+                )
+        
             else:
                 st.info("Belum ada data")
-
+                
         # =========================
         # 📊 PDF HISTORY (TEMP)
         # =========================
         elif tab == "📊 History Calculate (PDF)":
 
-            st.markdown("### 📊 Calculate History")
-
-            pdf_data = ref.child("pdf_history").get()
-
+            st.markdown("### 📄 PDF History")
+        
+            pdf_data = ref.child("pdf_history").get() or {}
+        
             if pdf_data:
-                df = pd.DataFrame(pdf_data.values())
-                st.dataframe(df)
+                data_list = list(pdf_data.values())
+        
+                for i, item in enumerate(data_list[::-1]):
+        
+                    st.markdown(f"""
+                    **{item.get("date")}**  
+                    {item.get("pol")} → {item.get("pod")}  
+                    👤 {item.get("email")}
+                    """)
+        
+                    if "file" in item:
+                        pdf_bytes = bytes.fromhex(item["file"])
+        
+                        st.download_button(
+                            label="📥 Download PDF",
+                            data=pdf_bytes,
+                            file_name=item.get("file_name", f"report_{i}.pdf"),
+                            mime="application/pdf",
+                            key=f"pdf_{i}"
+                        )
+        
+                    st.markdown("---")
+        
             else:
                 st.info("Belum ada PDF")
 
@@ -1261,9 +1306,14 @@ if calculate:
         save_input_history(
             port_pol,
             port_pod,
+            type_cargo,
+            qyt_cargo,
             freight_price_input,
+            freight_cost_mt,
+            price_fuel,
             st.session_state.email
         )
+        
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
@@ -1887,7 +1937,8 @@ if calculate:
             port_pol,
             port_pod,
             st.session_state.email,
-            file_name
+            file_name,
+            pdf_buffer
         )
 
     except Exception as e:
