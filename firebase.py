@@ -5,35 +5,32 @@ from firebase_admin import credentials, db
 # =========================
 # 🔐 LOAD SECRETS
 # =========================
-firebase = st.secrets["firebase"]
-database = st.secrets["database"]
+firebase = st.secrets.get("firebase")
 
-# =========================
-# 🔥 DB URL (SEPARATE SECTION)
-# =========================
-DB_URL = database["FIREBASE_DB_URL"].strip()
-
-if not DB_URL:
-    st.error("❌ FIREBASE_DB_URL kosong")
+if firebase is None:
+    st.error("❌ Firebase secrets tidak ditemukan")
     st.stop()
 
 # =========================
-# 🔥 SERVICE ACCOUNT
+# 🔥 DB URL (FIX UTAMA)
 # =========================
-firebase_config = {
-    "type": firebase["type"],
-    "project_id": firebase["project_id"],
-    "private_key": firebase["private_key"].replace("\\n", "\n"),
-    "client_email": firebase["client_email"],
-    "token_uri": firebase["token_uri"]
-}
+DB_URL = firebase.get("FIREBASE_DB_URL")
+
+if not DB_URL:
+    st.error("❌ FIREBASE_DB_URL kosong / tidak terbaca")
+    st.stop()
+
+# =========================
+# 🔥 SERVICE ACCOUNT CONFIG
+# =========================
+firebase_config = dict(firebase)
+firebase_config["private_key"] = firebase_config["private_key"].replace("\\n", "\n")
 
 # =========================
 # 🚀 INIT FIREBASE
 # =========================
 if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_config)
-
     firebase_admin.initialize_app(cred, {
         "databaseURL": DB_URL
     })
