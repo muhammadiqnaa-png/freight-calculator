@@ -24,7 +24,7 @@ if not firebase_admin._apps:
     cred = credentials.Certificate({
         "type": "service_account",
         "project_id": FIREBASE_PROJECT_ID,
-        "private_key": FIREBASE_PRIVATE_KEY.replace("\\n", "\n"),
+        "private_key": FIREBASE_PRIVATE_KEY.replace("\\\\n", "\n"),
         "client_email": FIREBASE_CLIENT_EMAIL,
         "token_uri": "https://oauth2.googleapis.com/token"
     })
