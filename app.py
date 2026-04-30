@@ -834,32 +834,46 @@ with st.sidebar.expander("➕ Additional Cost"):
 # =========================
 # 📊 ADMIN PANEL (TEMPORARY - NO FIREBASE)
 # =========================
-if is_admin():
+with st.sidebar.expander("📊 Admin Panel", expanded=False):
 
-    st.sidebar.markdown("---")
+    st.markdown("### 📊 History Calculate Report")
 
-    with st.sidebar.expander("📊 Admin Panel", expanded=False):
+    data = ref.child("pdf_history").get()
 
-        st.markdown("### 📊 History Calculate Report")
+    if data:
 
-        data = ref.child("pdf_history").get()
+        df = pd.DataFrame(data.values())
 
-        if data:
+        df = df[[
+            "date",
+            "pol",
+            "pod",
+            "cargo_type",
+            "qty",
+            "freight_input",
+            "freight_cost",
+            "fuel_price",
+            "email",
+            "file_name"
+        ]]
 
-            df = pd.DataFrame(data.values())
+        df = df.rename(columns={
+            "date": "Date",
+            "pol": "POL",
+            "pod": "POD",
+            "cargo_type": "Cargo Type",
+            "qty": "Qty",
+            "freight_input": "Freight Input",
+            "freight_cost": "Freight Cost",
+            "fuel_price": "Fuel Price",
+            "email": "Email",
+            "file_name": "File PDF"
+        })
 
-            df = df.rename(columns={
-                "date": "Date",
-                "pol": "POL",
-                "pod": "POD",
-                "email": "Email",
-                "file_name": "File PDF"
-            })
+        st.dataframe(df, use_container_width=True)
 
-            st.dataframe(df, use_container_width=True)
-
-        else:
-            st.info("Belum ada data report")
+    else:
+        st.info("Belum ada data report")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
