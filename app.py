@@ -1091,58 +1091,33 @@ if is_admin():
         elif tab == "👤 User Activity":
         
             st.markdown("### 👤 User Activity")
-        
+
             data = ref.child("user_activity").get() or {}
-        
+            
             if data:
-        
-                # ===== AMBIL DATA =====
+            
                 df = pd.DataFrame.from_dict(data, orient="index")
-        
-                # ===== RESET INDEX JADI EMAIL =====
+            
                 df = df.reset_index().rename(columns={"index": "email"})
-        
-                # ===== FIX KOLOM WAJIB (ANTI ERROR) =====
+            
+                # 🔥 AMANIN BIAR GA ERROR
                 if "total_calculate" not in df.columns:
                     df["total_calculate"] = 0
-        
-                if "last_active" not in df.columns:
-                    df["last_active"] = "-"
-        
+            
                 if "last_login" not in df.columns:
                     df["last_login"] = "-"
-        
-                # ===== HANDLE DATA KOSONG =====
-                df["total_calculate"] = pd.to_numeric(df["total_calculate"], errors="coerce").fillna(0)
-        
-                # ===== SORT =====
+            
+                # 🔥 SORT DARI PALING AKTIF
                 df = df.sort_values("total_calculate", ascending=False)
-        
-                # ===== TAMPILKAN =====
-                st.dataframe(df, use_container_width=True)
-        
-                # ===== SUMMARY =====
-                st.markdown("### 📊 Summary")
-        
-                total_users = len(df)
-                total_calc = int(df["total_calculate"].sum())
-                avg_usage = int(df["total_calculate"].mean()) if total_users > 0 else 0
-        
-                st.metric("Total Users", total_users)
-                st.metric("Total Calculate", total_calc)
-                st.metric("Avg Usage", avg_usage)
-        
-                # ===== TOP USER (AMAN) =====
-                if total_users > 0:
-                    top_user = df.iloc[0]
-        
-                    st.success(
-                        f"🔥 Most Active: {top_user['email']} ({int(top_user['total_calculate'])}x)"
-                    )
-        
+            
+                # 🔥 TAMPIL SIMPLE
+                st.dataframe(
+                    df[["email", "last_login", "total_calculate"]],
+                    use_container_width=True
+                )
+            
             else:
                 st.info("Belum ada data user")
-
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
