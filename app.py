@@ -29,66 +29,27 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(pol, pod, freight_input, email):
-
-    new_data = {
-        "email": email,
-        "pol": pol,
-        "pod": pod,
-        "freight": freight_input,
-        "date": datetime.now().strftime("%Y-%m-%d")
-    }
-
-    # Firebase save
-    ref.child("freight_input").push(new_data)
-
-    # Session safety init
-    if "freight_history" not in st.session_state:
-        st.session_state.freight_history = []
-
-    history = st.session_state.freight_history
-
-    # anti duplicate (email + route + date)
-    for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["pol"].strip().upper() == new_data["pol"].strip().upper() and
-            item["pod"].strip().upper() == new_data["pod"].strip().upper() and
-            item["date"] == new_data["date"]
-        ):
-            return
-
-    history.append(new_data)
-    
 def save_pdf_history(pol, pod, email, file_name):
 
     new_data = {
-        "email": email,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "pol": pol,
         "pod": pod,
-        "file_name": file_name,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # 🔥 TAMBAHAN WAJIB
+        "cargo_type": st.session_state.get("type_cargo", ""),
+        "qty": st.session_state.get("qyt_cargo", 0),
+
+        "freight_input": st.session_state.get("freight_price_input", 0),
+        "freight_cost": st.session_state.get("freight_cost_mt", 0),
+
+        "fuel_price": st.session_state.get("price_fuel", 0),
+
+        "email": email,
+        "file_name": file_name
     }
 
-    # Firebase save
     ref.child("pdf_history").push(new_data)
-
-    # Session safety init
-    if "pdf_history" not in st.session_state:
-        st.session_state.pdf_history = []
-
-    history = st.session_state.pdf_history
-
-    # anti duplicate
-    for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["file_name"] == new_data["file_name"] and
-            item["date"][:10] == new_data["date"][:10]
-        ):
-            return
-
-    history.append(new_data)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
