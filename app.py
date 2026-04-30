@@ -28,73 +28,31 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(pol, pod, freight_input, email):
+def save_pdf_history(
+    pol,
+    pod,
+    cargo_type,
+    qty,
+    freight_input,
+    freight_cost,
+    fuel_price,
+    email,
+    file_name
+):
 
     new_data = {
-        "email": email,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "pol": pol,
         "pod": pod,
-        "freight": freight_input,
-        "date": datetime.now().strftime("%Y-%m-%d")
-    }
-
-    # =========================
-    # 🔥 CHECK DUPLICATE DI FIREBASE
-    # =========================
-    existing_data = ref.child("freight_input").get()
-
-    if existing_data:
-        for item in existing_data.values():
-
-            if (
-                item.get("email") == new_data["email"] and
-                item.get("pol", "").strip().upper() == new_data["pol"].strip().upper() and
-                item.get("pod", "").strip().upper() == new_data["pod"].strip().upper() and
-                item.get("date") == new_data["date"]
-            ):
-                return  # ❌ STOP kalau sudah ada
-
-    # =========================
-    # SAVE FIREBASE
-    # =========================
-    ref.child("freight_input").push(new_data)
-
-    # =========================
-    # SESSION (optional cache)
-    # =========================
-    if "freight_history" not in st.session_state:
-        st.session_state.freight_history = []
-
-    st.session_state.freight_history.append(new_data)
-    
-def save_pdf_history_safe(pol, pod, email, file_name):
-
-    new_data = {
+        "cargo_type": cargo_type,
+        "qty": qty,
+        "freight_input": freight_input,
+        "freight_cost": freight_cost,
+        "fuel_price": fuel_price,
         "email": email,
-        "pol": pol,
-        "pod": pod,
-        "file_name": file_name,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "file_name": file_name
     }
 
-    # =========================
-    # 🔥 CEK DUPLIKAT DI FIREBASE
-    # =========================
-    existing = ref.child("pdf_history").get()
-
-    if existing:
-        for item in existing.values():
-            if (
-                item.get("email") == email and
-                item.get("pol", "").strip().upper() == pol.strip().upper() and
-                item.get("pod", "").strip().upper() == pod.strip().upper() and
-                item.get("file_name") == file_name
-            ):
-                return  # ❌ STOP kalau sudah ada
-
-    # =========================
-    # SAVE KE FIREBASE
-    # =========================
     ref.child("pdf_history").push(new_data)
 
 cookies = EncryptedCookieManager(
@@ -921,9 +879,8 @@ if is_admin():
 
             if pdf_data:
                 df = pd.DataFrame(pdf_data.values())
+                df = df.sort_values("date", ascending=False)
                 st.dataframe(df)
-            else:
-                st.info("Belum ada PDF")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
@@ -1265,14 +1222,6 @@ calculate = st.button(
 
 if calculate:
     try:
-        if freight_price_input > 0:
-            save_input_history(
-                port_pol,
-                port_pod,
-                freight_price_input,
-                st.session_state.email
-            )
-        
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
@@ -1885,21 +1834,24 @@ if calculate:
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
 
-        download_clicked = st.download_button(
+        if st.download_button(
             label="📥 Download PDF Report",
             data=pdf_buffer,
             file_name=file_name,
             mime="application/pdf"
-        )
+        ):
         
-        if download_clicked:
-            save_pdf_history_safe(
+            save_pdf_history(
                 port_pol,
                 port_pod,
+                type_cargo,
+                qyt_cargo,
+                freight_price_input,
+                freight_cost_mt,
+                price_fuel,
                 st.session_state.email,
                 file_name
             )
-                
 
     except Exception as e:
         st.error(f"Error: {e}")
