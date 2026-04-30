@@ -97,6 +97,11 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
+# ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
+if cookies.get("logged_in") == "true":
+    st.session_state.logged_in = True
+    st.session_state.email = cookies.get("email")
+
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
     st.session_state.hide_intro = False
@@ -332,12 +337,6 @@ st.markdown("""
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FreightCalc">
 """, unsafe_allow_html=True)
-
-
-# ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
-if cookies.get("logged_in") == "true":
-    st.session_state.logged_in = True
-    st.session_state.email = cookies.get("email")
 
 if "page" not in st.session_state:
     st.session_state.page = "login"
