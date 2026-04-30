@@ -10,6 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
+import pytz
 from firebase import ref
 import requests
 from openpyxl import Workbook
@@ -17,6 +18,8 @@ from openpyxl.styles import Font, Alignment
 import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
+
+wib = pytz.timezone("Asia/Jakarta")
 
 # =========================
 # 🔐 ADMIN CONTROL
@@ -132,10 +135,11 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 # =========================
 def track_login(email):
 
-    now = datetime.now()
+    now = datetime.now(wib)
+    last_login = now.strftime("%Y-%m-%d %H:%M")
 
     ref.child("user_activity").child(email.replace(".", "_")).update({
-        "last_login": now.strftime("%Y-%m-%d")
+        "last_login": last_login
     })
 
 
