@@ -10,7 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
-from firebase import
+from firebase import get_ref
 import requests
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
