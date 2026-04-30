@@ -134,7 +134,7 @@ def track_login(email):
 
     ref.child("user_activity").child(email.replace(".", "_")).update({
         
-            last_login = datetime.now().strftime("%Y-%m-%d")
+    last_login = datetime.now().strftime("%Y-%m-%d")
     })
 
 
