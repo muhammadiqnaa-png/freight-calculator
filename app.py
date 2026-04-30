@@ -67,7 +67,7 @@ def save_input_history(pol, pod, freight_input, email):
 
     st.session_state.freight_history.append(new_data)
     
-def save_pdf_history(pol, pod, email, file_name):
+def save_pdf_history_safe(pol, pod, email, file_name):
 
     new_data = {
         "email": email,
@@ -77,25 +77,25 @@ def save_pdf_history(pol, pod, email, file_name):
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
-    # Firebase save
+    # =========================
+    # 🔥 CEK DUPLIKAT DI FIREBASE
+    # =========================
+    existing = ref.child("pdf_history").get()
+
+    if existing:
+        for item in existing.values():
+            if (
+                item.get("email") == email and
+                item.get("pol", "").strip().upper() == pol.strip().upper() and
+                item.get("pod", "").strip().upper() == pod.strip().upper() and
+                item.get("file_name") == file_name
+            ):
+                return  # ❌ STOP kalau sudah ada
+
+    # =========================
+    # SAVE KE FIREBASE
+    # =========================
     ref.child("pdf_history").push(new_data)
-
-    # Session safety init
-    if "pdf_history" not in st.session_state:
-        st.session_state.pdf_history = []
-
-    history = st.session_state.pdf_history
-
-    # anti duplicate
-    for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["file_name"] == new_data["file_name"] and
-            item["date"][:10] == new_data["date"][:10]
-        ):
-            return
-
-    history.append(new_data)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
@@ -1885,19 +1885,21 @@ if calculate:
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
 
-        st.download_button(
+        download_clicked = st.download_button(
             label="📥 Download PDF Report",
             data=pdf_buffer,
             file_name=file_name,
             mime="application/pdf"
         )
         
-        save_pdf_history(
-            port_pol,
-            port_pod,
-            st.session_state.email,
-            file_name
-        )
+        if download_clicked:
+            save_pdf_history_safe(
+                port_pol,
+                port_pod,
+                st.session_state.email,
+                file_name
+            )
+                
 
     except Exception as e:
         st.error(f"Error: {e}")
