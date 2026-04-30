@@ -19,6 +19,9 @@ DB_URL = firebase.get("FIREBASE_DB_URL", "").strip()
 if not DB_URL:
     st.error("❌ FIREBASE_DB_URL tidak terbaca dari secrets")
     st.stop()
+    st.write("DB_URL:", DB_URL)
+
+
 
 # =========================
 # 🔥 COPY CONFIG
