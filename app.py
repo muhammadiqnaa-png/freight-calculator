@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from io import BytesIO
 from distance import *
+from auth import *
 from presets import *
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
@@ -9,10 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
-from firebase import get_ref
 import requests
-from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment
 import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
@@ -23,172 +21,25 @@ from streamlit_cookies_manager import EncryptedCookieManager
 ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
 
 def is_admin():
-    email = (st.session_state.get("email") or "").strip().lower()
-    return email == ADMIN_EMAIL.strip().lower()
+    return st.session_state.get("email") == ADMIN_EMAIL
 
 
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(
-    pol, pod, cargo_type, qty,
-    freight_input, freight_cost,
-    fuel_price, email
-):
+def save_input_history(pol, pod, freight_input, email):
 
-    new_data = {
-        "date": datetime.now().strftime("%Y-%m-%d"),
+    url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
+
+    data = {
         "pol": pol,
         "pod": pod,
-        "cargo_type": cargo_type,
-        "qty": qty,
         "freight_input": freight_input,
-        "freight_cost": freight_cost,
-        "fuel_price": fuel_price,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "email": email
     }
 
-    # ===== INIT SESSION =====
-    if "freight_history" not in st.session_state:
-        st.session_state.freight_history = []
-
-    history = st.session_state.freight_history
-
-    # ===== CHECK DUPLICATE (SESSION) =====
-    for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["pol"].strip().upper() == new_data["pol"].strip().upper() and
-            item["pod"].strip().upper() == new_data["pod"].strip().upper() and
-            item["date"] == new_data["date"]
-        ):
-            return
-
-    # ===== CHECK DUPLICATE (FIREBASE) 🔥 OPTIONAL TAPI DISARANKAN =====
-    existing = ref.child("calculate_history").get() or {}
-
-    for item in existing.values():
-        if (
-            item.get("email") == new_data["email"] and
-            item.get("pol", "").strip().upper() == new_data["pol"].strip().upper() and
-            item.get("pod", "").strip().upper() == new_data["pod"].strip().upper() and
-            item.get("date") == new_data["date"]
-        ):
-            return
-
-    # ===== SAVE KE FIREBASE =====
-    ref.child("calculate_history").push(new_data)
-
-    # ===== SAVE KE SESSION =====
-    history.append(new_data)
-    
-def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
-
-    new_data = {
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "pol": pol,
-        "pod": pod,
-        "email": email,
-        "file_name": file_name,
-        "barge_size": st.session_state.get("preset_selected", "Custom"),
-        "file": pdf_bytes.getvalue().hex()
-    }
-
-    # ===== INIT SESSION =====
-    if "pdf_history" not in st.session_state:
-        st.session_state.pdf_history = []
-
-    history = st.session_state.pdf_history
-
-    # ===== CHECK DUPLICATE (SESSION) =====
-    for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["file_name"] == new_data["file_name"] and
-            item["date"] == new_data["date"]
-        ):
-            return
-
-    # ===== CHECK DUPLICATE (FIREBASE) 🔥 =====
-    existing = ref.child("pdf_history").get() or {}
-
-    for item in existing.values():
-        if (
-            item.get("email") == new_data["email"] and
-            item.get("file_name") == new_data["file_name"] and
-            item.get("date") == new_data["date"]
-        ):
-            return
-
-    # ===== SAVE KE FIREBASE =====
-    ref.child("pdf_history").push(new_data)
-
-    # ===== SAVE KE SESSION =====
-    history.append(new_data)
-
-# =========================
-# 📊 USER TRACKING
-# =========================
-def track_login(email):
-    try:
-        ref.child("user_activity").child(email.replace(".", "_")).update({
-            "last_login": "now"
-        })
-    except Exception as e:
-        print("Firebase skipped:", e)
-        
-def generate_excel(df):
-
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Calculate History"
-
-    headers = [
-        "Date", "POL", "POD", "Cargo",
-        "Qty", "Freight Input", "Freight Cost",
-        "Fuel Price", "User"
-    ]
-
-    ws.append(headers)
-
-    # header style
-    for col in ws[1]:
-        col.font = Font(bold=True)
-        col.alignment = Alignment(horizontal="center")
-
-    # isi data
-    for _, row in df.iterrows():
-        ws.append([
-            row.get("date"),
-            row.get("pol"),
-            row.get("pod"),
-            row.get("cargo_type"),
-            row.get("qty"),
-            row.get("freight_input"),
-            row.get("freight_cost"),
-            row.get("fuel_price"),
-            row.get("email"),
-        ])
-
-    # auto width
-    for col in ws.columns:
-        max_length = 0
-        col_letter = col[0].column_letter
-
-        for cell in col:
-            if cell.value:
-                max_length = max(max_length, len(str(cell.value)))
-
-        ws.column_dimensions[col_letter].width = max_length + 2
-
-    ws.freeze_panes = "A2"
-
-    buffer = BytesIO()
-    wb.save(buffer)
-    buffer.seek(0)
-
-    return buffer
-
+    requests.post(url, json=data)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
@@ -197,13 +48,6 @@ cookies = EncryptedCookieManager(
 
 if not cookies.ready():
     st.stop()
-
-# ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
-if cookies.get("logged_in") == "true":
-    st.session_state.logged_in = True
-    st.session_state.email = cookies.get("email")
-    
-    track_login(st.session_state.email)
 
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
@@ -442,6 +286,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+# ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
+if cookies.get("logged_in") == "true":
+    st.session_state.logged_in = True
+    st.session_state.email = cookies.get("email")
+
 if "page" not in st.session_state:
     st.session_state.page = "login"
 
@@ -471,16 +320,6 @@ if "last_route" not in st.session_state:
 # ===== POPUP INFO =====
 if "show_info" not in st.session_state:
     st.session_state.show_info = False
-
-# ===== HISTORY INIT FIX =====
-if "freight_history" not in st.session_state:
-    st.session_state.freight_history = []
-
-if "pdf_history" not in st.session_state:
-    st.session_state.pdf_history = []
-
-if "last_pdf_saved" not in st.session_state:
-    st.session_state.last_pdf_saved = None
 
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
@@ -616,7 +455,6 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
-                track_login(email)
 
                 cookies["logged_in"] = "true"
                 cookies["email"] = email
@@ -977,135 +815,6 @@ with st.sidebar.expander("➕ Additional Cost"):
             })
     st.session_state.additional_costs = updated_costs
 
-# =========================
-# 📊 ADMIN PANEL (TEMPORARY - NO FIREBASE)
-# =========================
-if is_admin():
-
-    st.sidebar.markdown("---")
-
-    with st.sidebar.expander("📊 Admin Panel", expanded=False):
-
-        tab = st.selectbox(
-            "Menu Admin",
-            [
-                "📊 Calculate History",
-                "📊 History Calculate (PDF)",
-                "👤 User Activity"
-            ]
-        )
-
-        # =========================
-        # 📥 TEMP FREIGHT INPUT LOG
-        # =========================
-        if tab == "📊 Calculate History":
-
-            st.markdown("### 📊 Calculate History")
-        
-            data = ref.child("calculate_history").get() or {}
-        
-            if data:
-                df = pd.DataFrame(list(data.values()))
-        
-                df = df.sort_values("date", ascending=False)
-        
-                st.dataframe(
-                    df[[
-                        "date",
-                        "pol",
-                        "pod",
-                        "cargo_type",
-                        "qty",
-                        "freight_input",
-                        "freight_cost",
-                        "fuel_price",
-                        "email"
-                    ]],
-                    use_container_width=True
-                )
-                
-                # ===== DOWNLOAD EXCEL =====
-                excel_file = generate_excel(df)
-                
-                st.download_button(
-                    label="📥 Download Excel",
-                    data=excel_file,
-                    file_name=f"calculate_history_{datetime.now():%Y%m%d}.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-                        
-            else:
-                st.info("Belum ada data")
-        
-                                
-        # =========================
-        # 📊 PDF HISTORY (TEMP)
-        # =========================
-        elif tab == "📊 History Calculate (PDF)":
-
-            st.markdown("### 📄 PDF History")
-        
-            pdf_data = ref.child("pdf_history").get() or {}
-        
-            if pdf_data:
-                data_list = list(pdf_data.values())
-        
-                for i, item in enumerate(data_list[::-1]):
-        
-                    barge = item.get("barge_size", "Custom")
-
-                    st.markdown(f"""
-                    **{item.get("date")}**  
-                    {item.get("pol")} → {item.get("pod")} ({barge.upper()})  
-                    👤 {item.get("email")}
-                    """)
-        
-                    if "file" in item:
-                        pdf_bytes = bytes.fromhex(item["file"])
-        
-                        st.download_button(
-                            label="📥 Download PDF",
-                            data=pdf_bytes,
-                            file_name=item.get("file_name", f"report_{i}.pdf"),
-                            mime="application/pdf",
-                            key=f"pdf_{i}"
-                        )
-        
-                    st.markdown("---")
-        
-            else:
-                st.info("Belum ada PDF")
-
-        elif tab == "👤 User Activity":
-        
-            st.markdown("### 👤 User Activity")
-
-            data = ref.child("user_activity").get() or {}
-            
-            if data:
-            
-                df = pd.DataFrame.from_dict(data, orient="index")
-            
-                df = df.reset_index().rename(columns={"index": "email"})
-            
-                # 🔥 AMANIN BIAR GA ERROR
-                if "total_calculate" not in df.columns:
-                    df["total_calculate"] = 0
-            
-                if "last_login" not in df.columns:
-                    df["last_login"] = "-"
-            
-                # 🔥 SORT DARI PALING AKTIF
-                df = df.sort_values("total_calculate", ascending=False)
-            
-                # 🔥 TAMPIL SIMPLE
-                st.dataframe(
-                    df[["email", "last_login", "total_calculate"]],
-                    use_container_width=True
-                )
-            
-            else:
-                st.info("Belum ada data user")
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
@@ -1446,6 +1155,12 @@ calculate = st.button(
 
 if calculate:
     try:
+        save_input_history(
+            port_pol,
+            port_pod,
+            freight_price_input,
+            st.session_state.email
+        )
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
@@ -1550,19 +1265,6 @@ if calculate:
         ])
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
-
-        save_input_history(
-            port_pol,
-            port_pod,
-            type_cargo,
-            qyt_cargo,
-            freight_price_input,
-            freight_cost_mt,
-            price_fuel,
-            st.session_state.email
-        )
-
-        track_usage(st.session_state.email)
 
         # ===== IDEAL PRICE CALC =====
         ideal_freight = 0
@@ -2077,20 +1779,6 @@ if calculate:
             file_name=file_name,
             mime="application/pdf"
         )
-        
-        pdf_id = f"{port_pol}-{port_pod}-{datetime.now().strftime('%Y-%m-%d')}"
-
-        if st.session_state.last_pdf_saved != pdf_id:
-        
-            save_pdf_history(
-                port_pol,
-                port_pod,
-                st.session_state.email,
-                file_name,
-                pdf_buffer
-            )
-        
-            st.session_state.last_pdf_saved = pdf_id
 
     except Exception as e:
         st.error(f"Error: {e}")
