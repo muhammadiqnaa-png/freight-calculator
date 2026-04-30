@@ -6,4 +6,3 @@ reportlab
 openpyxl
 numpy
 streamlit-cookies-manager
-pytz
