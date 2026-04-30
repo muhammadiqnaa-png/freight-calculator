@@ -99,6 +99,59 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 
     history.append(new_data)
 
+def generate_excel(df):
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Calculate History"
+
+    headers = [
+        "Date", "POL", "POD", "Cargo",
+        "Qty", "Freight Input", "Freight Cost",
+        "Fuel Price", "User"
+    ]
+
+    ws.append(headers)
+
+    # header style
+    for col in ws[1]:
+        col.font = Font(bold=True)
+        col.alignment = Alignment(horizontal="center")
+
+    # isi data
+    for _, row in df.iterrows():
+        ws.append([
+            row.get("date"),
+            row.get("pol"),
+            row.get("pod"),
+            row.get("cargo_type"),
+            row.get("qty"),
+            row.get("freight_input"),
+            row.get("freight_cost"),
+            row.get("fuel_price"),
+            row.get("email"),
+        ])
+
+    # auto width
+    for col in ws.columns:
+        max_length = 0
+        col_letter = col[0].column_letter
+
+        for cell in col:
+            if cell.value:
+                max_length = max(max_length, len(str(cell.value)))
+
+        ws.column_dimensions[col_letter].width = max_length + 2
+
+    ws.freeze_panes = "A2"
+
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+
+    return buffer
+
+
 cookies = EncryptedCookieManager(
     prefix="freight_app",
     password="abc123"
