@@ -879,43 +879,26 @@ if is_admin():
 
     with st.sidebar.expander("📊 Admin Panel", expanded=False):
 
-        tab = st.selectbox(
-            "Menu Admin",
-            [
-                "📥 History Freight Input",
-                "📊 History Calculate (PDF)"
-            ]
-        )
+        st.markdown("### 📊 History Calculate Report")
 
-        # =========================
-        # 📥 TEMP FREIGHT INPUT LOG
-        # =========================
-        if tab == "📥 History Freight Input":
+        data = ref.child("pdf_history").get()
 
-            st.markdown("### 📥 Freight Input Log (Local)")
+        if data:
 
-            data = ref.child("freight_input").get()
+            df = pd.DataFrame(data.values())
 
-            if data:
-                df = pd.DataFrame(data.values())
-                st.dataframe(df)
-            else:
-                st.info("Belum ada data")
+            df = df.rename(columns={
+                "date": "Date",
+                "pol": "POL",
+                "pod": "POD",
+                "email": "Email",
+                "file_name": "File PDF"
+            })
 
-        # =========================
-        # 📊 PDF HISTORY (TEMP)
-        # =========================
-        elif tab == "📊 History Calculate (PDF)":
+            st.dataframe(df, use_container_width=True)
 
-            st.markdown("### 📊 Calculate History")
-
-            pdf_data = ref.child("pdf_history").get()
-
-            if pdf_data:
-                df = pd.DataFrame(pdf_data.values())
-                st.dataframe(df)
-            else:
-                st.info("Belum ada PDF")
+        else:
+            st.info("Belum ada data report")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
