@@ -131,24 +131,13 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 # 📊 USER TRACKING
 # =========================
 def track_login(email):
-    ref = get_ref()
-    ref.child("user_activity").child(email.replace(".", "_")).update({
-        "last_login": "now"
-    })
-    
-def track_usage(email):
-
-    user_ref = ref.child("user_activity").child(email.replace(".", "_"))
-
-    data = user_ref.get() or {}
-
-    total = data.get("total_calculate", 0)
-
-    user_ref.update({
-        "total_calculate": total + 1,
-        "last_active": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    })
-
+    try:
+        ref.child("user_activity").child(email.replace(".", "_")).update({
+            "last_login": "now"
+        })
+    except Exception as e:
+        print("Firebase skipped:", e)
+        
 def generate_excel(df):
 
     wb = Workbook()
