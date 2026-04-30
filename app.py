@@ -1002,7 +1002,7 @@ if is_admin():
             "Menu Admin",
             [
                 "📊 Calculate History",
-                "📊 History Calculate (PDF)"
+                "📊 History Calculate (PDF)",
                 "👤 User Activity"
             ]
         )
