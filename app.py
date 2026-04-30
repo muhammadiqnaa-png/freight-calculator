@@ -91,6 +91,7 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
         "pod": pod,
         "email": email,
         "file_name": file_name,
+        "barge_size": st.session_state.get("preset_selected", "Custom"),
         "file": pdf_bytes.getvalue().hex()
     }
 
@@ -1037,9 +1038,11 @@ if is_admin():
         
                 for i, item in enumerate(data_list[::-1]):
         
+                    barge = item.get("barge_size", "Custom")
+
                     st.markdown(f"""
                     **{item.get("date")}**  
-                    {item.get("pol")} → {item.get("pod")}  
+                    {item.get("pol")} → {item.get("pod")} ({barge.upper()})  
                     👤 {item.get("email")}
                     """)
         
