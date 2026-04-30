@@ -981,7 +981,17 @@ if is_admin():
                     ]],
                     use_container_width=True
                 )
-        
+                
+                # ===== DOWNLOAD EXCEL =====
+                excel_file = generate_excel(df)
+                
+                st.download_button(
+                    label="📥 Download Excel",
+                    data=excel_file,
+                    file_name=f"calculate_history_{datetime.now():%Y%m%d}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+                        
             else:
                 st.info("Belum ada data")
         
