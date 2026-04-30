@@ -1,20 +1,16 @@
 import firebase_admin
 from firebase_admin import credentials, db
 import streamlit as st
-import json
 
-# LOAD JSON STRING
-firebase_json = json.loads(st.secrets["firebase_json"])
+firebase_dict = dict(st.secrets["firebase"])
 
-# FIX SAFETY
-firebase_json["private_key"] = firebase_json["private_key"].replace("\\n", "\n").strip()
+firebase_dict["private_key"] = firebase_dict["private_key"].replace("\\n", "\n").strip()
 
-# INIT
 if not firebase_admin._apps:
-    cred = credentials.Certificate(firebase_json)
+    cred = credentials.Certificate(firebase_dict)
 
     firebase_admin.initialize_app(cred, {
-        "databaseURL": firebase_json.get("databaseURL")
+        "databaseURL": firebase_dict.get("databaseURL")
     })
 
 def get_ref(path):
