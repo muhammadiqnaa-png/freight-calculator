@@ -29,14 +29,12 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_pdf_history(pol, pod, email, file_name):
-
+def save_pdf_history(pol, pod, email):
     new_data = {
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "pol": pol,
         "pod": pod,
 
-        # 🔥 TAMBAHAN WAJIB
         "cargo_type": st.session_state.get("type_cargo", ""),
         "qty": st.session_state.get("qyt_cargo", 0),
 
@@ -45,8 +43,7 @@ def save_pdf_history(pol, pod, email, file_name):
 
         "fuel_price": st.session_state.get("price_fuel", 0),
 
-        "email": email,
-        "file_name": file_name
+        "email": email
     }
 
     ref.child("pdf_history").push(new_data)
@@ -1843,8 +1840,7 @@ if calculate:
         save_pdf_history(
             port_pol,
             port_pod,
-            st.session_state.email,
-            file_name
+            st.session_state.email
         )
 
     except Exception as e:
