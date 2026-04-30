@@ -5,23 +5,27 @@ from firebase_admin import credentials, auth, db
 # =========================
 # 🔐 LOAD SECRETS
 # =========================
-firebase = st.secrets.get("firebase")
+firebase = st.secrets.get("firebase", None)
 
-if not firebase:
+if firebase is None:
     st.error("❌ Firebase secrets tidak ditemukan")
     st.stop()
 
+FIREBASE_DB_URL = firebase.get("FIREBASE_DB_URL")
+FIREBASE_PROJECT_ID = firebase.get("FIREBASE_PROJECT_ID")
+FIREBASE_CLIENT_EMAIL = firebase.get("FIREBASE_CLIENT_EMAIL")
+FIREBASE_PRIVATE_KEY = firebase.get("FIREBASE_PRIVATE_KEY")
+
 # =========================
-# 🔥 INIT FIREBASE (SAFE)
+# 🔥 INIT FIREBASE
 # =========================
 if not firebase_admin._apps:
-
     cred = credentials.Certificate({
         "type": "service_account",
-        "project_id": firebase["FIREBASE_PROJECT_ID"],
+        "project_id": FIREBASE_PROJECT_ID,
         "private_key_id": "dummy",
-        "private_key": firebase["FIREBASE_PRIVATE_KEY"],
-        "client_email": firebase["FIREBASE_CLIENT_EMAIL"],
+        "private_key": FIREBASE_PRIVATE_KEY.replace("\\n", "\n"),
+        "client_email": FIREBASE_CLIENT_EMAIL,
         "client_id": "dummy",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
@@ -30,7 +34,7 @@ if not firebase_admin._apps:
     })
 
     firebase_admin.initialize_app(cred, {
-        "databaseURL": firebase["FIREBASE_DB_URL"]
+        "databaseURL": FIREBASE_DB_URL
     })
 
 ref = db.reference("/")
@@ -40,13 +44,16 @@ ref = db.reference("/")
 # =========================
 def register_user(email, password):
     try:
-        user = auth.create_user(email=email, password=password)
+        user = auth.create_user(
+            email=email,
+            password=password
+        )
         return True, user.uid
     except Exception as e:
         return False, str(e)
 
 # =========================
-# 🔐 LOGIN USER
+# 🔐 LOGIN USER (SIMPLIFIED)
 # =========================
 def login_user(email, password):
     try:
