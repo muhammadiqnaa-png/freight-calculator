@@ -9,8 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
-from datetime import datetime
-import pytz
+from datetime import datetime, timedelta
 from firebase import ref
 import requests
 from openpyxl import Workbook
@@ -135,7 +134,7 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
 # =========================
 def track_login(email):
 
-    now = datetime.now(wib)
+    now = datetime.utcnow() + timedelta(hours=7)  # WIB manual
     last_login = now.strftime("%Y-%m-%d %H:%M")
 
     ref.child("user_activity").child(email.replace(".", "_")).update({
