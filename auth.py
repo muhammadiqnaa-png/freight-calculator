@@ -19,18 +19,20 @@ if not firebase_admin._apps:
     cred = credentials.Certificate({
         "type": "service_account",
         "project_id": firebase["FIREBASE_PROJECT_ID"],
-        "private_key": firebase["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n"),
+        "private_key_id": "dummy",
+        "private_key": firebase["FIREBASE_PRIVATE_KEY"],
         "client_email": firebase["FIREBASE_CLIENT_EMAIL"],
-        "token_uri": "https://oauth2.googleapis.com/token"
+        "client_id": "dummy",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "dummy"
     })
 
     firebase_admin.initialize_app(cred, {
         "databaseURL": firebase["FIREBASE_DB_URL"]
     })
 
-# =========================
-# 📡 DB REFERENCE
-# =========================
 ref = db.reference("/")
 
 # =========================
@@ -38,16 +40,13 @@ ref = db.reference("/")
 # =========================
 def register_user(email, password):
     try:
-        user = auth.create_user(
-            email=email,
-            password=password
-        )
+        user = auth.create_user(email=email, password=password)
         return True, user.uid
     except Exception as e:
         return False, str(e)
 
 # =========================
-# 🔐 LOGIN USER (SIMPLIFIED)
+# 🔐 LOGIN USER
 # =========================
 def login_user(email, password):
     try:
