@@ -38,26 +38,34 @@ def save_input_history(pol, pod, freight_input, email):
         "date": datetime.now().strftime("%Y-%m-%d")
     }
 
-    # Firebase save
+    # =========================
+    # 🔥 CHECK DUPLICATE DI FIREBASE
+    # =========================
+    existing_data = ref.child("freight_input").get()
+
+    if existing_data:
+        for item in existing_data.values():
+
+            if (
+                item.get("email") == new_data["email"] and
+                item.get("pol", "").strip().upper() == new_data["pol"].strip().upper() and
+                item.get("pod", "").strip().upper() == new_data["pod"].strip().upper() and
+                item.get("date") == new_data["date"]
+            ):
+                return  # ❌ STOP kalau sudah ada
+
+    # =========================
+    # SAVE FIREBASE
+    # =========================
     ref.child("freight_input").push(new_data)
 
-    # Session safety init
+    # =========================
+    # SESSION (optional cache)
+    # =========================
     if "freight_history" not in st.session_state:
         st.session_state.freight_history = []
 
-    history = st.session_state.freight_history
-
-    # anti duplicate (email + route + date)
-    for item in history:
-        if (
-            item["email"] == new_data["email"] and
-            item["pol"].strip().upper() == new_data["pol"].strip().upper() and
-            item["pod"].strip().upper() == new_data["pod"].strip().upper() and
-            item["date"] == new_data["date"]
-        ):
-            return
-
-    history.append(new_data)
+    st.session_state.freight_history.append(new_data)
     
 def save_pdf_history(pol, pod, email, file_name):
 
