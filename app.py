@@ -94,23 +94,36 @@ def save_pdf_history(pol, pod, email, file_name, pdf_bytes):
         "file": pdf_bytes.getvalue().hex()
     }
 
-    ref.child("pdf_history").push(new_data)
-
-    # Session safety init
+    # ===== INIT SESSION =====
     if "pdf_history" not in st.session_state:
         st.session_state.pdf_history = []
 
     history = st.session_state.pdf_history
 
-    # anti duplicate
+    # ===== CHECK DUPLICATE (SESSION) =====
     for item in history:
         if (
             item["email"] == new_data["email"] and
             item["file_name"] == new_data["file_name"] and
-            item["date"][:10] == new_data["date"][:10]
+            item["date"] == new_data["date"]
         ):
             return
 
+    # ===== CHECK DUPLICATE (FIREBASE) 🔥 =====
+    existing = ref.child("pdf_history").get() or {}
+
+    for item in existing.values():
+        if (
+            item.get("email") == new_data["email"] and
+            item.get("file_name") == new_data["file_name"] and
+            item.get("date") == new_data["date"]
+        ):
+            return
+
+    # ===== SAVE KE FIREBASE =====
+    ref.child("pdf_history").push(new_data)
+
+    # ===== SAVE KE SESSION =====
     history.append(new_data)
 
 def generate_excel(df):
