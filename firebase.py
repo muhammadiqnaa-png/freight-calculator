@@ -3,14 +3,13 @@ from firebase_admin import credentials, db
 import streamlit as st
 import json
 
-# =========================
-# LOAD RAW JSON STRING
-# =========================
+# LOAD JSON STRING
 firebase_json = json.loads(st.secrets["firebase_json"])
 
-# =========================
-# INIT FIREBASE
-# =========================
+# FIX SAFETY
+firebase_json["private_key"] = firebase_json["private_key"].replace("\\n", "\n").strip()
+
+# INIT
 if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_json)
 
