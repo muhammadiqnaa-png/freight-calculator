@@ -5,7 +5,7 @@ from firebase_admin import credentials, db
 # =========================
 # 🔐 LOAD SECRETS SAFELY
 # =========================
-firebase = st.secrets.get("firebase")
+firebase = st.secrets["firebase"]
 
 if not firebase:
     st.error("❌ Firebase secrets tidak ditemukan")
