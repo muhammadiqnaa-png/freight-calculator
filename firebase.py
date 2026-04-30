@@ -14,10 +14,10 @@ if not firebase:
 # =========================
 # 🔥 AMBIL DB URL (WAJIB VALIDASI)
 # =========================
-DB_URL = firebase["FIREBASE_DB_URL"]
+DB_URL = firebase.get("FIREBASE_DB_URL", "").strip()
 
-if not DB_URL or DB_URL.strip() == "":
-    st.error("❌ FIREBASE_DB_URL kosong saat runtime")
+if not DB_URL:
+    st.error("❌ FIREBASE_DB_URL tidak terbaca dari secrets")
     st.stop()
 
 # =========================
