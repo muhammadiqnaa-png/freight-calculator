@@ -1257,12 +1257,14 @@ calculate = st.button(
 
 if calculate:
     try:
-        save_input_history(
-            port_pol,
-            port_pod,
-            freight_price_input,
-            st.session_state.email
-        )
+        if freight_price_input > 0:
+            save_input_history(
+                port_pol,
+                port_pod,
+                freight_price_input,
+                st.session_state.email
+            )
+        
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
