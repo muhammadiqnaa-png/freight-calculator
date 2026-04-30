@@ -3,27 +3,40 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # =========================
-# INIT FIREBASE
+# 🔐 LOAD FIREBASE CONFIG
 # =========================
+firebase = st.secrets.get("firebase")
 
+if firebase is None:
+    st.error("Firebase secrets tidak ditemukan")
+    st.stop()
+
+# =========================
+# 🔥 VALIDASI DB URL (IMPORTANT)
+# =========================
+DB_URL = firebase.get("FIREBASE_DB_URL")
+
+if not DB_URL:
+    st.error("❌ FIREBASE_DB_URL kosong / tidak terbaca dari secrets")
+    st.stop()
+
+# =========================
+# 🔥 BUILD CREDENTIAL
+# =========================
+firebase_config = dict(firebase)
+firebase_config["private_key"] = firebase_config["private_key"].replace("\\n", "\n")
+
+# =========================
+# 🚀 INIT FIREBASE APP
+# =========================
 if not firebase_admin._apps:
-
-    private_key = st.secrets["firebase"]["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n")
-
-    cred = credentials.Certificate({
-        "type": "service_account",
-        "project_id": st.secrets["firebase"]["FIREBASE_PROJECT_ID"],
-        "client_email": st.secrets["firebase"]["FIREBASE_CLIENT_EMAIL"],
-        "private_key": private_key,
-        "token_uri": "https://oauth2.googleapis.com/token"
-    })
+    cred = credentials.Certificate(firebase_config)
 
     firebase_admin.initialize_app(cred, {
-        "databaseURL": st.secrets["firebase"]["FIREBASE_DB_URL"]
+        "databaseURL": DB_URL
     })
 
 # =========================
-# DB REFERENCE
+# 🌐 DB REFERENCE
 # =========================
-
 ref = db.reference("/")
