@@ -21,8 +21,12 @@ from streamlit_cookies_manager import EncryptedCookieManager
 # =========================
 ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
 
+st.sidebar.caption(f"DEBUG EMAIL: {st.session_state.get('email')}")
+st.sidebar.caption(f"IS ADMIN: {is_admin()}")
+
 def is_admin():
-    return st.session_state.get("email") == ADMIN_EMAIL
+    email = (st.session_state.get("email") or "").strip().lower()
+    return email == ADMIN_EMAIL.strip().lower()
 
 
 # =========================
