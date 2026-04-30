@@ -28,32 +28,66 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_pdf_history(
-    pol,
-    pod,
-    cargo_type,
-    qty,
-    freight_input,
-    freight_cost,
-    fuel_price,
-    email,
-    file_name
-):
+def save_input_history(pol, pod, freight_input, email):
 
     new_data = {
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "email": email,
         "pol": pol,
         "pod": pod,
-        "cargo_type": cargo_type,
-        "qty": qty,
-        "freight_input": freight_input,
-        "freight_cost": freight_cost,
-        "fuel_price": fuel_price,
-        "email": email,
-        "file_name": file_name
+        "freight": freight_input,
+        "date": datetime.now().strftime("%Y-%m-%d")
     }
 
+    # Firebase save
+    ref.child("freight_input").push(new_data)
+
+    # Session safety init
+    if "freight_history" not in st.session_state:
+        st.session_state.freight_history = []
+
+    history = st.session_state.freight_history
+
+    # anti duplicate (email + route + date)
+    for item in history:
+        if (
+            item["email"] == new_data["email"] and
+            item["pol"].strip().upper() == new_data["pol"].strip().upper() and
+            item["pod"].strip().upper() == new_data["pod"].strip().upper() and
+            item["date"] == new_data["date"]
+        ):
+            return
+
+    history.append(new_data)
+    
+def save_pdf_history(pol, pod, email, file_name):
+
+    new_data = {
+        "email": email,
+        "pol": pol,
+        "pod": pod,
+        "file_name": file_name,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    # Firebase save
     ref.child("pdf_history").push(new_data)
+
+    # Session safety init
+    if "pdf_history" not in st.session_state:
+        st.session_state.pdf_history = []
+
+    history = st.session_state.pdf_history
+
+    # anti duplicate
+    for item in history:
+        if (
+            item["email"] == new_data["email"] and
+            item["file_name"] == new_data["file_name"] and
+            item["date"][:10] == new_data["date"][:10]
+        ):
+            return
+
+    history.append(new_data)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
@@ -879,8 +913,9 @@ if is_admin():
 
             if pdf_data:
                 df = pd.DataFrame(pdf_data.values())
-                df = df.sort_values("date", ascending=False)
                 st.dataframe(df)
+            else:
+                st.info("Belum ada PDF")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
@@ -1222,6 +1257,12 @@ calculate = st.button(
 
 if calculate:
     try:
+        save_input_history(
+            port_pol,
+            port_pod,
+            freight_price_input,
+            st.session_state.email
+        )
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
@@ -1834,24 +1875,19 @@ if calculate:
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
 
-        if st.download_button(
+        st.download_button(
             label="📥 Download PDF Report",
             data=pdf_buffer,
             file_name=file_name,
             mime="application/pdf"
-        ):
+        )
         
-            save_pdf_history(
-                port_pol,
-                port_pod,
-                type_cargo,
-                qyt_cargo,
-                freight_price_input,
-                freight_cost_mt,
-                price_fuel,
-                st.session_state.email,
-                file_name
-            )
+        save_pdf_history(
+            port_pol,
+            port_pod,
+            st.session_state.email,
+            file_name
+        )
 
     except Exception as e:
         st.error(f"Error: {e}")
