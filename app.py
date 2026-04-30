@@ -1,9 +1,4 @@
 import streamlit as st
-
-st.write("SECRETS RAW:")
-st.write(st.secrets)
-
-import streamlit as st
 import pandas as pd
 from io import BytesIO
 from distance import *
