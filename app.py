@@ -10,7 +10,6 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
-import pytz
 from firebase import ref
 import requests
 from openpyxl import Workbook
@@ -18,8 +17,6 @@ from openpyxl.styles import Font, Alignment
 import json
 import os
 from streamlit_cookies_manager import EncryptedCookieManager
-
-wib = pytz.timezone("Asia/Jakarta")
 
 # =========================
 # 🔐 ADMIN CONTROL
