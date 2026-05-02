@@ -1466,7 +1466,7 @@ if calculate:
             price_fuel,
             st.session_state.email,
             st.session_state.preset_selected,  # 🔥 barge
-            base64.b64encode(pdf_bytes).decode()  # 🔥 pdf
+            pdf_base64
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
