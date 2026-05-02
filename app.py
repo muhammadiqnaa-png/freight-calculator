@@ -864,7 +864,7 @@ if is_admin():
                         "Freight Input": item.get("freight_input"),
                         "Freight Cost": item.get("freight_cost"),
                         "Fuel Price": item.get("fuel_price"),
-                        "User": email
+                        "User": item.get("email"),
                     })
 
                 df = pd.DataFrame(records)
