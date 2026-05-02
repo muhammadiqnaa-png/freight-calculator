@@ -14,6 +14,7 @@ import base64
 import requests
 import json
 import os
+import uuid
 from auth import login_user, register_user
 from streamlit_cookies_manager import EncryptedCookieManager
 
@@ -993,13 +994,13 @@ if is_admin():
                         continue
     
                     label = f"{item.get('date')} | {item.get('pol')} - {item.get('pod')} | {item.get('qty')} ({item.get('barge')})"
-    
+
                     st.download_button(
                         label=label,
                         data=pdf_bytes,
                         file_name=f"{item.get('pol')}-{item.get('pod')}.pdf",
                         mime="application/pdf",
-                        key=f"pdf_{item.get('date')}_{item.get('pol')}_{item.get('pod')}_{item.get('qty')}"
+                        key=f"pdf_{item.get('date')}_{item.get('pol')}_{item.get('pod')}_{item.get('qty')}_{uuid.uuid4().hex}"
                     )
     
         except Exception as e:
