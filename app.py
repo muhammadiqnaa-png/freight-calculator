@@ -816,6 +816,47 @@ with st.sidebar.expander("➕ Additional Cost"):
             })
     st.session_state.additional_costs = updated_costs
 
+# =========================
+# 👑 ADMIN PANEL (FIX)
+# =========================
+if is_admin():
+
+    st.sidebar.markdown("### 👑 Admin Panel")
+
+    with st.sidebar.expander("📊 History Calculate Report", expanded=False):
+
+        url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
+
+        try:
+            res = requests.get(url)
+            data = res.json()
+
+            if not data:
+                st.info("Belum ada data")
+            else:
+                # ambil data jadi list
+                records = list(data.values())
+
+                # 🔥 TAMPIL SIMPLE LIST
+                for item in reversed(records[-20:]):  # last 20 data
+
+                    st.markdown(f"""
+                    <div style="
+                        background:#0f172a;
+                        padding:8px;
+                        border-radius:8px;
+                        margin-bottom:6px;
+                    ">
+                    • <b>{item.get("pol","-")} → {item.get("pod","-")}</b><br>
+                    • Freight: Rp {item.get("freight_input",0):,.0f}<br>
+                    • Date: {item.get("date","-")}<br>
+                    • User: {item.get("email","-")}
+                    </div>
+                    """, unsafe_allow_html=True)
+
+        except Exception as e:
+            st.error(f"Error load admin data: {e}")
+
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
