@@ -30,17 +30,26 @@ def is_admin():
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app"
+    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/freight_input_history.json"
 
     data = {
         "pol": pol,
         "pod": pod,
         "freight_input": freight_input,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "email": email
+        "email": email,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
-    requests.post(url, json=data)
+    try:
+        res = requests.post(url, json=data)
+
+        if res.status_code == 200:
+            print("✅ Data berhasil masuk Firebase")
+        else:
+            print("❌ Gagal:", res.text)
+
+    except Exception as e:
+        print("❌ Error:", e)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
