@@ -1,55 +1,68 @@
 import streamlit as st
 import requests
 
-# ====== FIREBASE AUTH ======
-api_key = st.secrets["FIREBASE_API_KEY"]
-AUTH_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
-REGISTER_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
-
-def login_user(email, password):
-    res = requests.post(AUTH_URL, json={"email": email, "password": password, "returnSecureToken": True})
-    return res.ok, res.json()
-
-def register_user(email, password):
-    res = requests.post(REGISTER_URL, json={"email": email, "password": password, "returnSecureToken": True})
-    return res.ok, res.json()
+# =========================
+# 🔐 AMBIL API KEY (AMAN)
+# =========================
+def get_api_key():
+    api_key = st.secrets.get("FIREBASE_API_KEY")
+    if not api_key:
+        st.error("❌ FIREBASE_API_KEY belum diset di secrets")
+        st.stop()
+    return api_key
 
 
 # =========================
-# 🔐 REGISTER USER
-# =========================
-def register_user(email, password):
-    api_key = st.secrets["firebase"]["FIREBASE_API_KEY"]
-
-    url = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={api_key}"
-
-    res = requests.post(url, json={
-        "email": email,
-        "password": password,
-        "returnSecureToken": True
-    })
-
-    if res.status_code == 200:
-        return True, res.json()["localId"]
-    else:
-        return False, res.json()["error"]["message"]
-
-
-# =========================
-# 🔐 LOGIN USER
+# 🔑 LOGIN USER
 # =========================
 def login_user(email, password):
-    api_key = st.secrets["firebase"]["FIREBASE_API_KEY"]
+    api_key = get_api_key()
 
     url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={api_key}"
 
-    res = requests.post(url, json={
+    payload = {
         "email": email,
         "password": password,
         "returnSecureToken": True
-    })
+    }
 
-    if res.status_code == 200:
-        return True, res.json()["localId"]
-    else:
-        return False, res.json()["error"]["message"]
+    try:
+        res = requests.post(url, json=payload)
+        data = res.json()
+
+        if res.status_code == 200:
+            return True, data
+        else:
+            error_msg = data.get("error", {}).get("message", "Login gagal")
+            return False, error_msg
+
+    except Exception as e:
+        return False, str(e)
+
+
+# =========================
+# 📝 REGISTER USER
+# =========================
+def register_user(email, password):
+    api_key = get_api_key()
+
+    url = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={api_key}"
+
+    payload = {
+        "email": email,
+        "password": password,
+        "returnSecureToken": True
+    }
+
+    try:
+        res = requests.post(url, json=payload)
+        data = res.json()
+
+        if res.status_code == 200:
+            return True, data
+        else:
+            error_msg = data.get("error", {}).get("message", "Register gagal")
+            return False, error_msg
+
+    except Exception as e:
+        return False, str(e)
