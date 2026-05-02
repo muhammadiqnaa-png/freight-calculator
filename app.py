@@ -919,6 +919,22 @@ if is_admin():
                     })
 
                 df = pd.DataFrame(records)
+                
+                # ===== EXCEL EXPORT FUNCTION =====
+                def to_excel(df):
+                    output = BytesIO()
+                
+                    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+                        df.to_excel(writer, index=False, sheet_name="History Calculate")
+                
+                        worksheet = writer.sheets["History Calculate"]
+                
+                        # auto resize column
+                        for i, col in enumerate(df.columns):
+                            max_len = max(df[col].astype(str).map(len).max(), len(col))
+                            worksheet.column_dimensions[chr(65 + i)].width = max_len + 3
+                
+                    return output.getvalue()
 
                 # sort terbaru
                 if "Date" in df.columns:
@@ -932,6 +948,15 @@ if is_admin():
                         )
 
                 st.dataframe(df, use_container_width=True, height=300)
+                
+                excel_data = to_excel(df)
+
+                st.download_button(
+                    label="📥 Download Excel Report",
+                    data=excel_data,
+                    file_name="History_Calculate.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
 
         except Exception as e:
             st.error(f"Error load admin data: {e}")
