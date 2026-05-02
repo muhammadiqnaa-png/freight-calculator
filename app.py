@@ -83,39 +83,32 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
 
-    pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
+    try:
+        pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
-    # 🔥 CEK DUPLICATE SIMPLE
-    check_url = url
-    res = requests.get(check_url)
-    existing = res.json() if res.status_code == 200 else {}
+        data = {
+            "pol": pol,
+            "pod": pod,
+            "qty": qty,
+            "barge": barge,
+            "pdf": pdf_base64,
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "email": email
+        }
 
-    for item in (existing or {}).values():
-        if (
-            item.get("pol") == pol and
-            item.get("pod") == pod and
-            item.get("qty") == qty and
-            item.get("email") == email
-        ):
-            return  # STOP DUPLIKAT
+        res = requests.post(url, json=data)
 
-    data = {
-        "pol": pol,
-        "pod": pod,
-        "qty": qty,
-        "barge": barge,
-        "pdf": pdf_base64,
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "email": email
-    }
+        print("STATUS:", res.status_code)
+        print("RESPONSE:", res.text)
 
-    requests.post(url, json=data)
+        if res.status_code != 200:
+            st.error(f"Firebase Error: {res.text}")
+        else:
+            st.success("PDF saved to Firebase ✅")
 
-    if res.status_code != 200:
-        print("❌ PDF SAVE FAILED:", res.text)
-    else:
-        print("✅ PDF SAVED SUCCESS:", res.json())
-
+    except Exception as e:
+        st.error(f"Save PDF ERROR: {e}")
+        
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
     st.session_state.hide_intro = False
