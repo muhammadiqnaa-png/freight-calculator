@@ -456,14 +456,14 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
-
+            
                 cookies["logged_in"] = "true"
                 cookies["email"] = email
                 cookies.save()
-
+            
                 st.rerun()
             else:
-                st.error("Email atau password salah")
+                st.error(f"❌ {data}")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
