@@ -839,16 +839,49 @@ if is_admin():
                 st.info("Belum ada data")
             else:
                 records = list(data.values())
-
                 df = pd.DataFrame(records)
 
-                # 🔥 rapihin urutan kolom (kalau ada)
-                cols_order = ["date", "pol", "pod", "freight_input", "email"]
+                # 🔥 urutan lengkap
+                cols_order = [
+                    "date",
+                    "pol",
+                    "pod",
+                    "cargo",
+                    "qty",
+                    "freight_input",
+                    "freight_cost",
+                    "fuel_price",
+                    "email"
+                ]
+
                 df = df[[c for c in cols_order if c in df.columns]]
 
-                # 🔥 urut terbaru di atas
-                if "date" in df.columns:
-                    df = df.sort_values(by="date", ascending=False)
+                # 🔥 rename biar clean
+                df = df.rename(columns={
+                    "date": "Date",
+                    "pol": "POL",
+                    "pod": "POD",
+                    "cargo": "Cargo",
+                    "qty": "Qty",
+                    "freight_input": "Freight Input",
+                    "freight_cost": "Freight Cost",
+                    "fuel_price": "Fuel Price",
+                    "email": "User"
+                })
+
+                # 🔥 sort terbaru
+                if "Date" in df.columns:
+                    df = df.sort_values(by="Date", ascending=False)
+
+                # 🔥 format angka
+                if "Freight Input" in df.columns:
+                    df["Freight Input"] = df["Freight Input"].apply(lambda x: f"Rp {x:,.0f}")
+
+                if "Freight Cost" in df.columns:
+                    df["Freight Cost"] = df["Freight Cost"].apply(lambda x: f"Rp {x:,.0f}")
+
+                if "Fuel Price" in df.columns:
+                    df["Fuel Price"] = df["Fuel Price"].apply(lambda x: f"Rp {x:,.0f}")
 
                 st.dataframe(df, use_container_width=True, height=300)
 
@@ -1199,7 +1232,11 @@ if calculate:
             port_pol,
             port_pod,
             freight_price_input,
-            st.session_state.email
+            st.session_state.email,
+            type_cargo,
+            qyt_cargo,
+            freight_cost_mt,
+            price_fuel
         )
         distance_pol_pod = find_distance(port_pol, port_pod)
 
