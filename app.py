@@ -83,31 +83,23 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
 
-    try:
-        pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
+    pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
-        data = {
-            "pol": pol,
-            "pod": pod,
-            "qty": qty,
-            "barge": barge,
-            "pdf": pdf_base64,
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "email": email
-        }
+    data = {
+        "pol": pol,
+        "pod": pod,
+        "qty": qty,
+        "barge": barge,
+        "pdf": pdf_base64,
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "email": email
+    }
 
-        res = requests.post(url, json=data)
+    res = requests.post(url, json=data)
 
-        print("STATUS:", res.status_code)
-        print("RESPONSE:", res.text)
-
-        if res.status_code != 200:
-            st.error(f"Firebase Error: {res.text}")
-        else:
-            st.success("PDF saved to Firebase ✅")
-
-    except Exception as e:
-        st.error(f"Save PDF ERROR: {e}")
+    # optional debug
+    if res.status_code != 200:
+        print("❌ FAILED:", res.text)
         
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
@@ -1976,22 +1968,39 @@ if calculate:
 
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
-        download_clicked = st.download_button(
+        # ===== INIT TRIGGER =====
+        if "pdf_ready_to_save" not in st.session_state:
+            st.session_state.pdf_ready_to_save = False
+        
+        # ===== DOWNLOAD BUTTON =====
+        st.download_button(
             label="📥 Download PDF Report",
             data=pdf_bytes,
             file_name=file_name,
-            mime="application/pdf"
+            mime="application/pdf",
+            key="download_pdf"
         )
         
-        if download_clicked:
-            save_pdf_history(
-                port_pol,                  # POL
-                port_pod,                  # POD
-                qyt_cargo,                # QTY
-                selected_barge,           # BARGe
-                pdf_bytes,                # PDF
-                st.session_state.email    # EMAIL
-            )
+        # ===== SET TRIGGER MANUAL (STABLE) =====
+        st.session_state.pdf_ready_to_save = True
+        
+        # ===== SAVE KE FIREBASE (PASTI JALAN 1X) =====
+        if st.session_state.pdf_ready_to_save:
+        
+            try:
+                save_pdf_history(
+                    port_pol,
+                    port_pod,
+                    qyt_cargo,
+                    st.session_state.get("preset_selected", "Custom"),
+                    pdf_bytes,
+                    st.session_state.email
+                )
+        
+                st.session_state.pdf_ready_to_save = False  # STOP DUPLIKAT
+
+    except Exception as e:
+        st.error(f"PDF Save Error: {e}")
             
     except Exception as e:
         st.error(f"PDF Save Error: {e}")
