@@ -13,6 +13,7 @@ from datetime import datetime
 import requests
 import json
 import os
+from auth import login_user, register_user
 from streamlit_cookies_manager import EncryptedCookieManager
 
 # =========================
