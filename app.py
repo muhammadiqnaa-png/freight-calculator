@@ -1996,4 +1996,4 @@ if calculate:
                 st.session_state[f"saved_{file_name}"] = True
 
     except Exception as e:
-    st.error(f"PDF Save Error: {e}")
+        st.error(f"PDF Save Error: {e}")
