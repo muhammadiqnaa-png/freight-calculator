@@ -28,14 +28,18 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(pol, pod, freight_input, email):
+def save_input_history(pol, pod, freight_input, cargo, qty, freight_cost, fuel_price, email):
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
 
     data = {
         "pol": pol,
         "pod": pod,
+        "cargo": cargo,
+        "qty": qty,
         "freight_input": freight_input,
+        "freight_cost": freight_cost,
+        "fuel_price": fuel_price,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "email": email
     }
