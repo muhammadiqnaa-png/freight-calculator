@@ -79,6 +79,8 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
 def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
+    import base64
+
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
 
     pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
@@ -93,7 +95,10 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
         "email": email
     }
 
-    requests.post(url, json=data)
+    res = requests.post(url, json=data)
+
+    print("STATUS PDF:", res.status_code)
+    print("RESP:", res.text)
 
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
@@ -927,7 +932,7 @@ if is_admin():
             st.error(f"Error load admin data: {e}")
 
     with st.sidebar.expander("📄 History PDF", expanded=False):
-    
+
         url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
     
         try:
@@ -937,42 +942,31 @@ if is_admin():
             if not data:
                 st.info("Belum ada PDF")
             else:
-                rows = []
+                import base64
     
                 for item in data.values():
-                    rows.append({
-                        "Date": item.get("date"),
-                        "POL": item.get("pol"),
-                        "POD": item.get("pod"),
-                        "Qty": f"{item.get('qty')} ({item.get('barge')})",
-                        "PDF": item.get("pdf")
-                    })
     
-                df = pd.DataFrame(rows)
+                    # skip data rusak
+                    if "pdf" not in item or not isinstance(item["pdf"], str):
+                        continue
     
-                # sort terbaru
-                df = df.sort_values(by="Date", ascending=False)
+                    try:
+                        pdf_bytes = base64.b64decode(item["pdf"])
+                    except:
+                        continue
     
-                # 🔥 tampil table + download
-                for i, row in df.iterrows():
-                    col1, col2 = st.columns([3,1])
+                    label = f"{item.get('date')} | {item.get('pol')} - {item.get('pod')} | {item.get('qty')} ({item.get('barge')})"
     
-                    with col1:
-                        st.caption(f"{row['Date']} | {row['POL']} → {row['POD']} | {row['Qty']}")
-    
-                    with col2:
-                        pdf_bytes = base64.b64decode(row["PDF"])
-                        st.download_button(
-                            "Download",
-                            data=pdf_bytes,
-                            file_name=f"{row['POL']}-{row['POD']}.pdf",
-                            mime="application/pdf",
-                            key=f"pdf_{i}"
-                        )
+                    st.download_button(
+                        label=label,
+                        data=pdf_bytes,
+                        file_name=f"{item.get('pol')}-{item.get('pod')}.pdf",
+                        mime="application/pdf"
+                    )
     
         except Exception as e:
             st.error(f"Error load PDF history: {e}")
-        
+            
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
@@ -1931,26 +1925,36 @@ if calculate:
             buffer.seek(0)
             return buffer
 
-        # ===== GENERATE PDF & DOWNLOAD BUTTON =====
+        # ===== GENERATE PDF =====
         pdf_buffer = create_pdf(username=st.session_state.email)
+        pdf_bytes = pdf_buffer.getvalue()
+        
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
-        pdf_bytes = pdf_buffer.getvalue()
-
-        if st.download_button(
+        
+        # ===== SAVE PDF KE FIREBASE =====
+        if st.button("💾 Save PDF History"):
+        
+            if len(pdf_bytes) == 0:
+                st.error("PDF kosong bro ❌")
+            else:
+                save_pdf_history(
+                    port_pol,
+                    port_pod,
+                    qyt_cargo,
+                    selected_barge,
+                    pdf_bytes,
+                    st.session_state.email
+                )
+        
+                st.success("✅ PDF berhasil disimpan ke Firebase")
+        
+        # ===== DOWNLOAD PDF =====
+        st.download_button(
             label="📥 Download PDF Report",
             data=pdf_buffer,
             file_name=file_name,
             mime="application/pdf"
-        ):
-            save_pdf_history(
-                port_pol,
-                port_pod,
-                qyt_cargo,
-                st.session_state.preset_selected,
-                pdf_bytes,
-                st.session_state.email
-            )
-
+        )
     except Exception as e:
         st.error(f"Error: {e}")
