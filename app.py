@@ -30,7 +30,7 @@ def is_admin():
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/freight_input_history.json"
+    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
 
     data = {
         "pol": pol,
