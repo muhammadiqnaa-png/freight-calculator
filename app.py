@@ -39,7 +39,7 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_price, email, barge, pdf_base64):
+def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_price, email):
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
 
@@ -66,16 +66,16 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
     # ✅ KALAU TIDAK ADA → SAVE
     data = {
-        "id": str(uuid.uuid4()),  # 🔥 penting biar tidak double
         "pol": pol,
         "pod": pod,
+        "type_cargo": cargo,
         "qty": qty,
-        "barge": barge,
-        "pdf": pdf_base64,
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "email": email
-    }
-
+        "freight_input": freight_input,
+        "freight_cost": freight_cost,
+        "fuel_price": fuel_price,
+        "date": today,
+        "email": email }
+    
     requests.post(url, json=data)
         
 # ===== INTRO STATE =====
@@ -1464,9 +1464,7 @@ if calculate:
             freight_price_input, # freight_input
             freight_cost_mt,     # freight_cost
             price_fuel,
-            st.session_state.email,
-            st.session_state.preset_selected,  # 🔥 barge
-            pdf_base64
+            st.session_state.email
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
