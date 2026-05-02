@@ -1968,39 +1968,24 @@ if calculate:
 
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
-        # ===== INIT TRIGGER =====
-        if "pdf_ready_to_save" not in st.session_state:
-            st.session_state.pdf_ready_to_save = False
-        
         # ===== DOWNLOAD BUTTON =====
-        st.download_button(
+        download_clicked = st.download_button(
             label="📥 Download PDF Report",
             data=pdf_bytes,
             file_name=file_name,
-            mime="application/pdf",
-            key="download_pdf"
+            mime="application/pdf"
         )
         
-        # ===== SET TRIGGER MANUAL (STABLE) =====
-        st.session_state.pdf_ready_to_save = True
-        
-        # ===== SAVE KE FIREBASE (PASTI JALAN 1X) =====
-        if st.session_state.pdf_ready_to_save:
-        
+        # ===== SAVE KE FIREBASE (NO TRY BLOCK BOCOR) =====
+        if download_clicked:
             try:
                 save_pdf_history(
                     port_pol,
                     port_pod,
                     qyt_cargo,
-                    st.session_state.get("preset_selected", "Custom"),
+                    selected_barge,
                     pdf_bytes,
                     st.session_state.email
                 )
-        
-                st.session_state.pdf_ready_to_save = False  # STOP DUPLIKAT
-
-    except Exception as e:
-        st.error(f"PDF Save Error: {e}")
-            
-    except Exception as e:
-        st.error(f"PDF Save Error: {e}")
+            except Exception as e:
+                st.error(f"PDF Save Error: {e}")
