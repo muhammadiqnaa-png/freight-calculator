@@ -1405,7 +1405,7 @@ if calculate:
             qyt_cargo,
             freight_price_input,
             freight_cost_mt,
-            price_fuel
+            price_fuel,
             st.session_state.email,            
         )
 
