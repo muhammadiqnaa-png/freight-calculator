@@ -10,10 +10,10 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
+from firebase import ref
 import requests
 import json
 import os
-from auth import login_user, register_user
 from streamlit_cookies_manager import EncryptedCookieManager
 
 # =========================
@@ -24,34 +24,70 @@ ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
 def is_admin():
     return st.session_state.get("email") == ADMIN_EMAIL
 
+
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
 def save_input_history(pol, pod, freight_input, email):
 
-    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
-
-    data = {
+    new_data = {
+        "email": email,
         "pol": pol,
         "pod": pod,
-        "freight_input": freight_input,
-        "cargo_type": type_cargo,
-        "qty": qyt_cargo,
-        "fuel_price": price_fuel,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "email": email
+        "freight": freight_input,
+        "date": datetime.now().strftime("%Y-%m-%d")
     }
 
-    try:
-        res = requests.post(url, json=data)
+    # Firebase save
+    ref.child("freight_input").push(new_data)
 
-        if res.status_code == 200:
-            print("✅ Data berhasil masuk Firebase")
-        else:
-            print("❌ Gagal:", res.text)
+    # Session safety init
+    if "freight_history" not in st.session_state:
+        st.session_state.freight_history = []
 
-    except Exception as e:
-        print("❌ Error:", e)
+    history = st.session_state.freight_history
+
+    # anti duplicate (email + route + date)
+    for item in history:
+        if (
+            item["email"] == new_data["email"] and
+            item["pol"].strip().upper() == new_data["pol"].strip().upper() and
+            item["pod"].strip().upper() == new_data["pod"].strip().upper() and
+            item["date"] == new_data["date"]
+        ):
+            return
+
+    history.append(new_data)
+    
+def save_pdf_history(pol, pod, email, file_name):
+
+    new_data = {
+        "email": email,
+        "pol": pol,
+        "pod": pod,
+        "file_name": file_name,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    # Firebase save
+    ref.child("pdf_history").push(new_data)
+
+    # Session safety init
+    if "pdf_history" not in st.session_state:
+        st.session_state.pdf_history = []
+
+    history = st.session_state.pdf_history
+
+    # anti duplicate
+    for item in history:
+        if (
+            item["email"] == new_data["email"] and
+            item["file_name"] == new_data["file_name"] and
+            item["date"][:10] == new_data["date"][:10]
+        ):
+            return
+
+    history.append(new_data)
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
@@ -333,6 +369,13 @@ if "last_route" not in st.session_state:
 if "show_info" not in st.session_state:
     st.session_state.show_info = False
 
+# ===== HISTORY INIT FIX =====
+if "freight_history" not in st.session_state:
+    st.session_state.freight_history = []
+
+if "pdf_history" not in st.session_state:
+    st.session_state.pdf_history = []
+
 # ==========================================================
 # 🚀 INTRO / ONBOARDING SCREEN (FINAL VERSION)
 # ==========================================================
@@ -467,14 +510,14 @@ if not st.session_state.logged_in:
             if ok:
                 st.session_state.logged_in = True
                 st.session_state.email = email
-            
+
                 cookies["logged_in"] = "true"
                 cookies["email"] = email
                 cookies.save()
-            
+
                 st.rerun()
             else:
-                st.error(f"❌ {data}")
+                st.error("Email atau password salah")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -828,91 +871,51 @@ with st.sidebar.expander("➕ Additional Cost"):
     st.session_state.additional_costs = updated_costs
 
 # =========================
-# 🧑‍💼 ADMIN PANEL (FINAL STRUCTURE)
+# 📊 ADMIN PANEL (TEMPORARY - NO FIREBASE)
 # =========================
 if is_admin():
 
-    st.sidebar.markdown("## 🧑‍💼 Admin Panel")
+    st.sidebar.markdown("---")
 
-    menu = st.sidebar.radio(
-        "Menu",
-        ["📥 History Freight Input", "📄 History Calculate"]
-    )
+    with st.sidebar.expander("📊 Admin Panel", expanded=False):
 
-    # =========================
-    # 📥 FREIGHT INPUT HISTORY
-    # =========================
-    if menu == "📥 History Freight Input":
+        tab = st.selectbox(
+            "Menu Admin",
+            [
+                "📥 History Freight Input",
+                "📊 History Calculate (PDF)"
+            ]
+        )
 
-        st.sidebar.markdown("### 📥 Freight Input History")
+        # =========================
+        # 📥 TEMP FREIGHT INPUT LOG
+        # =========================
+        if tab == "📥 History Freight Input":
 
-        url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_input_history.json"
-        res = requests.get(url).json()
+            st.markdown("### 📥 Freight Input Log (Local)")
 
-        if res:
+            data = ref.child("freight_input").get()
 
-            # urut terbaru di atas
-            for k, v in reversed(list(res.items())):
+            if data:
+                df = pd.DataFrame(data.values())
+                st.dataframe(df)
+            else:
+                st.info("Belum ada data")
 
-                pol = v.get("pol", "-")
-                pod = v.get("pod", "-")
-                freight = v.get("freight_input", 0)
-                date = v.get("date", "-")
+        # =========================
+        # 📊 PDF HISTORY (TEMP)
+        # =========================
+        elif tab == "📊 History Calculate (PDF)":
 
-                title = f"🚢 {pol} → {pod} | {date}"
+            st.markdown("### 📊 Calculate History")
 
-                with st.sidebar.expander(title):
+            pdf_data = ref.child("pdf_history").get()
 
-                    st.markdown(f"""
-                    **POL:** {pol}  
-                    **POD:** {pod}  
-                    **Freight Input:** Rp {freight:,.0f}  
-                    **Tanggal:** {date}  
-                    **User:** {v.get('email', '-') }
-                    """)
-
-        else:
-            st.sidebar.info("Belum ada history input")
-
-    # =========================
-    # 📄 CALCULATE HISTORY (PDF)
-    # =========================
-    elif menu == "📄 History Calculate":
-
-        st.sidebar.markdown("### 📄 Freight Report History")
-
-        url = "https://YOUR_FIREBASE_URL.firebaseio.com/freight_pdf_history.json"
-        res = requests.get(url).json()
-
-        if res:
-
-            for k, v in reversed(list(res.items())):
-
-                file_name = v.get("file_name", "Freight Report")
-                route = v.get("route", "-")
-                date = v.get("date", "-")
-
-                title = f"📄 {file_name}"
-
-                with st.sidebar.expander(title):
-
-                    st.markdown(f"""
-                    **Route:** {route}  
-                    **File:** {file_name}  
-                    **Tanggal:** {date}  
-                    **User:** {v.get('email', '-')}
-                    """)
-
-                    # OPTIONAL download kalau ada link
-                    if v.get("pdf_url"):
-                        st.download_button(
-                            "⬇️ Download PDF",
-                            v["pdf_url"],
-                            file_name=file_name
-                        )
-
-        else:
-            st.sidebar.info("Belum ada PDF history")
+            if pdf_data:
+                df = pd.DataFrame(pdf_data.values())
+                st.dataframe(df)
+            else:
+                st.info("Belum ada PDF")
 
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
@@ -1877,6 +1880,13 @@ if calculate:
             data=pdf_buffer,
             file_name=file_name,
             mime="application/pdf"
+        )
+        
+        save_pdf_history(
+            port_pol,
+            port_pod,
+            st.session_state.email,
+            file_name
         )
 
     except Exception as e:
