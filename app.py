@@ -80,8 +80,6 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
 def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
-    import base64
-
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
 
     pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
@@ -98,8 +96,11 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
     res = requests.post(url, json=data)
 
-    print("STATUS PDF:", res.status_code)
-    print("RESP:", res.text)
+    # 🔥 DEBUG WAJIB
+    if res.status_code != 200:
+        print("❌ PDF SAVE FAILED:", res.text)
+    else:
+        print("✅ PDF SAVED SUCCESS:", res.json())
 
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
@@ -1962,6 +1963,21 @@ if calculate:
         # ===== GENERATE PDF =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         pdf_bytes = pdf_buffer.getvalue()
+
+        # 🔥 AUTO SAVE PDF KE FIREBASE (FIX HISTORY PDF)
+        try:
+            selected_barge = st.session_state.get("preset_selected", "Custom")
+        
+            save_pdf_history(
+                port_pol,
+                port_pod,
+                qyt_cargo,
+                selected_barge,
+                pdf_bytes,
+                st.session_state.email
+            )
+        except Exception as e:
+            st.error(f"PDF Save Error: {e}")
         
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
