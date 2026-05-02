@@ -1401,12 +1401,12 @@ if calculate:
         save_input_history(
             port_pol,
             port_pod,
-            type_cargo,
-            qyt_cargo,
-            freight_price_input,
-            freight_cost_mt,
+            type_cargo,          # cargo
+            qyt_cargo,           # qty
+            freight_price_input, # freight_input
+            freight_cost_mt,     # freight_cost
             price_fuel,
-            st.session_state.email,            
+            st.session_state.email
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
