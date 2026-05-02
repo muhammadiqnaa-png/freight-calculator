@@ -81,21 +81,19 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
     requests.post(url, json=data)
 
-def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
+def save_pdf_history(port_pol, port_pod, cargo_qty, barge, pdf_bytes, email):
+    
+    ref = db.child("pdf_history").push()
 
-    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
-
-    pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
-
-    data = {
-        "pol": pol,
-        "pod": pod,
-        "qty": qty,
+    ref.set({
+        "port_pol": port_pol,
+        "port_pod": port_pod,
+        "cargo_qty": cargo_qty,
         "barge": barge,
-        "pdf": pdf_base64,
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "email": email
-    }
+        "email": email,
+        "pdf": pdf_bytes.decode("latin1"),  # penting biar tidak error binary
+        "timestamp": datetime.now().isoformat()
+    })
 
     res = requests.post(
         url,
@@ -976,6 +974,7 @@ if is_admin():
     with st.sidebar.expander("📄 History PDF", expanded=False):
 
         url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
+        db.child("pdf_history").get()
     
         try:
             res = requests.get(url)
