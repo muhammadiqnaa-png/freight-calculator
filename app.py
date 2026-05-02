@@ -85,39 +85,31 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
     pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
-    today = datetime.now().strftime("%Y-%m-%d")
+    # 🔥 CEK DUPLICATE SIMPLE
+    check_url = url
+    res = requests.get(check_url)
+    existing = res.json() if res.status_code == 200 else {}
 
-    # 🔥 AMBIL DATA EXISTING (ANTI DUPLIKAT)
-    try:
-        res = requests.get(url)
-        existing = res.json() or {}
-    except:
-        existing = {}
-
-    # 🔥 CEK DUPLIKAT
-    for item in existing.values():
+    for item in (existing or {}).values():
         if (
             item.get("pol") == pol and
             item.get("pod") == pod and
             item.get("qty") == qty and
-            item.get("barge") == barge and
-            item.get("date") == today and
             item.get("email") == email
         ):
-            return  # ❌ STOP, SUDAH ADA
+            return  # STOP DUPLIKAT
 
-    # ✅ SAVE DATA BARU
     data = {
         "pol": pol,
         "pod": pod,
         "qty": qty,
         "barge": barge,
         "pdf": pdf_base64,
-        "date": today,
+        "date": datetime.now().strftime("%Y-%m-%d"),
         "email": email
     }
 
-    res = requests.post(url, json=data)
+    requests.post(url, json=data)
 
     if res.status_code != 200:
         print("❌ PDF SAVE FAILED:", res.text)
@@ -1998,15 +1990,19 @@ if calculate:
             mime="application/pdf"
         )
         
+        # ===== SAVE KE FIREBASE HANYA SAAT DOWNLOAD =====
         if download_clicked:
-            save_pdf_history(
-                port_pol,
-                port_pod,
-                qyt_cargo,
-                st.session_state.get("preset_selected", "Custom"),
-                pdf_bytes,
-                st.session_state.email
-            )
+            try:
+                save_pdf_history(
+                    port_pol,
+                    port_pod,
+                    qyt_cargo,
+                    selected_barge,
+                    pdf_bytes,
+                    st.session_state.email
+                )
+    except Exception as e:
+        st.error(f"PDF Save Error: {e}")
                 
     except Exception as e:
         st.error(f"Error: {e}")
