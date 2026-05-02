@@ -1986,6 +1986,10 @@ if calculate:
         # ===== GENERATE PDF =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         pdf_bytes = pdf_buffer.getvalue()
+
+        selected_barge = st.session_state.get("preset_selected", "Custom")
+
+        file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
         download_clicked = st.download_button(
             label="📥 Download PDF Report",
