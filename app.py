@@ -1990,15 +1990,5 @@ if calculate:
             file_name=file_name,
             mime="application/pdf"
         )
-        
-        if download_clicked:
-            save_pdf_history(
-                port_pol,
-                port_pod,
-                qyt_cargo,
-                st.session_state.preset_selected,
-                st.session_state.email,
-                pdf_bytes
-            )
     except Exception as e:
         st.error(f"Error: {e}")
