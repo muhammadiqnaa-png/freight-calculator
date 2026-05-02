@@ -10,6 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from datetime import datetime
+import base64
 import requests
 import json
 import os
@@ -72,6 +73,38 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
         "fuel_price": fuel_price,
         "date": today,
         "email": email
+    }
+
+    requests.post(url, json=data)
+
+def save_pdf_history(pol, pod, qty, barge, email, pdf_bytes):
+
+    url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
+
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    # ambil data lama
+    existing = requests.get(url).json()
+
+    # 🔥 CEK DUPLIKAT
+    if existing:
+        for item in existing.values():
+            if (
+                item.get("date") == today and
+                item.get("pol") == pol and
+                item.get("pod") == pod and
+                item.get("email") == email
+            ):
+                return  # ❌ skip kalau sama
+
+    data = {
+        "date": today,
+        "pol": pol,
+        "pod": pod,
+        "qty": qty,
+        "barge": barge,
+        "email": email,
+        "pdf": base64.b64encode(pdf_bytes).decode()
     }
 
     requests.post(url, json=data)
@@ -906,6 +939,54 @@ if is_admin():
 
         except Exception as e:
             st.error(f"Error load admin data: {e}")
+
+    with st.sidebar.expander("📄 History PDF", expanded=False):
+    
+        url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
+    
+        try:
+            res = requests.get(url)
+            data = res.json()
+    
+            if not data:
+                st.info("Belum ada PDF")
+            else:
+                rows = []
+    
+                for item in data.values():
+                    rows.append({
+                        "Date": item.get("date"),
+                        "POL": item.get("pol"),
+                        "POD": item.get("pod"),
+                        "Qty": f"{item.get('qty')} ({item.get('barge')})",
+                        "PDF": item.get("pdf")
+                    })
+    
+                df = pd.DataFrame(rows)
+    
+                # sort terbaru
+                df = df.sort_values(by="Date", ascending=False)
+    
+                # 🔥 tampil table + download
+                for i, row in df.iterrows():
+                    col1, col2 = st.columns([3,1])
+    
+                    with col1:
+                        st.caption(f"{row['Date']} | {row['POL']} → {row['POD']} | {row['Qty']}")
+    
+                    with col2:
+                        pdf_bytes = base64.b64decode(row["PDF"])
+                        st.download_button(
+                            "Download",
+                            data=pdf_bytes,
+                            file_name=f"{row['POL']}-{row['POD']}.pdf",
+                            mime="application/pdf",
+                            key=f"pdf_{i}"
+                        )
+    
+        except Exception as e:
+            st.error(f"Error load PDF history: {e}")
+        
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
@@ -1869,12 +1950,22 @@ if calculate:
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
 
-        st.download_button(
+        pdf_bytes = pdf_buffer.getvalue()
+
+        if st.download_button(
             label="📥 Download PDF Report",
-            data=pdf_buffer,
+            data=pdf_bytes,
             file_name=file_name,
             mime="application/pdf"
-        )
+        ):
+            save_pdf_history(
+                port_pol,
+                port_pod,
+                qyt_cargo,
+                st.session_state.preset_selected,
+                st.session_state.email,
+                pdf_bytes
+            )
 
     except Exception as e:
         st.error(f"Error: {e}")
