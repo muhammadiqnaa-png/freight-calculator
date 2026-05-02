@@ -859,8 +859,8 @@ if is_admin():
                         "Date": item.get("date"),
                         "POL": item.get("pol"),
                         "POD": item.get("pod"),
-                        "Cargo": cargo,
-                        "Qty": qty,
+                        "Cargo": item.get("type_cargo"),
+                        "Qty": item.get("qty"),
                         "Freight Input": item.get("freight_input"),
                         "Freight Cost": item.get("freight_cost"),
                         "Fuel Price": item.get("fuel_price"),
@@ -1401,12 +1401,12 @@ if calculate:
         save_input_history(
             port_pol,
             port_pod,
-            freight_price_input,
-            st.session_state.email,
             type_cargo,
             qyt_cargo,
+            freight_price_input,
             freight_cost_mt,
             price_fuel
+            st.session_state.email,            
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
