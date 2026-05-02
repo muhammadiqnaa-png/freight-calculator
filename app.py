@@ -998,7 +998,8 @@ if is_admin():
                         label=label,
                         data=pdf_bytes,
                         file_name=f"{item.get('pol')}-{item.get('pod')}.pdf",
-                        mime="application/pdf"
+                        mime="application/pdf",
+                        key=f"pdf_{item.get('date')}_{item.get('pol')}_{item.get('pod')}_{item.get('qty')}"
                     )
     
         except Exception as e:
