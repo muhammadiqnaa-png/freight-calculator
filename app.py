@@ -1952,12 +1952,14 @@ if calculate:
 
         pdf_bytes = pdf_buffer.getvalue()
 
-        if st.download_button(
+        download_clicked = st.download_button(
             label="📥 Download PDF Report",
             data=pdf_bytes,
             file_name=file_name,
             mime="application/pdf"
-        ):
+        )
+        
+        if download_clicked:
             save_pdf_history(
                 port_pol,
                 port_pod,
