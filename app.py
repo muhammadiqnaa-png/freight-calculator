@@ -1905,7 +1905,6 @@ if calculate:
         # ===== GENERATE PDF =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         pdf_bytes = pdf_buffer.getvalue()
-        
         pdf_base64 = base64.b64encode(pdf_bytes).decode()
 
         selected_barge = st.session_state.get("preset_selected", "Custom")
