@@ -26,9 +26,6 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
-if "saved_pdf" not in st.session_state:
-    st.session_state.saved_pdf = set()
-
 # =========================
 # 🔐 ADMIN CONTROL
 # =========================
@@ -80,30 +77,6 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
     }
 
     requests.post(url, json=data)
-
-def save_pdf_history(port_pol, port_pod, cargo_qty, barge, pdf_bytes, email):
-    
-    ref = db.child("pdf_history").push()
-
-    ref.set({
-        "port_pol": port_pol,
-        "port_pod": port_pod,
-        "cargo_qty": cargo_qty,
-        "barge": barge,
-        "email": email,
-        "pdf": pdf_bytes.decode("latin1"),  # penting biar tidak error binary
-        "timestamp": datetime.now().isoformat()
-    })
-
-    res = requests.post(
-        url,
-        data=json.dumps(data),
-        headers={"Content-Type": "application/json"}
-    )
-
-    # optional debug
-    if res.status_code != 200:
-        print("❌ FAILED:", res.text)
         
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
@@ -971,43 +944,6 @@ if is_admin():
         except Exception as e:
             st.error(f"Error load admin data: {e}")
 
-    with st.sidebar.expander("📄 History PDF", expanded=False):
-
-        url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
-        db.child("pdf_history").get()
-    
-        try:
-            res = requests.get(url)
-            data = res.json()
-    
-            if not data:
-                st.info("Belum ada PDF")
-            else:
-                import base64
-    
-                for item in data.values():
-    
-                    # skip data rusak
-                    if "pdf" not in item or not isinstance(item["pdf"], str):
-                        continue
-    
-                    try:
-                        pdf_bytes = base64.b64decode(item["pdf"])
-                    except:
-                        continue
-    
-                    label = f"{item.get('date')} | {item.get('pol')} - {item.get('pod')} | {item.get('qty')} ({item.get('barge')})"
-
-                    st.download_button(
-                        label=label,
-                        data=pdf_bytes,
-                        file_name=f"{item.get('pol')}-{item.get('pod')}.pdf",
-                        mime="application/pdf",
-                        key=f"pdf_{item.get('date')}_{item.get('pol')}_{item.get('pod')}_{item.get('qty')}_{uuid.uuid4().hex}"
-                    )
-    
-        except Exception as e:
-            st.error(f"Error load PDF history: {e}")
             
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
@@ -1973,26 +1909,12 @@ if calculate:
 
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
-        if st.download_button(
-            label="📥 Download PDF Report",
-            data=pdf_bytes,
-            file_name=file_name,
-            mime="application/pdf",
-            key=file_name
-        ):
-        
-            if f"saved_{file_name}" not in st.session_state:
-        
-                save_pdf_history(
-                    port_pol,
-                    port_pod,
-                    qyt_cargo,
-                    selected_barge,
-                    pdf_bytes,
-                    st.session_state.email
-                )
-        
-                st.session_state[f"saved_{file_name}"] = True
+    # ===== DOWNLOAD PDF ===== 
+    st.download_button(
+        label="📥 Download PDF Report",
+        data=pdf_buffer,
+        file_name=file_name,
+        mime="application/pdf" )
 
     except Exception as e:
         st.error(f"PDF Save Error: {e}")
