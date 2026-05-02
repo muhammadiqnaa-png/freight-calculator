@@ -31,7 +31,8 @@ if not cookies.ready():
 ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
 
 def is_admin():
-    return st.session_state.get("email") == ADMIN_EMAIL
+    email = st.session_state.get("email") or cookies.get("email")
+    return email == ADMIN_EMAIL
 
 
 # =========================
@@ -338,8 +339,12 @@ st.markdown("""
 
 
 # ✅ AUTO LOGIN DARI COOKIE (WAJIB DI ATAS)
-if cookies.get("logged_in") == "true":
+if cookies.get("logged_in") == "true" and cookies.get("email"):
     st.session_state.logged_in = True
+    st.session_state.email = cookies.get("email")
+
+# 🔥 FORCE SYNC EMAIL (ANTI BUG ADMIN HILANG)
+if st.session_state.get("email") is None:
     st.session_state.email = cookies.get("email")
 
 if "page" not in st.session_state:
@@ -974,13 +979,11 @@ if st.sidebar.button("**Log Out**"):
     st.session_state.logged_in = False
     st.session_state.page = "login"
 
-    # 🔥 RESET INTRO
     st.session_state.hide_intro = False
     cookies["hide_intro"] = "false"
 
-    # 🔥 CLEAR LOGIN COOKIE
     cookies["logged_in"] = "false"
-    cookies["email"] = ""
+    cookies.pop("email", None)
 
     cookies.save()
 
