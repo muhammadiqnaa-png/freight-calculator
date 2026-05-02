@@ -2,13 +2,15 @@ import streamlit as st
 import requests
 
 # =========================
-# 🔐 AMBIL API KEY (AMAN)
+# 🔐 GET API KEY (ANTI ERROR)
 # =========================
 def get_api_key():
     api_key = st.secrets.get("FIREBASE_API_KEY")
+
     if not api_key:
-        st.error("❌ FIREBASE_API_KEY belum diset di secrets")
+        st.error("❌ FIREBASE_API_KEY belum diset di Streamlit Secrets")
         st.stop()
+
     return api_key
 
 
