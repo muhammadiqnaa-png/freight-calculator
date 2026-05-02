@@ -1932,29 +1932,21 @@ if calculate:
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
-        # ===== SAVE PDF KE FIREBASE =====
-        if st.button("💾 Save PDF History"):
-        
-            if len(pdf_bytes) == 0:
-                st.error("PDF kosong bro ❌")
-            else:
-                save_pdf_history(
-                    port_pol,
-                    port_pod,
-                    qyt_cargo,
-                    selected_barge,
-                    pdf_bytes,
-                    st.session_state.email
-                )
-        
-                st.success("✅ PDF berhasil disimpan ke Firebase")
-        
-        # ===== DOWNLOAD PDF =====
-        st.download_button(
+        download_clicked = st.download_button(
             label="📥 Download PDF Report",
-            data=pdf_buffer,
+            data=pdf_bytes,
             file_name=file_name,
             mime="application/pdf"
         )
+        
+        if download_clicked:
+            save_pdf_history(
+                port_pol,
+                port_pod,
+                qyt_cargo,
+                st.session_state.preset_selected,
+                st.session_state.email,
+                pdf_bytes
+            )
     except Exception as e:
         st.error(f"Error: {e}")
