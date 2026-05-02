@@ -817,7 +817,7 @@ with st.sidebar.expander("➕ Additional Cost"):
     st.session_state.additional_costs = updated_costs
 
 # =========================
-# 👑 ADMIN PANEL (FIX)
+# 👑 ADMIN PANEL (TABLE)
 # =========================
 if is_admin():
 
@@ -834,25 +834,19 @@ if is_admin():
             if not data:
                 st.info("Belum ada data")
             else:
-                # ambil data jadi list
                 records = list(data.values())
 
-                # 🔥 TAMPIL SIMPLE LIST
-                for item in reversed(records[-20:]):  # last 20 data
+                df = pd.DataFrame(records)
 
-                    st.markdown(f"""
-                    <div style="
-                        background:#0f172a;
-                        padding:8px;
-                        border-radius:8px;
-                        margin-bottom:6px;
-                    ">
-                    • <b>{item.get("pol","-")} → {item.get("pod","-")}</b><br>
-                    • Freight: Rp {item.get("freight_input",0):,.0f}<br>
-                    • Date: {item.get("date","-")}<br>
-                    • User: {item.get("email","-")}
-                    </div>
-                    """, unsafe_allow_html=True)
+                # 🔥 rapihin urutan kolom (kalau ada)
+                cols_order = ["date", "pol", "pod", "freight_input", "email"]
+                df = df[[c for c in cols_order if c in df.columns]]
+
+                # 🔥 urut terbaru di atas
+                if "date" in df.columns:
+                    df = df.sort_values(by="date", ascending=False)
+
+                st.dataframe(df, use_container_width=True, height=300)
 
         except Exception as e:
             st.error(f"Error load admin data: {e}")
