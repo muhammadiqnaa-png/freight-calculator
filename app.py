@@ -77,34 +77,20 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
     requests.post(url, json=data)
 
-def save_pdf_history(pol, pod, qty, barge, email, pdf_bytes):
+def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/pdf_history.json"
 
-    today = datetime.now().strftime("%Y-%m-%d")
-
-    # ambil data lama
-    existing = requests.get(url).json()
-
-    # 🔥 CEK DUPLIKAT
-    if existing:
-        for item in existing.values():
-            if (
-                item.get("date") == today and
-                item.get("pol") == pol and
-                item.get("pod") == pod and
-                item.get("email") == email
-            ):
-                return  # ❌ skip kalau sama
+    pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
     data = {
-        "date": today,
         "pol": pol,
         "pod": pod,
         "qty": qty,
         "barge": barge,
-        "email": email,
-        "pdf": base64.b64encode(pdf_bytes).decode()
+        "pdf": pdf_base64,
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "email": email
     }
 
     requests.post(url, json=data)
