@@ -39,7 +39,7 @@ def is_admin():
 # =========================
 # 💾 SAVE FREIGHT INPUT HISTORY
 # =========================
-def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_price, email):
+def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_price, email, barge, pdf_base64):
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
 
@@ -1280,7 +1280,6 @@ calculate = st.button(
         
 # ===== PERHITUNGAN =====
 
-
 if calculate:
     try:
         distance_pol_pod = find_distance(port_pol, port_pod)
@@ -1465,7 +1464,9 @@ if calculate:
             freight_price_input, # freight_input
             freight_cost_mt,     # freight_cost
             price_fuel,
-            st.session_state.email
+            st.session_state.email,
+            st.session_state.preset_selected,  # 🔥 barge
+            base64.b64encode(pdf_bytes).decode()  # 🔥 pdf
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
@@ -1904,6 +1905,8 @@ if calculate:
         # ===== GENERATE PDF =====
         pdf_buffer = create_pdf(username=st.session_state.email)
         pdf_bytes = pdf_buffer.getvalue()
+        
+        pdf_base64 = base64.b64encode(pdf_bytes).decode()
 
         selected_barge = st.session_state.get("preset_selected", "Custom")
 
