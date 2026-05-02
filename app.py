@@ -1983,25 +1983,22 @@ if calculate:
 
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
-    download_clicked = st.download_button(
-        label="📥 Download PDF Report",
-        data=pdf_bytes,
-        file_name=file_name,
-        mime="application/pdf"
-    )
-
-    if download_clicked:
-        save_pdf_history(
-            port_pol,
-            port_pod,
-            qyt_cargo,
-            selected_barge,
-            pdf_bytes,
-            st.session_state.email
+        download_clicked = st.download_button(
+            label="📥 Download PDF Report",
+            data=pdf_bytes,
+            file_name=file_name,
+            mime="application/pdf"
         )
-
-except Exception as e:
-    st.error(f"PDF Save Error: {e}")
-                
+    
+        if download_clicked:
+            save_pdf_history(
+                port_pol,
+                port_pod,
+                qyt_cargo,
+                selected_barge,
+                pdf_bytes,
+                st.session_state.email
+            )
+    
     except Exception as e:
-        st.error(f"Error: {e}")
+        st.error(f"PDF Save Error: {e}")
