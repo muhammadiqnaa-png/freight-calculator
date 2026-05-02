@@ -26,6 +26,9 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
+if "saved_pdf" not in st.session_state:
+    st.session_state.saved_pdf = set()
+
 # =========================
 # 🔐 ADMIN CONTROL
 # =========================
@@ -66,14 +69,13 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
     # ✅ KALAU TIDAK ADA → SAVE
     data = {
+        "id": str(uuid.uuid4()),  # 🔥 penting biar tidak double
         "pol": pol,
         "pod": pod,
-        "type_cargo": cargo,
         "qty": qty,
-        "freight_input": freight_input,
-        "freight_cost": freight_cost,
-        "fuel_price": fuel_price,
-        "date": today,
+        "barge": barge,
+        "pdf": pdf_base64,
+        "date": datetime.now().strftime("%Y-%m-%d"),
         "email": email
     }
 
@@ -95,7 +97,11 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
         "email": email
     }
 
-    res = requests.post(url, json=data)
+    res = requests.post(
+        url,
+        data=json.dumps(data),
+        headers={"Content-Type": "application/json"}
+    )
 
     # optional debug
     if res.status_code != 200:
@@ -1968,17 +1974,16 @@ if calculate:
 
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
         
-        # ===== DOWNLOAD BUTTON =====
-        download_clicked = st.download_button(
+        if st.download_button(
             label="📥 Download PDF Report",
             data=pdf_bytes,
             file_name=file_name,
-            mime="application/pdf"
-        )
+            mime="application/pdf",
+            key=file_name
+        ):
         
-        # ===== SAVE KE FIREBASE (NO TRY BLOCK BOCOR) =====
-        if download_clicked:
-            try:
+            if f"saved_{file_name}" not in st.session_state:
+        
                 save_pdf_history(
                     port_pol,
                     port_pod,
@@ -1987,5 +1992,5 @@ if calculate:
                     pdf_bytes,
                     st.session_state.email
                 )
-            except Exception as e:
-                st.error(f"PDF Save Error: {e}")
+        
+                st.session_state[f"saved_{file_name}"] = True
