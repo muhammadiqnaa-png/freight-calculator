@@ -16,6 +16,14 @@ import os
 from auth import login_user, register_user
 from streamlit_cookies_manager import EncryptedCookieManager
 
+cookies = EncryptedCookieManager(
+    prefix="freight_app",
+    password="abc123"
+)
+
+if not cookies.ready():
+    st.stop()
+
 # =========================
 # 🔐 ADMIN CONTROL
 # =========================
@@ -32,6 +40,28 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
 
     url = "https://freight-calculator-2b823-default-rtdb.asia-southeast1.firebasedatabase.app/calculate_history.json"
 
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    # 🔥 AMBIL DATA LAMA
+    try:
+        res = requests.get(url)
+        existing_data = res.json()
+    except:
+        existing_data = None
+
+    # 🔥 CEK DUPLICATE
+    if existing_data:
+        for item in existing_data.values():
+            if (
+                item.get("date") == today and
+                item.get("pol") == pol and
+                item.get("pod") == pod and
+                item.get("email") == email
+            ):
+                # ❌ DUPLICATE → STOP SAVE
+                return
+
+    # ✅ KALAU TIDAK ADA → SAVE
     data = {
         "pol": pol,
         "pod": pod,
@@ -40,19 +70,11 @@ def save_input_history(pol, pod, cargo, qty, freight_input, freight_cost, fuel_p
         "freight_input": freight_input,
         "freight_cost": freight_cost,
         "fuel_price": fuel_price,
-        "date": datetime.now().strftime("%Y-%m-%d"),
+        "date": today,
         "email": email
     }
 
     requests.post(url, json=data)
-
-cookies = EncryptedCookieManager(
-    prefix="freight_app",
-    password="abc123"
-)
-
-if not cookies.ready():
-    st.stop()
 
 # ===== INTRO STATE =====
 if "hide_intro" not in st.session_state:
