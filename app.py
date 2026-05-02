@@ -85,19 +85,40 @@ def save_pdf_history(pol, pod, qty, barge, pdf_bytes, email):
 
     pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    # 🔥 AMBIL DATA EXISTING (ANTI DUPLIKAT)
+    try:
+        res = requests.get(url)
+        existing = res.json() or {}
+    except:
+        existing = {}
+
+    # 🔥 CEK DUPLIKAT
+    for item in existing.values():
+        if (
+            item.get("pol") == pol and
+            item.get("pod") == pod and
+            item.get("qty") == qty and
+            item.get("barge") == barge and
+            item.get("date") == today and
+            item.get("email") == email
+        ):
+            return  # ❌ STOP, SUDAH ADA
+
+    # ✅ SAVE DATA BARU
     data = {
         "pol": pol,
         "pod": pod,
         "qty": qty,
         "barge": barge,
         "pdf": pdf_base64,
-        "date": datetime.now().strftime("%Y-%m-%d"),
+        "date": today,
         "email": email
     }
 
     res = requests.post(url, json=data)
 
-    # 🔥 DEBUG WAJIB
     if res.status_code != 200:
         print("❌ PDF SAVE FAILED:", res.text)
     else:
