@@ -929,10 +929,16 @@ if is_admin():
                 
                         worksheet = writer.sheets["History Calculate"]
                 
-                        # auto resize column
+                        # 🔥 SAFE AUTO WIDTH (FIX ERROR FLOAT LEN)
                         for i, col in enumerate(df.columns):
-                            max_len = max(df[col].astype(str).map(len).max(), len(col))
-                            worksheet.column_dimensions[chr(65 + i)].width = max_len + 3
+                            try:
+                                max_len = max(
+                                    df[col].astype(str).fillna("").map(len).max(),
+                                    len(str(col))
+                                )
+                                worksheet.column_dimensions[chr(65 + i)].width = max_len + 3
+                            except:
+                                worksheet.column_dimensions[chr(65 + i)].width = 15
                 
                     return output.getvalue()
 
