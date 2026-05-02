@@ -838,56 +838,52 @@ if is_admin():
             if not data:
                 st.info("Belum ada data")
             else:
-                records = list(data.values())
+                records = []
+
+                for item in data.values():
+
+                    # 🔥 NORMALIZE FIELD
+                    cargo = item.get("cargo") or item.get("cargo_type") or item.get("type_cargo")
+                    qty = item.get("qty")
+                    email = item.get("email")
+
+                    # 🔥 FIX DATA ANEH (SWAP CASE)
+                    if isinstance(qty, str) and "MT" in qty:
+                        cargo = qty
+                        qty = None
+
+                    if isinstance(email, (int, float)):
+                        email = "-"
+
+                    records.append({
+                        "Date": item.get("date"),
+                        "POL": item.get("pol"),
+                        "POD": item.get("pod"),
+                        "Cargo": cargo,
+                        "Qty": qty,
+                        "Freight Input": item.get("freight_input"),
+                        "Freight Cost": item.get("freight_cost"),
+                        "Fuel Price": item.get("fuel_price"),
+                        "User": email
+                    })
+
                 df = pd.DataFrame(records)
 
-                # 🔥 urutan lengkap
-                cols_order = [
-                    "date",
-                    "pol",
-                    "pod",
-                    "cargo",
-                    "qty",
-                    "freight_input",
-                    "freight_cost",
-                    "fuel_price",
-                    "email"
-                ]
-
-                df = df[[c for c in cols_order if c in df.columns]]
-
-                # 🔥 rename biar clean
-                df = df.rename(columns={
-                    "date": "Date",
-                    "pol": "POL",
-                    "pod": "POD",
-                    "cargo": "Cargo",
-                    "qty": "Qty",
-                    "freight_input": "Freight Input",
-                    "freight_cost": "Freight Cost",
-                    "fuel_price": "Fuel Price",
-                    "email": "User"
-                })
-
-                # 🔥 sort terbaru
+                # sort terbaru
                 if "Date" in df.columns:
                     df = df.sort_values(by="Date", ascending=False)
 
-                # 🔥 format angka
-                if "Freight Input" in df.columns:
-                    df["Freight Input"] = df["Freight Input"].apply(lambda x: f"Rp {x:,.0f}")
-
-                if "Freight Cost" in df.columns:
-                    df["Freight Cost"] = df["Freight Cost"].apply(lambda x: f"Rp {x:,.0f}")
-
-                if "Fuel Price" in df.columns:
-                    df["Fuel Price"] = df["Fuel Price"].apply(lambda x: f"Rp {x:,.0f}")
+                # format angka
+                for col in ["Freight Input", "Freight Cost", "Fuel Price"]:
+                    if col in df.columns:
+                        df[col] = df[col].apply(
+                            lambda x: f"Rp {x:,.0f}" if pd.notnull(x) else "-"
+                        )
 
                 st.dataframe(df, use_container_width=True, height=300)
 
         except Exception as e:
             st.error(f"Error load admin data: {e}")
-
 # ===== LOGOUT =====
 st.sidebar.markdown("### Account")
 st.sidebar.write(f"**{st.session_state.email}**")
