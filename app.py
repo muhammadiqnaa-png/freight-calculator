@@ -1228,16 +1228,6 @@ calculate = st.button(
 
 if calculate:
     try:
-        save_input_history(
-            port_pol,
-            port_pod,
-            freight_price_input,
-            st.session_state.email,
-            type_cargo,
-            qyt_cargo,
-            freight_cost_mt,
-            price_fuel
-        )
         distance_pol_pod = find_distance(port_pol, port_pod)
 
         # 🔥 FIX: hanya hitung kalau NEXT PORT dipilih
@@ -1411,6 +1401,17 @@ if calculate:
         # ===== FINAL =====
         tce_per_day = tce_profit / total_voyage_days if total_voyage_days > 0 else 0
         tce_per_month = tce_per_day * 30
+
+        save_input_history(
+            port_pol,
+            port_pod,
+            freight_price_input,
+            st.session_state.email,
+            type_cargo,
+            qyt_cargo,
+            freight_cost_mt,
+            price_fuel
+        )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
