@@ -36,8 +36,11 @@ def save_input_history(pol, pod, freight_input, email):
         "pol": pol,
         "pod": pod,
         "freight_input": freight_input,
-        "email": email,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "cargo_type": type_cargo,
+        "qty": qyt_cargo,
+        "fuel_price": price_fuel,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "email": email
     }
 
     try:
