@@ -1157,19 +1157,19 @@ st.markdown("### 🚢 Voyage Input")
 # ===== POL =====
 all_ports = get_all_ports()
 
-port_pol = st.selectbox("Loading Port (POL)", [""] + all_ports)
+port_pol = st.selectbox("Loading Port (POL)", [""] + all_ports, key="pol")
 
 # ===== POD (muncul setelah POL dipilih) =====
 if port_pol:
     pods = get_pods_by_pol(port_pol)
-    port_pod = st.selectbox("Discharge Port (POD)", [""] + pods)
+    port_pod = st.selectbox("Discharge Port (POD)", [""] + pods, key="pod")
 else:
     port_pod = ""
 
 # ===== NEXT PORT (muncul setelah POD dipilih) =====
 if port_pod:
     next_ports = get_next_by_pod(port_pod)
-    next_port = st.selectbox("Next Port (Optional)", [""] + next_ports)
+    next_port = st.selectbox("Next Port (Optional)", [""] + next_ports, key="next_port")
 else:
     next_port = ""
 
