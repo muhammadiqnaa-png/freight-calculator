@@ -1569,42 +1569,14 @@ if calculate:
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #f8fafc, #eef5ff);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            color:#0f172a;
-            border-left:5px solid #93c5fd;
-            box-shadow:0 4px 12px rgba(0,0,0,0.4);
-        ">
-            <h4 style="color:#93c5fd;">🚢 Voyage Summary</h4>
-
-        • Cargo Type : <b>{type_cargo}</b><br>
-        • Route : <b>{port_pol} → {port_pod}</b><br>
-        • Distance POL → POD : <b>{distance_pol_pod:,.0f} NM</b><br>
-        • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
-        • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
-        <span style="font-size:11px; color:#bbb;">
-        (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
-        </span><br>
-        • Freight Cost : <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
-        
-        {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
-         if float(target_margin or 0) > 0 else ""}
-        
-        </div>
-        """, unsafe_allow_html=True)
-
-        # ===== COMPARE BARGE (CONDITIONAL) =====
+        # ===== VOYAGE SUMMARY =====
         if compare_mode:
         
-            res_270 = calculate_for_barge("270 ft")
-            res_300 = calculate_for_barge("300 ft")
-            res_330 = calculate_for_barge("330 ft")
-
-            st.subheader("🚢 Voyage Summary (Compare)")
+            res270 = calculate_for_barge("270 ft")
+            res300 = calculate_for_barge("300 ft")
+            res330 = calculate_for_barge("330 ft")
+        
+            st.markdown("### 🚢 Voyage Summary (Compare)")
         
             c1, c2, c3 = st.columns(3)
         
@@ -1612,30 +1584,58 @@ if calculate:
                 with col:
                     st.markdown(f"""
                     <div style="
-                        background:#f8fafc;
+                        background:linear-gradient(135deg, #f8fafc, #eef5ff);
                         padding:12px;
                         border-radius:12px;
-                        border-left:5px solid #2563eb;
-                        color:black;
+                        color:#0f172a;
+                        border-left:5px solid #93c5fd;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.3);
                     ">
-                    <b>{title}</b><br><br>
         
-                    • Cargo : <b>{type_cargo}</b><br>
+                    <h4 style="color:#93c5fd;">🚢 {title}</h4>
+        
                     • Route : <b>{port_pol} → {port_pod}</b><br>
                     • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
-                    • Total Cargo : <b>{res['qty']:,.0f}</b><br>
-                    • Total Voyage : <b>{res['hari']:.1f} Days</b><br>
-                    • Freight Cost : <b>Rp {res['freight']:,.0f}</b><br>
+                    • Total Cargo : <b>{res["qty"]:,.0f}</b><br>
+                    • Total Voyage : <b>{res["hari"]:.1f} Days</b><br>
+                    • Freight Cost : <b>Rp {res["freight"]:,.0f}</b>
         
                     </div>
                     """, unsafe_allow_html=True)
         
-            render(c1, "🚢 270 ft", res_270)
-            render(c2, "🚢 300 ft", res_300)
-            render(c3, "🚢 330 ft", res_330)
+            render(c1, "270 ft", res270)
+            render(c2, "300 ft", res300)
+            render(c3, "330 ft", res330)
         
-            # ===== SPACING BIAR GA NEMPEL =====
-            st.divider()
+        else:
+        
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #f8fafc, #eef5ff);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                color:#0f172a;
+                border-left:5px solid #93c5fd;
+                box-shadow:0 4px 12px rgba(0,0,0,0.4);
+            ">
+                <h4 style="color:#93c5fd;">🚢 Voyage Summary</h4>
+        
+            • Cargo Type : <b>{type_cargo}</b><br>
+            • Route : <b>{port_pol} → {port_pod}</b><br>
+            • Distance POL → POD : <b>{distance_pol_pod:,.0f} NM</b><br>
+            • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
+            • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
+            <span style="font-size:11px; color:#bbb;">
+            (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
+            </span><br>
+            • Freight Cost : <b>Rp {freight_cost_mt:,.0f}</b>
+        
+            {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
+             if float(target_margin or 0) > 0 else ""}
+        
+            </div>
+            """, unsafe_allow_html=True)
             
         if freight_price_input > 0:
 
