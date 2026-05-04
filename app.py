@@ -1596,9 +1596,9 @@ if calculate:
                 • Cargo : <b>{type_cargo}</b><br>
                 • Route : <b>{port_pol} → {port_pod}</b><br>
                 • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
-                • Qty : <b>{res['qty']:,.0f}</b><br>
-                • Hari : <b>{res['hari']:.1f} Days</b><br>
-                • Freight : <b>Rp {res['freight']:,.0f}</b><br>
+                • Total Cargo : <b>{res['qty']:,.0f}</b><br>
+                • Total Voyage : <b>{res['hari']:.1f} Days</b><br>
+                • Freight Cost : <b>Rp {res['freight']:,.0f}</b><br>
         
                  </div>
                 """, unsafe_allow_html=True)
