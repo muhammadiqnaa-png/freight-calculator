@@ -1269,6 +1269,9 @@ if not port_pol or not port_pod:
     st.error("⚠️ Pilih POL & POD")
     st.stop()
 
+# ===== MODE COMPARE =====
+compare_mode = st.toggle("⚖️ Compare Barge Size", value=False)
+
 # ===== BUTTON =====
 st.markdown("<br>", unsafe_allow_html=True)
 
