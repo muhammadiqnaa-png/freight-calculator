@@ -1357,6 +1357,26 @@ def calculate_for_barge(size):
         "total_cost": total_cost,
         "qty": qty_local
     }
+
+def calculate_budget_for_barge(size):
+
+    res = calculate_for_barge(size)
+
+    qty = res["qty"]
+    total_cost_local = res["total_cost"]
+
+    revenue = freight_price_input * qty
+    pph = revenue * 0.012
+    profit = revenue - total_cost_local - pph
+
+    return {
+        "size": size,
+        "qty": qty,
+        "revenue": revenue,
+        "pph": pph,
+        "total_cost": total_cost_local,
+        "profit": profit
+    }
         
 # ===== PERHITUNGAN =====
 
@@ -1617,30 +1637,72 @@ if calculate:
             
         if freight_price_input > 0:
 
-            profit_color = "#16a34a" if profit_user >= 0 else "#dc2626"
-            status = "PROFIT ✅" if profit_user >= 0 else "LOSS ❌"
-
-            st.markdown(f"""
-            <div style="
-                background:linear-gradient(135deg, #f0fdf4, #ecfdf5);
-                padding:12px;
-                border-radius:12px;
-                margin-bottom:10px;
-                color:#052e16;
-                border-left:5px solid {profit_color};
-                box-shadow:0 4px 12px rgba(0,0,0,0.35);
-            ">
-            <h4 style="color:{profit_color};">💼 Budget Customer</h4>
-
-            • Freight Input User: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
-            • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
-            • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
-            • Total Cost : <b>Rp {total_cost:,.0f}</b><br>
-            • Profit: <b style="color:{profit_color};">Rp {profit_user:,.0f} ({profit_percent_user:.2f}%)</b><br>
-            • Status: <b style="color:{profit_color};">{status}</b>
-
-            </div>
-            """, unsafe_allow_html=True)
+            if compare_mode:
+        
+                res270 = calculate_budget_for_barge("270 ft")
+                res300 = calculate_budget_for_barge("300 ft")
+                res330 = calculate_budget_for_barge("330 ft")
+        
+                st.subheader("💼 Budget Customer (Compare)")
+        
+                c1, c2, c3 = st.columns(3)
+        
+                def render(col, res):
+                    profit_color = "#16a34a" if res["profit"] >= 0 else "#dc2626"
+                    status = "PROFIT ✅" if res["profit"] >= 0 else "LOSS ❌"
+        
+                    with col:
+                        st.markdown(f"""
+                        <div style="
+                            background:#f0fdf4;
+                            padding:12px;
+                            border-radius:12px;
+                            border-left:5px solid {profit_color};
+                            color:black;
+                        ">
+        
+                        <b>{res["size"]}</b><br><br>
+        
+                        • Freight Input: <b>Rp {freight_price_input:,.0f}</b><br>
+                        • Revenue: <b>Rp {res["revenue"]:,.0f}</b><br>
+                        • PPH: <b>Rp {res["pph"]:,.0f}</b><br>
+                        • Total Cost: <b>Rp {res["total_cost"]:,.0f}</b><br>
+                        • Profit: <b style="color:{profit_color};">Rp {res["profit"]:,.0f}</b><br>
+                        • Status: <b style="color:{profit_color};">{status}</b>
+        
+                        </div>
+                        """, unsafe_allow_html=True)
+        
+                render(c1, res270)
+                render(c2, res300)
+                render(c3, res330)
+        
+            else:
+        
+                profit_color = "#16a34a" if profit_user >= 0 else "#dc2626"
+                status = "PROFIT ✅" if profit_user >= 0 else "LOSS ❌"
+        
+                st.markdown(f"""
+                <div style="
+                    background:linear-gradient(135deg, #f0fdf4, #ecfdf5);
+                    padding:12px;
+                    border-radius:12px;
+                    margin-bottom:10px;
+                    color:#052e16;
+                    border-left:5px solid {profit_color};
+                    box-shadow:0 4px 12px rgba(0,0,0,0.35);
+                ">
+                <h4 style="color:{profit_color};">💼 Budget Customer</h4>
+        
+                • Freight Input User: <b>Rp {freight_price_input:,.0f}</b><br>
+                • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
+                • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
+                • Total Cost : <b>Rp {total_cost:,.0f}</b><br>
+                • Profit: <b style="color:{profit_color};">Rp {profit_user:,.0f}</b><br>
+                • Status: <b style="color:{profit_color};">{status}</b>
+        
+                </div>
+                """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div style="
