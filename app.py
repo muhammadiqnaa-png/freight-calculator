@@ -1577,42 +1577,45 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
 
-        # ===== COMPARE BARGE =====
-        res_270 = calculate_for_barge("270 ft")
-        res_300 = calculate_for_barge("300 ft")
-        res_330 = calculate_for_barge("330 ft")
-
-        c1, c2, c3 = st.columns(3)
+        # ===== COMPARE BARGE (CONDITIONAL) =====
+        if compare_mode:
         
-        def render(col, title, res):
-            with col:
-                st.markdown(f"""
-                <div style="
-                    background:#f8fafc;
-                    padding:12px;
-                    border-radius:12px;
-                    border-left:5px solid #2563eb;
-                    color:black;
-                ">
-                <b>{title}</b><br><br>
+            res_270 = calculate_for_barge("270 ft")
+            res_300 = calculate_for_barge("300 ft")
+            res_330 = calculate_for_barge("330 ft")
         
-                • Cargo : <b>{type_cargo}</b><br>
-                • Route : <b>{port_pol} → {port_pod}</b><br>
-                • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
-                • Total Cargo : <b>{res['qty']:,.0f}</b><br>
-                • Total Voyage : <b>{res['hari']:.1f} Days</b><br>
-                • Freight Cost : <b>Rp {res['freight']:,.0f}</b><br>
+            st.markdown("### ⚖️ Compare Barge Size")
         
-                 </div>
-                """, unsafe_allow_html=True)
+            c1, c2, c3 = st.columns(3)
         
-        render(c1, "🚢 270 ft", res_270)
-        render(c2, "🚢 300 ft", res_300)
-        render(c3, "🚢 330 ft", res_330)
-
-        # ===== SPACING (WAJIB) =====
-        st.markdown("<br>", unsafe_allow_html=True)
-
+            def render(col, title, res):
+                with col:
+                    st.markdown(f"""
+                    <div style="
+                        background:#f8fafc;
+                        padding:12px;
+                        border-radius:12px;
+                        border-left:5px solid #2563eb;
+                        color:black;
+                    ">
+                    <b>{title}</b><br><br>
+        
+                    • Cargo : <b>{type_cargo}</b><br>
+                    • Route : <b>{port_pol} → {port_pod}</b><br>
+                    • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
+                    • Total Cargo : <b>{res['qty']:,.0f}</b><br>
+                    • Total Voyage : <b>{res['hari']:.1f} Days</b><br>
+                    • Freight Cost : <b>Rp {res['freight']:,.0f}</b><br>
+        
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+            render(c1, "🚢 270 ft", res_270)
+            render(c2, "🚢 300 ft", res_300)
+            render(c3, "🚢 330 ft", res_330)
+        
+            # ===== SPACING BIAR GA NEMPEL =====
+            st.divider()
             
         if freight_price_input > 0:
 
