@@ -1292,6 +1292,7 @@ def calculate_for_barge(size):
     port_stay_pod_local = port_stay_pod
 
     # ===== DARI PRESET =====
+    qty_local = cargo_qty_default.get(size, {}).get(type_cargo, 0)
     consumption_local = preset.get("consumption", 0)
     consumption_fw_local = preset.get("consumption_fw", 0)
     price_fw_local = preset.get("price_fw", 0)
@@ -1345,14 +1346,14 @@ def calculate_for_barge(size):
         other_cost
     ])
 
-    freight = total_cost / qyt_cargo if qyt_cargo > 0 else 0
+    freight = total_cost / qty_local if qty_local > 0 else 0
 
     return {
         "hari": total_days,
         "freight": freight,
-        "total_cost": total_cost
+        "total_cost": total_cost,
+        "qty": qty_local
     }
-
         
 # ===== PERHITUNGAN =====
 
@@ -1597,7 +1598,7 @@ if calculate:
                 • Cargo : <b>{type_cargo}</b><br>
                 • Route : <b>{port_pol} → {port_pod}</b><br>
                 • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
-                • Qty : <b>{qyt_cargo:,.0f}</b><br>
+                • Qty : <b>{res['qty']:,.0f}</b><br>
                 • Hari : <b>{res['hari']:.1f} Days</b><br>
                 • Freight : <b>Rp {res['freight']:,.0f}</b><br>
         
