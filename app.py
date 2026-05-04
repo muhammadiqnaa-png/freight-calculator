@@ -1276,7 +1276,49 @@ calculate = st.button(
     "**🚀 CALCULATE NOW**",
     use_container_width=True,
     type="primary"
-)     
+)
+
+# =========================
+# 📊 FUNCTION BARGE SUMMARY
+# =========================
+def calculate_barge_summary(preset_name):
+
+    params = preset_params[preset_name]
+
+    speed_laden = params["speed_laden"]
+    speed_ballast = params["speed_ballast"]
+    consumption = params["consumption"]
+
+    qty = cargo_qty_default[preset_name].get(type_cargo, 0)
+
+    distance = find_distance(port_pol, port_pod)
+
+    # waktu
+    pol_pod_hour = distance / speed_laden if speed_laden else 0
+    pod_pol_hour = distance / speed_ballast if speed_ballast else 0
+
+    pol_pod_day = pol_pod_hour / 24
+    pod_pol_day = pod_pol_hour / 24
+
+    total_voyage_days = (pol_pod_hour + pod_pol_hour) / 24 + (port_stay_pol + port_stay_pod)
+
+    # fuel
+    total_fuel = (pol_pod_hour + pod_pol_hour) * consumption
+    cost_fuel = total_fuel * price_fuel
+
+    # cost sederhana (biar stabil dulu)
+    total_cost = cost_fuel + port_cost_pol + port_cost_pod + asist_tug
+
+    freight = total_cost / qty if qty else 0
+
+    return {
+        "qty": qty,
+        "distance": distance,
+        "voyage_days": total_voyage_days,
+        "pol_pod_day": pol_pod_day,
+        "pod_pol_day": pod_pol_day,
+        "freight": freight
+    }
         
 # ===== PERHITUNGAN =====
 
@@ -1496,6 +1538,48 @@ if calculate:
         
         </div>
         """, unsafe_allow_html=True)
+
+        # =========================
+        # 📊 3 COLUMN BARGE COMPARE
+        # =========================
+        
+        col1, col2, col3 = st.columns(3)
+        
+        barge_list = ["270 ft", "300 ft", "330 ft"]
+        cols = [col1, col2, col3]
+        
+        for i, barge in enumerate(barge_list):
+        
+            data = calculate_barge_summary(barge)
+        
+            with cols[i]:
+                st.markdown(f"""
+                <div style="
+                    background:linear-gradient(135deg,#ffffff,#f1f5f9);
+                    padding:10px;
+                    border-radius:10px;
+                    border-left:5px solid #2563eb;
+                    box-shadow:0 4px 10px rgba(0,0,0,0.25);
+                    font-size:12px;
+                    color:#0f172a;
+                ">
+        
+                <h4 style="text-align:center; color:#2563eb;">{barge}</h4>
+        
+                • Cargo Type : <b>{type_cargo}</b><br>
+                • Route : <b>{port_pol} → {port_pod}</b><br>
+                • Distance : <b>{data["distance"]:,.0f} NM</b><br>
+                • Total Cargo : <b>{data["qty"]:,.0f} {type_cargo.split()[1]}</b><br>
+        
+                • Voyage : <b>{data["voyage_days"]:.1f} Days</b><br>
+                <span style="font-size:10px; color:#666;">
+                (Laden {data["pol_pod_day"]:.1f} D - Ballast {data["pod_pol_day"]:.1f} D)
+                </span><br>
+        
+                • Freight : <b>Rp {data["freight"]:,.0f}</b>
+        
+                </div>
+                """, unsafe_allow_html=True)
 
             
         if freight_price_input > 0:
