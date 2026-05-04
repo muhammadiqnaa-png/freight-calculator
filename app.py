@@ -1609,8 +1609,8 @@ if calculate:
         render(c2, "🚢 300 ft", res_300)
         render(c3, "🚢 330 ft", res_330)
 
-               </div>
-                """, unsafe_allow_html=True)
+        # ===== SPACING (WAJIB) =====
+        st.markdown("<br><br>", unsafe_allow_html=True)
 
             
         if freight_price_input > 0:
