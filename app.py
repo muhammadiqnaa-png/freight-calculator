@@ -1706,6 +1706,9 @@ if calculate:
                 </div>
                 """, unsafe_allow_html=True)
 
+            # ===== SPACING BIAR GA NEMPEL =====
+            st.divider()
+
         st.markdown(f"""
         <div style="
             background:linear-gradient(135deg, #fff7ed, #fffbeb);
