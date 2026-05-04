@@ -1602,14 +1602,14 @@ if calculate:
                 • Hari : <b>{res['hari']:.1f} Days</b><br>
                 • Freight : <b>Rp {res['freight']:,.0f}</b><br>
         
-                
+                 </div>
+                """, unsafe_allow_html=True)
         
         render(c1, "🚢 270 ft", res_270)
         render(c2, "🚢 300 ft", res_300)
         render(c3, "🚢 330 ft", res_330)
 
-                </div>
-                """, unsafe_allow_html=True)
+               
 
             
         if freight_price_input > 0:
