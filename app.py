@@ -1281,43 +1281,114 @@ calculate = st.button(
 # =========================
 # 📊 FUNCTION BARGE SUMMARY
 # =========================
-def calculate_barge_summary(preset_name):
+def calculate_for_barge(size):
 
-    params = preset_params[preset_name]
+    # ===== USER INPUT (SIDEBAR) =====
+    speed_laden_val = speed_laden
+    speed_ballast_val = speed_ballast
+    consumption_val = consumption
+    port_pol_val = port_stay_pol
+    port_pod_val = port_stay_pod
+    fuel_price_val = price_fuel
 
-    speed_laden = params["speed_laden"]
-    speed_ballast = params["speed_ballast"]
-    consumption = params["consumption"]
+    # ===== QTY PER SIZE =====
+    qty = cargo_qty_default[size].get(type_cargo, 0)
 
-    qty = cargo_qty_default[preset_name].get(type_cargo, 0)
+    distance_pol_pod = find_distance(port_pol, port_pod)
 
-    distance = find_distance(port_pol, port_pod)
+    # ===== TIME =====
+    pol_pod_hour = distance_pol_pod / speed_laden_val if speed_laden_val else 0
+    pod_pol_hour = distance_pol_pod / speed_ballast_val if speed_ballast_val else 0
 
-    # waktu
-    pol_pod_hour = distance / speed_laden if speed_laden else 0
-    pod_pol_hour = distance / speed_ballast if speed_ballast else 0
+    sailing_time = pol_pod_hour + pod_pol_hour
+
+    total_days = (sailing_time / 24) + (port_pol_val + port_pod_val)
 
     pol_pod_day = pol_pod_hour / 24
     pod_pol_day = pod_pol_hour / 24
 
-    total_voyage_days = (pol_pod_hour + pod_pol_hour) / 24 + (port_stay_pol + port_stay_pod)
+    total_days_round = int(total_days) if total_days % 1 < 0.5 else int(total_days) + 1
 
-    # fuel
-    total_fuel = (pol_pod_hour + pod_pol_hour) * consumption
-    cost_fuel = total_fuel * price_fuel
+    # ===== VARIABLE COST =====
+    total_fuel = (sailing_time * consumption_val) + ((port_pol_val + port_pod_val) * 120)
+    cost_fuel = total_fuel * fuel_price_val
 
-    # cost sederhana (biar stabil dulu)
-    total_cost = cost_fuel + port_cost_pol + port_cost_pod + asist_tug
+    total_fw = consumption_fw * total_days_round
+    cost_fw = total_fw * price_fw
+
+    premi_cost = distance_pol_pod * premi_nm
+    port_cost = port_cost_pol + port_cost_pod + asist_tug
+
+    # ===== OWNER / CHARTER =====
+    charter_cost = (charter / 30) * total_days
+
+    if mode == "Owner":
+        crew_cost = (crew / 30) * total_days
+        insurance_cost = (insurance / 30) * total_days
+        docking_cost = (docking / 30) * total_days
+        maintenance_cost = (maintenance / 30) * total_days
+        certificate_cost = (certificate / 30) * total_days
+    else:
+        crew_cost = insurance_cost = docking_cost = maintenance_cost = certificate_cost = 0
+
+    # ===== OPEX =====
+    overhead_cost = (opex_office / 30) * total_days
+    depreciation_cost = (depreciation_kapal / 30) * total_days
+
+    # ===== ADDITIONAL COST =====
+    additional_total = 0
+
+    for cost in st.session_state.get("additional_costs", []):
+        unit = cost.get("unit")
+        price = cost.get("price", 0)
+        cons = cost.get("consumption", 0)
+        subtype = cost.get("subtype", "Day")
+
+        val = 0
+
+        if unit == "Ltr":
+            val = cons * total_days * price if subtype == "Day" else cons * (total_days * 24) * price
+        elif unit == "Ton":
+            val = cons * total_days * price if subtype == "Day" else cons * (total_days * 24) * price
+        elif unit == "Month":
+            val = (price / 30) * total_days
+        elif unit == "Voyage":
+            val = price
+        elif unit in ["MT", "M3"]:
+            val = price * qty
+        elif unit == "Day":
+            val = price * total_days
+
+        additional_total += val
+
+    # ===== TOTAL COST FULL =====
+    total_cost = sum([
+        charter_cost,
+        crew_cost,
+        insurance_cost,
+        docking_cost,
+        maintenance_cost,
+        certificate_cost,
+        overhead_cost,
+        depreciation_cost,
+        premi_cost,
+        port_cost,
+        cost_fuel,
+        cost_fw,
+        other_cost,
+        additional_total
+    ])
 
     freight = total_cost / qty if qty else 0
 
     return {
         "qty": qty,
-        "distance": distance,
-        "voyage_days": total_voyage_days,
+        "days": total_days,
+        "freight": freight,
         "pol_pod_day": pol_pod_day,
         "pod_pol_day": pod_pol_day,
-        "freight": freight
+        "distance": distance_pol_pod,
+        "total_cost": total_cost
     }
         
 # ===== PERHITUNGAN =====
