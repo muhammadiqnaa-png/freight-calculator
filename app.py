@@ -1278,88 +1278,57 @@ calculate = st.button(
     type="primary"
 )
 
-# =========================
-# 📊 FUNCTION BARGE SUMMARY
-# =========================
+
 def calculate_for_barge(size):
 
-    # ===== USER INPUT (SIDEBAR) =====
-    speed_laden_val = speed_laden
-    speed_ballast_val = speed_ballast
-    consumption_val = consumption
-    port_pol_val = port_stay_pol
-    port_pod_val = port_stay_pod
-    fuel_price_val = price_fuel
+    # ===== AMBIL PRESET =====
+    preset = preset_params.get(size, {})
 
-    # ===== QTY PER SIZE =====
-    qty = cargo_qty_default[size].get(type_cargo, 0)
+    # ===== OVERRIDE (DARI SIDEBAR) =====
+    speed_laden_local = speed_laden
+    speed_ballast_local = speed_ballast
+    price_fuel_local = price_fuel
+    port_stay_pol_local = port_stay_pol
+    port_stay_pod_local = port_stay_pod
 
+    # ===== DARI PRESET =====
+    consumption_local = preset.get("consumption", 0)
+    consumption_fw_local = preset.get("consumption_fw", 0)
+    price_fw_local = preset.get("price_fw", 0)
+    charter_local = preset.get("charter", 0)
+    crew_local = preset.get("crew", 0)
+    insurance_local = preset.get("insurance", 0)
+    docking_local = preset.get("docking", 0)
+    maintenance_local = preset.get("maintenance", 0)
+    certificate_local = preset.get("certificate", 0)
+    premi_nm_local = preset.get("premi_nm", 0)
+
+    # ===== DISTANCE =====
     distance_pol_pod = find_distance(port_pol, port_pod)
+    distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
 
     # ===== TIME =====
-    pol_pod_hour = distance_pol_pod / speed_laden_val if speed_laden_val else 0
-    pod_pol_hour = distance_pol_pod / speed_ballast_val if speed_ballast_val else 0
+    sailing_time = (distance_pol_pod / speed_laden_local) + (distance_pod_pol / speed_ballast_local)
+    total_days = (sailing_time / 24) + (port_stay_pol_local + port_stay_pod_local)
 
-    sailing_time = pol_pod_hour + pod_pol_hour
+    # ===== FUEL =====
+    total_fuel = (sailing_time * consumption_local) + ((port_stay_pol_local + port_stay_pod_local) * 120)
+    cost_fuel = total_fuel * price_fuel_local
 
-    total_days = (sailing_time / 24) + (port_pol_val + port_pod_val)
+    # ===== FW =====
+    total_fw = consumption_fw_local * total_days
+    cost_fw = total_fw * price_fw_local
 
-    pol_pod_day = pol_pod_hour / 24
-    pod_pol_day = pod_pol_hour / 24
+    # ===== COST =====
+    charter_cost = (charter_local / 30) * total_days
+    crew_cost = (crew_local / 30) * total_days
+    insurance_cost = (insurance_local / 30) * total_days
+    docking_cost = (docking_local / 30) * total_days
+    maintenance_cost = (maintenance_local / 30) * total_days
+    certificate_cost = (certificate_local / 30) * total_days
 
-    total_days_round = int(total_days) if total_days % 1 < 0.5 else int(total_days) + 1
-
-    # ===== VARIABLE COST =====
-    total_fuel = (sailing_time * consumption_val) + ((port_pol_val + port_pod_val) * 120)
-    cost_fuel = total_fuel * fuel_price_val
-
-    total_fw = consumption_fw * total_days_round
-    cost_fw = total_fw * price_fw
-
-    premi_cost = distance_pol_pod * premi_nm
+    premi_cost = distance_pol_pod * premi_nm_local
     port_cost = port_cost_pol + port_cost_pod + asist_tug
-
-    # ===== OWNER / CHARTER =====
-    charter_cost = (charter / 30) * total_days
-
-    if mode == "Owner":
-        crew_cost = (crew / 30) * total_days
-        insurance_cost = (insurance / 30) * total_days
-        docking_cost = (docking / 30) * total_days
-        maintenance_cost = (maintenance / 30) * total_days
-        certificate_cost = (certificate / 30) * total_days
-    else:
-        crew_cost = insurance_cost = docking_cost = maintenance_cost = certificate_cost = 0
-
-    # ===== OPEX =====
-    overhead_cost = (opex_office / 30) * total_days
-    depreciation_cost = (depreciation_kapal / 30) * total_days
-
-    # ===== ADDITIONAL COST =====
-    additional_total = 0
-
-    for cost in st.session_state.get("additional_costs", []):
-        unit = cost.get("unit")
-        price = cost.get("price", 0)
-        cons = cost.get("consumption", 0)
-        subtype = cost.get("subtype", "Day")
-
-        val = 0
-
-        if unit == "Ltr":
-            val = cons * total_days * price if subtype == "Day" else cons * (total_days * 24) * price
-        elif unit == "Ton":
-            val = cons * total_days * price if subtype == "Day" else cons * (total_days * 24) * price
-        elif unit == "Month":
-            val = (price / 30) * total_days
-        elif unit == "Voyage":
-            val = price
-        elif unit in ["MT", "M3"]:
-            val = price * qty
-        elif unit == "Day":
-            val = price * total_days
-
-        additional_total += val
 
     # ===== TOTAL COST FULL =====
     total_cost = sum([
@@ -1369,27 +1338,21 @@ def calculate_for_barge(size):
         docking_cost,
         maintenance_cost,
         certificate_cost,
-        overhead_cost,
-        depreciation_cost,
-        premi_cost,
-        port_cost,
         cost_fuel,
         cost_fw,
-        other_cost,
-        additional_total
+        premi_cost,
+        port_cost,
+        other_cost
     ])
 
-    freight = total_cost / qty if qty else 0
+    freight = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
     return {
-        "qty": qty,
-        "days": total_days,
+        "hari": total_days,
         "freight": freight,
-        "pol_pod_day": pol_pod_day,
-        "pod_pol_day": pod_pol_day,
-        "distance": distance_pol_pod,
         "total_cost": total_cost
     }
+
         
 # ===== PERHITUNGAN =====
 
@@ -1610,47 +1573,40 @@ if calculate:
         </div>
         """, unsafe_allow_html=True)
 
-        # =========================
-        # 📊 3 COLUMN BARGE COMPARE
-        # =========================
+        # ===== COMPARE BARGE =====
+        res_270 = calculate_for_barge("270 ft")
+        res_300 = calculate_for_barge("300 ft")
+        res_330 = calculate_for_barge("330 ft")
+
+        st.markdown("### ⚖️ Compare Barge Size")
+
+        c1, c2, c3 = st.columns(3)
         
-        col1, col2, col3 = st.columns(3)
-        
-        barge_list = ["270 ft", "300 ft", "330 ft"]
-        cols = [col1, col2, col3]
-        
-        for i, barge in enumerate(barge_list):
-        
-            data = calculate_barge_summary(barge)
-        
-            with cols[i]:
+        def render(col, title, res):
+            with col:
                 st.markdown(f"""
                 <div style="
-                    background:linear-gradient(135deg,#ffffff,#f1f5f9);
-                    padding:10px;
-                    border-radius:10px;
+                    background:#f8fafc;
+                    padding:12px;
+                    border-radius:12px;
                     border-left:5px solid #2563eb;
-                    box-shadow:0 4px 10px rgba(0,0,0,0.25);
-                    font-size:12px;
-                    color:#0f172a;
+                    color:black;
                 ">
+                <b>{title}</b><br><br>
         
-                <h4 style="text-align:center; color:#2563eb;">{barge}</h4>
-        
-                • Cargo Type : <b>{type_cargo}</b><br>
+                • Cargo : <b>{type_cargo}</b><br>
                 • Route : <b>{port_pol} → {port_pod}</b><br>
-                • Distance : <b>{data["distance"]:,.0f} NM</b><br>
-                • Total Cargo : <b>{data["qty"]:,.0f} {type_cargo.split()[1]}</b><br>
-        
-                • Voyage : <b>{data["voyage_days"]:.1f} Days</b><br>
-                <span style="font-size:10px; color:#666;">
-                (Laden {data["pol_pod_day"]:.1f} D - Ballast {data["pod_pol_day"]:.1f} D)
-                </span><br>
-        
-                • Freight : <b>Rp {data["freight"]:,.0f}</b>
+                • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
+                • Qty : <b>{qyt_cargo:,.0f}</b><br>
+                • Hari : <b>{res['hari']:.1f} Days</b><br>
+                • Freight : <b>Rp {res['freight']:,.0f}</b><br>
         
                 </div>
                 """, unsafe_allow_html=True)
+        
+        render(c1, "🚢 270 ft", res_270)
+        render(c2, "🚢 300 ft", res_300)
+        render(c3, "🚢 330 ft", res_330)
 
             
         if freight_price_input > 0:
