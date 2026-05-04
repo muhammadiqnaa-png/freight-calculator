@@ -1579,8 +1579,6 @@ if calculate:
         res_300 = calculate_for_barge("300 ft")
         res_330 = calculate_for_barge("330 ft")
 
-        st.markdown("### ⚖️ Compare Barge Size")
-
         c1, c2, c3 = st.columns(3)
         
         def render(col, title, res):
@@ -1610,7 +1608,7 @@ if calculate:
         render(c3, "🚢 330 ft", res_330)
 
         # ===== SPACING (WAJIB) =====
-        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
             
         if freight_price_input > 0:
