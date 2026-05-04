@@ -1604,7 +1604,7 @@ if calculate:
             res_300 = calculate_for_barge("300 ft")
             res_330 = calculate_for_barge("330 ft")
 
-            st.subheader("💼 Budget Customer (Compare)")
+            st.subheader("🚢 Voyage Summary (Compare)")
         
             c1, c2, c3 = st.columns(3)
         
