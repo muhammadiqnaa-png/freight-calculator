@@ -58,11 +58,11 @@ cargo_qty_default = {
         "Split (M3)": 5000
     },
     "330 ft": {
-        "Coal (MT)": 11500,
-        "Nickel (MT)": 11500,
-        "Bauxite (MT)": 11500,
-        "Sand (M3)": 6000,
-        "Split (M3)": 6500
+        "Coal (MT)": 10500,
+        "Nickel (MT)": 10500,
+        "Bauxite (MT)": 10500,
+        "Sand (M3)": 5500,
+        "Split (M3)": 6300
     }
 }
 
