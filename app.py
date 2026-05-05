@@ -1895,39 +1895,39 @@ if calculate:
             if show_title_inside:
                 header = f"""
                 <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    margin-bottom:6px;
-                    font-weight:700;
-                    color:#7c3aed;
-                    font-size:15px;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:6px;
+                font-weight:700;
+                color:#7c3aed;
+                font-size:15px;
                 ">
-                    <span>🏗️ {title}</span>
-                    <span style="font-size:12px; color:#64748b;">{size}</span>
+                <span>🏗️ {title}</span>
+                <span style="font-size:12px; color:#64748b;">{size}</span>
                 </div>
                 """
             else:
                 header = f"""
                 <div style="
-                    font-weight:700;
-                    margin-bottom:6px;
-                    color:#7c3aed;
-                    font-size:14px;
+                font-weight:700;
+                margin-bottom:6px;
+                color:#7c3aed;
+                font-size:14px;
                 ">
-                    🚢 {size}
+                🚢 {size}
                 </div>
                 """
         
-            # ===== FINAL CARD =====
-            return f"""
+        # ===== FINAL CARD =====
+        return f"""
         <div style="
-            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-            padding:12px;
-            border-radius:12px;
-            border-left:5px solid #7c3aed;
-            box-shadow:0 4px 12px rgba(0,0,0,0.25);
-            color:#0f172a;
+        background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+        padding:12px;
+        border-radius:12px;
+        border-left:5px solid #7c3aed;
+        box-shadow:0 4px 12px rgba(0,0,0,0.25);
+        color:#0f172a;
         ">
         {header}
         {content}
@@ -1982,11 +1982,11 @@ if calculate:
             
         st.markdown(f"""
         <div style="
-            background:linear-gradient(135deg, #f8fafc, #f1f5f9);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            border-left:5px solid #64748b;
+        background:linear-gradient(135deg, #f8fafc, #f1f5f9);
+        padding:12px;
+        border-radius:12px;
+        margin-bottom:10px;
+        border-left:5px solid #64748b;
         ">
         <h4 style="color:#64748b;">🏢 General & Administrative Cost (G&A)</h4>
         
