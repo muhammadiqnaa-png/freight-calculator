@@ -1935,17 +1935,17 @@ if calculate:
                 """
         
             st.markdown(f"""
-            <div style="
+        <div style="
                 background:linear-gradient(135deg, #f5f3ff, #ede9fe);
                 padding:12px;
                 border-radius:12px;
                 border-left:5px solid #7c3aed;
-            ">
+        ">
         
-            {html}
+        {html}
         
-            <hr style="margin:4px 0; opacity:0.2;">
-            <b>Total : Rp {oc["total"]:,.0f}</b>
+        <hr style="margin:4px 0; opacity:0.2;">
+        <b>Total : Rp {oc["total"]:,.0f}</b>
         
             </div>
             """, unsafe_allow_html=True)
