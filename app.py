@@ -1868,20 +1868,26 @@ if calculate:
             c1, c2, c3 = st.columns(3)
         
             def render(col, size):
-        
+
                 preset = preset_params.get(size, {})
-        
+            
                 charter_val = preset.get("charter", 0)
                 crew_val = preset.get("crew", 0)
                 insurance_val = preset.get("insurance", 0)
                 docking_val = preset.get("docking", 0)
                 maintenance_val = preset.get("maintenance", 0)
                 certificate_val = preset.get("certificate", 0)
-        
+            
+                # ===== TOTAL OWNER =====
+                total_owner = (
+                    charter_val + crew_val + insurance_val +
+                    docking_val + maintenance_val + certificate_val
+                )
+            
                 with col:
-        
+            
                     if mode == "Owner":
-        
+            
                         st.markdown(f"""
                         <div style="
                             background:linear-gradient(135deg, #f5f3ff, #ede9fe);
@@ -1890,20 +1896,43 @@ if calculate:
                             border-left:5px solid #7c3aed;
                             color:#0f172a;
                         ">
-        
+            
                         <h4>🏗️ {size} (Owner)</h4>
-        
+            
                         • Charter Hire : <b>Rp {charter_val:,.0f}</b><br>
                         • Crew : <b>Rp {crew_val:,.0f}</b><br>
                         • Insurance : <b>Rp {insurance_val:,.0f}</b><br>
                         • Docking : <b>Rp {docking_val:,.0f}</b><br>
                         • Maintenance : <b>Rp {maintenance_val:,.0f}</b><br>
                         • Certificate : <b>Rp {certificate_val:,.0f}</b><br>
-        
+            
                         <hr style="margin:4px 0; opacity:0.2;">
-        
-                        <b>Total Owner Cost</b>
-        
+            
+                        <b>Total Owner Cost : Rp {total_owner:,.0f}</b>
+            
+                        </div>
+                        """, unsafe_allow_html=True)
+            
+                    else:
+            
+                        # ===== CHARTER SIMPLE =====
+                        st.markdown(f"""
+                        <div style="
+                            background:linear-gradient(135deg, #fff7ed, #fffbeb);
+                            padding:12px;
+                            border-radius:12px;
+                            border-left:5px solid #f97316;
+                            color:#0f172a;
+                        ">
+            
+                        <h4>🏗️ {size} (Charter)</h4>
+            
+                        • Charter Hire : <b>Rp {charter_val:,.0f}</b><br>
+            
+                        <hr style="margin:4px 0; opacity:0.2;">
+            
+                        <b>Total Charter Cost : Rp {charter_val:,.0f}</b>
+            
                         </div>
                         """, unsafe_allow_html=True)
         
