@@ -1806,24 +1806,24 @@ if calculate:
         
             def render(col, title, vc):
                 with col:
-                st.markdown(f"""
-                <div style="
-                    background: linear-gradient(135deg, #fff7ed, #ffffff);
-                    padding:14px;
-                    border-radius:12px;
-                    border-left:5px solid #f97316;
-                    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-                    color:#0f172a;
-                ">
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #fff7ed, #ffffff);
+                        padding:14px;
+                        border-radius:12px;
+                        border-left:5px solid #f97316;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.08);
+                        color:#0f172a;
+                    ">
         
-                <h4 style="color:#f97316;">🚢 {title}</h4>
+                    <h4 style="color:#f97316;">🚢 {title}</h4>
         
                     • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
                     • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
                     • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
                     • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
         
-                <hr style="margin:6px 0; opacity:0.2;">
+                    <hr style="margin:6px 0; opacity:0.2;">
         
                     <b>Total Variable Cost : Rp {vc["total"]:,.0f}</b>
         
