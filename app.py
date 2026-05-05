@@ -1596,7 +1596,7 @@ if calculate:
         
                     • Route : <b>{port_pol} → {port_pod}</b><br>
                     • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
-                    • Total Cargo : <b>{res["qty"]:,.0f}</b><br>
+                    • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split("(")[-1].replace(")", "")}</b><br>
                     • Total Voyage : <b>{res["hari"]:.1f} Days</b><br>
                     • Freight Cost : <b>Rp {res["freight"]:,.0f}</b>
         
@@ -1624,7 +1624,7 @@ if calculate:
             • Cargo Type : <b>{type_cargo}</b><br>
             • Route : <b>{port_pol} → {port_pod}</b><br>
             • Distance POL → POD : <b>{distance_pol_pod:,.0f} NM</b><br>
-            • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
+            • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split("(")[-1].replace(")", "")}</b><br>
             • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
             <span style="font-size:11px; color:#bbb;">
             (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
