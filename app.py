@@ -1904,8 +1904,7 @@ if calculate:
                 </h4>
                 """
         
-            return f"""
-            <div style="
+            return f"""<div style="
                 background:linear-gradient(135deg, #f5f3ff, #ede9fe);
                 padding:12px;
                 border-radius:12px;
@@ -1913,14 +1912,14 @@ if calculate:
                 box-shadow:0 4px 12px rgba(0,0,0,0.1);
                 color:#0f172a;
             ">
-        
+            
             {title_html}
-        
+            
             {html}
-        
+            
             <hr style="margin:4px 0; opacity:0.2;">
             <b>Total : Rp {oc["total"]:,.0f}</b>
-        
+            
             </div>
             """
         
