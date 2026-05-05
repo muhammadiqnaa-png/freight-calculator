@@ -48,21 +48,24 @@ cargo_qty_default = {
         "Nickel (MT)": 5500,
         "Bauxite (MT)": 5500,
         "Sand (M3)": 3500,
-        "Split (M3)": 3500
+        "Split (M3)": 3500,
+        "Palm kernel (MT)": 3500
     },
     "300 ft": {
         "Coal (MT)": 7500,
         "Nickel (MT)": 7500,
         "Bauxite (MT)": 7500,
         "Sand (M3)": 4700,
-        "Split (M3)": 5000
+        "Split (M3)": 5000,
+        "Palm kernel (MT)": 5500
     },
     "330 ft": {
         "Coal (MT)": 10500,
         "Nickel (MT)": 10500,
         "Bauxite (MT)": 10500,
         "Sand (M3)": 5500,
-        "Split (M3)": 6300
+        "Split (M3)": 6300,
+        "Palm kernel (MT)": 7500
     }
 }
 
