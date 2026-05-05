@@ -1865,7 +1865,7 @@ if calculate:
             """, unsafe_allow_html=True)
 
         # ===== OWNER / CHARTER COST DISPLAY (FINAL BEHAVIOR) =====
-
+        
         title = "Owner Cost" if mode == "Owner" else "Charter Cost"
         
         def render_card(size, oc, show_title_inside=True):
