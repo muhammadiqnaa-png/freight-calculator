@@ -1866,9 +1866,12 @@ if calculate:
             preset = preset_params.get(size, {})
         
             # ambil hasil voyage biar konsisten
-            res = calculate_for_barge(size)
-        
-            total_days = res["hari"]
+            # ===== HITUNG VOYAGE REAL (FIX UTAMA) =====
+            distance_pol_pod = find_distance(port_pol, port_pod)
+            distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
+            
+            sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
+            total_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
         
             charter = (preset.get("charter", 0) / 30) * total_days
             crew = (preset.get("crew", 0) / 30) * total_days
