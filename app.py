@@ -1860,98 +1860,129 @@ if calculate:
             """, unsafe_allow_html=True)
         
         # ===== OWNER / CHARTER COST =====
-        st.markdown("### 🏗️ Owner / Charter Cost")
-        
-        def render_owner_charter(col, size):
-        
-            preset = preset_params.get(size, {})
-        
-            charter_local = preset.get("charter", 0)
-            crew = preset.get("crew", 0)
-            insurance = preset.get("insurance", 0)
-            docking = preset.get("docking", 0)
-            maintenance = preset.get("maintenance", 0)
-            certificate = preset.get("certificate", 0)
-        
-            if mode == "Owner":
-        
-                total_owner = (
-                    charter_local +
-                    crew +
-                    insurance +
-                    docking +
-                    maintenance +
-                    certificate
-                )
-        
-                html = f"""
-                <div style="
-                    background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-                    padding:12px;
-                    border-radius:12px;
-                    border-left:5px solid #7c3aed;
-                    color:#0f172a;
-                ">
-        
-                <h4>🏗️ {size} (Owner)</h4>
-        
-                • Charter Hire : <b>Rp {charter_local:,.0f}</b><br>
-                • Crew : <b>Rp {crew:,.0f}</b><br>
-                • Insurance : <b>Rp {insurance:,.0f}</b><br>
-                • Docking : <b>Rp {docking:,.0f}</b><br>
-                • Maintenance : <b>Rp {maintenance:,.0f}</b><br>
-                • Certificate : <b>Rp {certificate:,.0f}</b><br>
-        
-                <hr>
-        
-                <b>Total Owner Cost : Rp {total_owner:,.0f}</b>
-                </div>
-                """
-        
-            else:
-        
-                html = f"""
-                <div style="
-                    background:linear-gradient(135deg, #fff7ed, #fffbeb);
-                    padding:12px;
-                    border-radius:12px;
-                    border-left:5px solid #f97316;
-                    color:#0f172a;
-                ">
-        
-                <h4>🏗️ {size} (Charter)</h4>
-        
-                • Charter Hire : <b>Rp {charter_local:,.0f}</b><br>
-        
-                <hr>
-        
-                <b>Total Charter Cost : Rp {charter_local:,.0f}</b>
-                </div>
-                """
-        
-            col.markdown(html, unsafe_allow_html=True)
-        
-        
-        # ===== COMPARE MODE =====
+
         if compare_mode:
         
             st.markdown("### 🏗️ Owner / Charter Cost (Compare)")
         
             c1, c2, c3 = st.columns(3)
         
-            render_owner_charter(c1, "270 ft")
-            render_owner_charter(c2, "300 ft")
-            render_owner_charter(c3, "330 ft")
+            def render(col, size):
         
-        # ===== SINGLE MODE =====
+                preset = preset_params.get(size, {})
+        
+                charter_val = preset.get("charter", 0)
+                crew_val = preset.get("crew", 0)
+                insurance_val = preset.get("insurance", 0)
+                docking_val = preset.get("docking", 0)
+                maintenance_val = preset.get("maintenance", 0)
+                certificate_val = preset.get("certificate", 0)
+        
+                with col:
+        
+                    if mode == "Owner":
+        
+                        st.markdown(f"""
+                        <div style="
+                            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                            padding:12px;
+                            border-radius:12px;
+                            border-left:5px solid #7c3aed;
+                            color:#0f172a;
+                        ">
+        
+                        <h4>🏗️ {size} (Owner)</h4>
+        
+                        • Charter Hire : <b>Rp {charter_val:,.0f}</b><br>
+                        • Crew : <b>Rp {crew_val:,.0f}</b><br>
+                        • Insurance : <b>Rp {insurance_val:,.0f}</b><br>
+                        • Docking : <b>Rp {docking_val:,.0f}</b><br>
+                        • Maintenance : <b>Rp {maintenance_val:,.0f}</b><br>
+                        • Certificate : <b>Rp {certificate_val:,.0f}</b><br>
+        
+                        <hr style="margin:4px 0; opacity:0.2;">
+        
+                        <b>Total Owner Cost</b>
+        
+                        </div>
+                        """, unsafe_allow_html=True)
+        
+                    else:
+        
+                        # 🔥 SIMPLE CHARTER ONLY
+                        st.markdown(f"""
+                        <div style="
+                            background:linear-gradient(135deg, #fff7ed, #fffbeb);
+                            padding:12px;
+                            border-radius:12px;
+                            border-left:5px solid #f97316;
+                            color:#0f172a;
+                        ">
+        
+                        <h4>🏗️ {size} (Charter)</h4>
+        
+                        • Charter Hire : <b>Rp {charter_val:,.0f}</b><br>
+        
+                        <hr style="margin:4px 0; opacity:0.2;">
+        
+                        <b>Total Charter Cost</b>
+        
+                        </div>
+                        """, unsafe_allow_html=True)
+        
+            render(c1, "270 ft")
+            render(c2, "300 ft")
+            render(c3, "330 ft")
+        
         else:
         
-            active_barge = st.session_state.get("preset_control", "270 ft")
+            # ===== SINGLE MODE =====
         
-            col = st.container()
+            if mode == "Owner":
         
-            render_owner_charter(col, active_barge)
-    
+                st.markdown(f"""
+                <div style="
+                    background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                    padding:12px;
+                    border-radius:12px;
+                    border-left:5px solid #7c3aed;
+                    margin-bottom:10px;
+                ">
+                <h4 style="color:#7c3aed;">🏗️ Owner Cost</h4>
+        
+                • Installment : <b>Rp {charter_cost:,.0f}</b><br>
+                • Crew : <b>Rp {crew_cost:,.0f}</b><br>
+                • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
+                • Docking : <b>Rp {docking_cost:,.0f}</b><br>
+                • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
+                • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
+        
+                <hr style="margin:2px 0; opacity:0.2;">
+        
+                <b>Total</b>
+                </div>
+                """, unsafe_allow_html=True)
+        
+            else:
+        
+                st.markdown(f"""
+                <div style="
+                    background:linear-gradient(135deg, #fff7ed, #fffbeb);
+                    padding:12px;
+                    border-radius:12px;
+                    border-left:5px solid #f97316;
+                    margin-bottom:10px;
+                ">
+                <h4 style="color:#f97316;">🏗️ Charter Cost</h4>
+        
+                • Charter Hire : <b>Rp {charter_cost:,.0f}</b><br>
+        
+                <hr style="margin:2px 0; opacity:0.2;">
+        
+                <b>Total</b>
+                </div>
+                """, unsafe_allow_html=True)
+            
     
         st.markdown(f"""
         <div style="
