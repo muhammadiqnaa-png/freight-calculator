@@ -1227,7 +1227,7 @@ st.session_state.last_cargo = type_cargo
 
 # ===== QTY =====
 with col2:
-    unit = type_cargo.split()[1]
+    unit = type_cargo.split("(")[-1].replace(")", "")
 
     qyt_cargo = st.number_input(
         f"Qty ({unit})",
