@@ -1863,95 +1863,114 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        # ===== OWNER / CHARTER COST DISPLAY (FINAL BEHAVIOR) =====
-
+        # =========================
+        # 🏗️ OWNER / CHARTER COST (FINAL FIX)
+        # =========================
+        
         title = "Owner Cost" if mode == "Owner" else "Charter Cost"
+        
         
         def render_card(size, oc, show_title_inside=True):
         
+            # ===== CONTENT =====
             if mode == "Owner":
-                html = f"""
-                • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
-                • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
-                • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
-                • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
-                • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
-                • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
-                """
+                content_html = f"""
+        • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+        • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+        • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+        • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+        • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+        • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+        """
             else:
-                html = f"""
-                • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
-                """
+                content_html = f"""
+        • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+        """
         
-            # ===== TITLE INSIDE (ONLY FOR SINGLE MODE) =====
-            title_html = ""
+            # ===== TITLE =====
             if show_title_inside:
-                title_html = f"""
-                <h4 style="
-                    margin-bottom:6px;
-                    color:#7c3aed;
-                    display:flex;
-                    justify-content:space-between;
-                ">
-                    <span>🏗️ {title}</span>
-                    <span style="font-size:12px; color:#64748b;">{size}</span>
-                </h4>
-                """
+                header_html = f"""
+        <h4 style="
+        margin-bottom:6px;
+        color:#7c3aed;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        ">
+        <span>🏗️ {title}</span>
+        <span style="font-size:12px; color:#64748b;">{size}</span>
+        </h4>
+        """
             else:
-                title_html = f"""
-                <h4 style="margin-bottom:6px; color:#7c3aed;">
-                    🚢 {size}
-                </h4>
-                """
+                header_html = f"""
+        <h4 style="margin-bottom:6px; color:#7c3aed;">
+        🚢 {size}
+        </h4>
+        """
         
+            # ===== FINAL HTML (🔥 NO SPACE DI DEPAN <div>) =====
             return f"""<div style="
-                background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-                padding:12px;
-                border-radius:12px;
-                border-left:5px solid #7c3aed;
-                box-shadow:0 4px 12px rgba(0,0,0,0.1);
-                color:#0f172a;
-            ">
-            
-            {title_html}
-            
-            {html}
-            
-            <hr style="margin:4px 0; opacity:0.2;">
-            <b>Total : Rp {oc["total"]:,.0f}</b>
-            
-            </div>
-            """
+        background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+        padding:12px;
+        border-radius:12px;
+        border-left:5px solid #7c3aed;
+        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+        color:#0f172a;
+        ">
         
-        # ===== MODE SWITCH =====
+        {header_html}
+        
+        {content_html}
+        
+        <hr style="margin:4px 0; opacity:0.2;">
+        
+        <b>Total : Rp {oc["total"]:,.0f}</b>
+        
+        </div>"""
+        
+        
+        # =========================
+        # 📊 GET DATA PER SIZE
+        # =========================
+        def get_oc(size):
+            return owner_cost_for_barge(size, mode)
+        
+        
+        # =========================
+        # ⚖️ RENDER
+        # =========================
         if compare_mode:
         
-            # 🔥 TITLE DI LUAR (SESUAI REQUEST LO)
+            # ===== TITLE LUAR =====
             st.markdown(f"### 🏗️ {title} (Compare)")
         
-            oc270 = owner_cost_for_barge("270 ft", mode)
-            oc300 = owner_cost_for_barge("300 ft", mode)
-            oc330 = owner_cost_for_barge("330 ft", mode)
+            oc270 = get_oc("270 ft")
+            oc300 = get_oc("300 ft")
+            oc330 = get_oc("330 ft")
         
             c1, c2, c3 = st.columns(3)
         
             with c1:
-                st.markdown(render_card("270 ft", oc270, show_title_inside=False), unsafe_allow_html=True)
+                html = render_card("270 ft", oc270, False)
+                st.markdown(html, unsafe_allow_html=True)
         
             with c2:
-                st.markdown(render_card("300 ft", oc300, show_title_inside=False), unsafe_allow_html=True)
+                html = render_card("300 ft", oc300, False)
+                st.markdown(html, unsafe_allow_html=True)
         
             with c3:
-                st.markdown(render_card("330 ft", oc330, show_title_inside=False), unsafe_allow_html=True)
+                html = render_card("330 ft", oc330, False)
+                st.markdown(html, unsafe_allow_html=True)
         
         else:
         
             active_size = st.session_state.get("preset_control", "270 ft")
         
-            oc = owner_cost_for_barge(active_size, mode)
+            oc = get_oc(active_size)
         
-            # 🔥 NO TITLE LUAR — MASUK KE DALAM CARD
-            st.markdown(render_card(active_size, oc, show_title_inside=True), unsafe_allow_html=True)
+            html = render_card(active_size, oc, True)
+        
+            st.markdown(html, unsafe_allow_html=True)
             
         st.markdown(f"""
         <div style="
