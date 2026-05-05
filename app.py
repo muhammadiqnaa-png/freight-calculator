@@ -1864,60 +1864,60 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        # =========================
-        # 🏗️ OWNER / CHARTER COST (CONSISTENT UI)
-        # =========================
+# =========================
+# 🏗️ OWNER / CHARTER COST (CONSISTENT UI)
+# =========================
         
-        title = "Owner Cost" if mode == "Owner" else "Charter Cost"
+title = "Owner Cost" if mode == "Owner" else "Charter Cost"
         
         
-        # =========================
-        # 🎨 CARD FUNCTION
-        # =========================
-        def render_card(size, oc, show_title_inside=True):
+# =========================
+# 🎨 CARD FUNCTION
+# =========================
+def render_card(size, oc, show_title_inside=True):
         
-            # ===== CONTENT =====
-            if mode == "Owner":
-                content = f"""
-                • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
-                • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
-                • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
-                • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
-                • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
-                • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
-                """
+    # ===== CONTENT =====
+    if mode == "Owner":
+        content = f"""
+        • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+        • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+        • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+        • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+        • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+        • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+        """
+    else:
+        content = f"""
+        • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+        """
+        
+    # ===== HEADER =====
+    if show_title_inside:
+        header = f"""
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:6px;
+            font-weight:700;
+            color:#7c3aed;
+            font-size:15px;
+        ">
+            <span>🏗️ {title}</span>
+            <span style="font-size:12px; color:#64748b;">{size}</span>
+        </div>
+        """
             else:
-                content = f"""
-                • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
-                """
-        
-            # ===== HEADER =====
-            if show_title_inside:
                 header = f"""
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    margin-bottom:6px;
-                    font-weight:700;
-                    color:#7c3aed;
-                    font-size:15px;
-                ">
-                    <span>🏗️ {title}</span>
-                    <span style="font-size:12px; color:#64748b;">{size}</span>
-                </div>
-                """
-            else:
-                header = f"""
-                <div style="
-                    font-weight:700;
-                    margin-bottom:6px;
-                    color:#7c3aed;
-                    font-size:14px;
-                ">
+        <div style="
+            font-weight:700;
+            margin-bottom:6px;
+            color:#7c3aed;
+            font-size:14px;
+        ">
                     🚢 {size}
-                </div>
-                """
+        </div>
+        """
         
             # ===== FINAL CARD =====
             return f"""
