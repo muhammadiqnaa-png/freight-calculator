@@ -1864,119 +1864,92 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        # =========================
-        # 🏗️ OWNER / CHARTER COST (CONSISTENT UI)
-        # =========================
-        
         title = "Owner Cost" if mode == "Owner" else "Charter Cost"
-        
-        
-        # =========================
-        # 🎨 CARD FUNCTION
-        # =========================
-        def render_owner_card(size, oc, show_title_inside=True):
 
-            # ===== ISI =====
-            if mode == "Owner":
-                content_html = f"""
-                • Installment : <b>Rp {oc['charter']:,.0f}</b><br>
-                • Crew : <b>Rp {oc['crew']:,.0f}</b><br>
-                • Insurance : <b>Rp {oc['insurance']:,.0f}</b><br>
-                • Docking : <b>Rp {oc['docking']:,.0f}</b><br>
-                • Maintenance : <b>Rp {oc['maintenance']:,.0f}</b><br>
-                • Certificate : <b>Rp {oc['certificate']:,.0f}</b><br>
-                """
-            else:
-                content_html = f"""
-                • Charter Hire : <b>Rp {oc['charter']:,.0f}</b><br>
-                """
-        
-            # ===== TITLE =====
-            if show_title_inside:
-                title_html = f"""
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    margin-bottom:8px;
-                ">
-                    <span style="font-weight:700; color:#7c3aed;">
-                        🏗️ {title}
-                    </span>
-                    <span style="
-                        font-size:12px;
-                        color:#64748b;
-                        background:#e5e7eb;
-                        padding:2px 8px;
-                        border-radius:8px;
-                    ">
-                        {size}
-                    </span>
-                </div>
-                """
-            else:
-                title_html = f"""
-                <div style="
-                    font-weight:600;
-                    color:#7c3aed;
-                    margin-bottom:6px;
-                ">
-                    🚢 {size}
-                </div>
-                """
-        
-            return f"""
-            <div style="
-                background: linear-gradient(135deg, #f5f3ff, #ede9fe);
-                padding:14px;
-                border-radius:14px;
-                border-left:5px solid #7c3aed;
-                box-shadow:0 4px 12px rgba(0,0,0,0.08);
-                color:#0f172a;
-            ">
-        
-            {title_html}
-        
-            {content_html}
-        
-            <hr style="margin:6px 0; opacity:0.2;">
-        
-            <b>Total : Rp {oc['total']:,.0f}</b>
-        
-            </div>
-            """
-        
-        
-        # ==========================================
-        # 🎯 RENDER MODE
-        # ==========================================
-        
         if compare_mode:
-        
-            st.markdown(f"### 🏗️ {title} (Compare)")
         
             oc270 = owner_cost_for_barge("270 ft", mode)
             oc300 = owner_cost_for_barge("300 ft", mode)
             oc330 = owner_cost_for_barge("330 ft", mode)
         
+            st.markdown(f"### 🏗️ {title} (Compare)")
+        
             c1, c2, c3 = st.columns(3)
         
-            with c1:
-                st.markdown(render_owner_card("270 ft", oc270, False), unsafe_allow_html=True)
+            def render(col, size, oc):
+                with col:
         
-            with c2:
-                st.markdown(render_owner_card("300 ft", oc300, False), unsafe_allow_html=True)
+                    if mode == "Owner":
+                        html = f"""
+                        • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+                        • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+                        • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+                        • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+                        • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+                        • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+                        """
+                    else:
+                        html = f"""
+                        • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+                        """
         
-            with c3:
-                st.markdown(render_owner_card("330 ft", oc330, False), unsafe_allow_html=True)
+                    st.markdown(f"""
+                    <div style="
+                        background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                        padding:12px;
+                        border-radius:12px;
+                        border-left:5px solid #7c3aed;
+                    ">
+                    <h4>🚢 {size}</h4>
+        
+                    {html}
+        
+                    <hr style="margin:4px 0; opacity:0.2;">
+                    <b>Total : Rp {oc["total"]:,.0f}</b>
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+            render(c1, "270 ft", oc270)
+            render(c2, "300 ft", oc300)
+            render(c3, "330 ft", oc330)
         
         else:
         
             active_size = st.session_state.get("preset_control", "270 ft")
+        
             oc = owner_cost_for_barge(active_size, mode)
         
-            # 🔥 SINGLE CARD (CLEAN)
-            st.markdown(render_owner_card(active_size, oc, True), unsafe_allow_html=True)
+            st.markdown(f"### 🏗️ {title}")
+        
+            if mode == "Owner":
+                html = f"""
+                • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+                • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+                • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+                • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+                • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+                • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+                """
+            else:
+                html = f"""
+                • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+                """
+        
+            st.markdown(f"""
+            <div style="
+                background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                padding:12px;
+                border-radius:12px;
+                border-left:5px solid #7c3aed;
+            ">
+        
+            {html}
+        
+            <hr style="margin:4px 0; opacity:0.2;">
+            <b>Total : Rp {oc["total"]:,.0f}</b>
+        
+            </div>
+            """, unsafe_allow_html=True)
             
         st.markdown(f"""
         <div style="
