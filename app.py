@@ -1762,21 +1762,21 @@ if calculate:
                     st.markdown(f"""
                     <div style="
                         background: linear-gradient(135deg, #fff7ed, #ffffff);
-                        padding:12px;
+                        padding:14px;
                         border-radius:12px;
                         border-left:5px solid #f97316;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.08);
                         color:#0f172a;
-                        box-shadow:0 4px 12px rgba(0,0,0,0.1);
                     ">
         
-                    <h4>🚢 {title}</h4>
+                    <h4 style="color:#f97316;">🚢 {title}</h4>
         
                     • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
                     • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
                     • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
                     • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
         
-                    <hr>
+                    <hr style="margin:6px 0; opacity:0.2;">
         
                     <b>Total Variable Cost : Rp {vc["total"]:,.0f}</b>
         
@@ -1789,19 +1789,32 @@ if calculate:
         
         else:
         
-            vc = variable_cost_for_barge(st.session_state.preset_selected)
+            active_barge = st.session_state.get("preset_control", "270 ft")
+        
+            vc = variable_cost_for_barge(active_barge)
         
             st.markdown(f"""
-            ### ⛽ Variable Cost
+            <div style="
+                background: linear-gradient(135deg, #fff7ed, #ffffff);
+                padding:14px;
+                border-radius:12px;
+                border-left:5px solid #f97316;
+                box-shadow:0 4px 12px rgba(0,0,0,0.08);
+                color:#0f172a;
+            ">
+        
+            <h4 style="color:#f97316;">⛽ Variable Cost ({active_barge})</h4>
         
             • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
             • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
             • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
             • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
         
-            <hr>
+            <hr style="margin:6px 0; opacity:0.2;">
         
             <b>Total Variable Cost : Rp {vc["total"]:,.0f}</b>
+        
+            </div>
             """, unsafe_allow_html=True)
         
         # ===== OWNER / CHARTER TOTAL =====
