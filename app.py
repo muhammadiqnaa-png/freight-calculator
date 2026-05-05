@@ -1921,18 +1921,18 @@ if calculate:
             st.markdown(f"### 🏗️ {title}")
         
             if mode == "Owner":
-                html = f"""
-                • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
-                • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
-                • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
-                • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
-                • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
-                • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
-                """
+            html = f"""
+            • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+            • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+            • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+            • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+            • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+            • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+            """
             else:
-                html = f"""
-                • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
-                """
+            html = f"""
+            • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+            """
         
             st.markdown(f"""
         <div style="
