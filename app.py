@@ -1869,20 +1869,17 @@ if calculate:
         
             def render(col, size):
 
-                preset = preset_params.get(size, {})
-            
-                charter_val = preset.get("charter", 0)
-                crew_val = preset.get("crew", 0)
-                insurance_val = preset.get("insurance", 0)
-                docking_val = preset.get("docking", 0)
-                maintenance_val = preset.get("maintenance", 0)
-                certificate_val = preset.get("certificate", 0)
-            
-                # ===== TOTAL OWNER =====
-                total_owner = (
-                    charter_val + crew_val + insurance_val +
-                    docking_val + maintenance_val + certificate_val
-                )
+                cost = get_owner_charter_breakdown(size)
+
+                charter_val = cost["charter"]
+                crew_val = cost["crew"]
+                insurance_val = cost["insurance"]
+                docking_val = cost["docking"]
+                maintenance_val = cost["maintenance"]
+                certificate_val = cost["certificate"]
+                
+                total_owner = cost["total_owner"]
+                total_charter = cost["total_charter"]
             
                 with col:
             
@@ -1931,7 +1928,7 @@ if calculate:
             
                         <hr style="margin:4px 0; opacity:0.2;">
             
-                        <b>Total Charter Cost : Rp {charter_val:,.0f}</b>
+                        <b>Total Charter Cost : Rp {total_charter:,.0f}</b>
             
                         </div>
                         """, unsafe_allow_html=True)
