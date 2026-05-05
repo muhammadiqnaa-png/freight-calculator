@@ -1922,7 +1922,7 @@ if calculate:
             <b>Total : Rp {oc["total"]:,.0f}</b>
         
             </div>
-            """, unsafe_allow_html=True)
+            """
         
         # ===== MODE SWITCH =====
         if compare_mode:
