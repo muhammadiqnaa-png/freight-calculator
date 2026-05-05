@@ -1377,6 +1377,44 @@ def calculate_budget_for_barge(size):
         "total_cost": total_cost_local,
         "profit": profit
     }
+
+def variable_cost_for_barge(size):
+
+    preset = preset_params.get(size, {})
+
+    # ambil qty + parameter dasar
+    speed_laden_local = speed_laden
+    speed_ballast_local = speed_ballast
+
+    consumption_local = preset.get("consumption", 0)
+    consumption_fw_local = preset.get("consumption_fw", 0)
+    price_fw_local = preset.get("price_fw", 0)
+
+    port_stay_pol_local = port_stay_pol
+    port_stay_pod_local = port_stay_pod
+
+    distance_pol_pod = find_distance(port_pol, port_pod)
+    distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
+
+    sailing_time = (distance_pol_pod / speed_laden_local) + (distance_pod_pol / speed_ballast_local)
+    total_days = (sailing_time / 24) + (port_stay_pol_local + port_stay_pod_local)
+
+    total_fuel = (sailing_time * consumption_local) + ((port_stay_pol_local + port_stay_pod_local) * 120)
+    cost_fuel = total_fuel * price_fuel
+
+    total_fw = consumption_fw_local * total_days
+    cost_fw = total_fw * price_fw_local
+
+    premi_cost = distance_pol_pod * preset.get("premi_nm", 0)
+    port_cost = port_cost_pol + port_cost_pod + asist_tug
+
+    return {
+        "fuel": cost_fuel,
+        "fw": cost_fw,
+        "premi": premi_cost,
+        "port": port_cost,
+        "total": cost_fuel + cost_fw + premi_cost + port_cost
+    }
         
 # ===== PERHITUNGAN =====
 
@@ -1709,31 +1747,62 @@ if calculate:
             # ===== SPACING BIAR GA NEMPEL =====
             st.divider()
 
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #fff7ed, #fffbeb);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            color:#0f172a;
-            border-left:5px solid #f97316;
-            box-shadow:0 4px 12px rgba(0,0,0,0.2);
-        ">
+        if compare_mode:
 
-        <h4 style="color:#f97316;">⛽ Variable Cost</h4>
-
-        • Fuel Cost : <b>Rp {cost_fuel:,.0f}</b> ({total_consumption_fuel:,.0f} Ltr)<br>
-        • FW Cost : <b>Rp {cost_fw:,.0f}</b> ({total_consumption_fw:,.0f} Ton)<br>
-        • Premi : <b>Rp {premi_cost:,.0f}</b><br>
-        • Port Cost : <b>Rp {port_cost:,.0f}</b><br>
-
-        <hr style="margin:2px 0; opacity:0.2;">
-
-        <b>Total Variable Cost :</b> 
-        <b>Rp {(cost_fuel + cost_fw + premi_cost + port_cost):,.0f}</b>
-
-        </div>
-        """, unsafe_allow_html=True)
+            vc270 = variable_cost_for_barge("270 ft")
+            vc300 = variable_cost_for_barge("300 ft")
+            vc330 = variable_cost_for_barge("330 ft")
+        
+            st.markdown("### ⛽ Variable Cost (Compare)")
+        
+            c1, c2, c3 = st.columns(3)
+        
+            def render(col, title, vc):
+                with col:
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #fff7ed, #ffffff);
+                        padding:12px;
+                        border-radius:12px;
+                        border-left:5px solid #f97316;
+                        color:#0f172a;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+                    ">
+        
+                    <h4>🚢 {title}</h4>
+        
+                    • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
+                    • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
+                    • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
+                    • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
+        
+                    <hr>
+        
+                    <b>Total Variable Cost : Rp {vc["total"]:,.0f}</b>
+        
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+            render(c1, "270 ft", vc270)
+            render(c2, "300 ft", vc300)
+            render(c3, "330 ft", vc330)
+        
+        else:
+        
+            vc = variable_cost_for_barge(st.session_state.preset_selected)
+        
+            st.markdown(f"""
+            ### ⛽ Variable Cost
+        
+            • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
+            • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
+            • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
+            • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
+        
+            <hr>
+        
+            <b>Total Variable Cost : Rp {vc["total"]:,.0f}</b>
+            """, unsafe_allow_html=True)
         
         # ===== OWNER / CHARTER TOTAL =====
         if mode == "Owner":
