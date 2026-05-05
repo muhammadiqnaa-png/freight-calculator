@@ -1936,29 +1936,6 @@ if calculate:
                         </div>
                         """, unsafe_allow_html=True)
         
-                    else:
-        
-                        # 🔥 SIMPLE CHARTER ONLY
-                        st.markdown(f"""
-                        <div style="
-                            background:linear-gradient(135deg, #fff7ed, #fffbeb);
-                            padding:12px;
-                            border-radius:12px;
-                            border-left:5px solid #f97316;
-                            color:#0f172a;
-                        ">
-        
-                        <h4>🏗️ {size} (Charter)</h4>
-        
-                        • Charter Hire : <b>Rp {charter_val:,.0f}</b><br>
-        
-                        <hr style="margin:4px 0; opacity:0.2;">
-        
-                        <b>Total Charter Cost</b>
-        
-                        </div>
-                        """, unsafe_allow_html=True)
-        
             render(c1, "270 ft")
             render(c2, "300 ft")
             render(c3, "330 ft")
