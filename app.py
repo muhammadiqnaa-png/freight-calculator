@@ -1865,83 +1865,76 @@ if calculate:
             """, unsafe_allow_html=True)
 
         # =========================
-        # 🏗️ OWNER / CHARTER COST FINAL (ANTI ERROR)
+        # 🏗️ OWNER / CHARTER COST (CONSISTENT UI)
         # =========================
         
         title = "Owner Cost" if mode == "Owner" else "Charter Cost"
         
         
         # =========================
-        # 🎨 CARD RENDER
+        # 🎨 CARD FUNCTION
         # =========================
         def render_card(size, oc, show_title_inside=True):
         
             # ===== CONTENT =====
             if mode == "Owner":
-                content_html = f"""
-                <div>• Installment : <b>Rp {oc["charter"]:,.0f}</b></div>
-                <div>• Crew : <b>Rp {oc["crew"]:,.0f}</b></div>
-                <div>• Insurance : <b>Rp {oc["insurance"]:,.0f}</b></div>
-                <div>• Docking : <b>Rp {oc["docking"]:,.0f}</b></div>
-                <div>• Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b></div>
-                <div>• Certificate : <b>Rp {oc["certificate"]:,.0f}</b></div>
+                content = f"""
+                • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+                • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+                • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+                • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+                • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+                • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
                 """
             else:
-                content_html = f"""
-                <div>• Charter Hire : <b>Rp {oc["charter"]:,.0f}</b></div>
+                content = f"""
+                • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
                 """
         
-            # ===== TITLE =====
+            # ===== HEADER =====
             if show_title_inside:
-                header_html = f"""
+                header = f"""
                 <div style="
                     display:flex;
                     justify-content:space-between;
                     align-items:center;
-                    margin-bottom:8px;
-                    font-weight:bold;
+                    margin-bottom:6px;
+                    font-weight:700;
                     color:#7c3aed;
+                    font-size:15px;
                 ">
                     <span>🏗️ {title}</span>
                     <span style="font-size:12px; color:#64748b;">{size}</span>
                 </div>
                 """
             else:
-                header_html = f"""
+                header = f"""
                 <div style="
-                    font-weight:bold;
+                    font-weight:700;
                     margin-bottom:6px;
                     color:#7c3aed;
+                    font-size:14px;
                 ">
                     🚢 {size}
                 </div>
                 """
         
-            # ===== FINAL HTML =====
+            # ===== FINAL CARD =====
             return f"""
-            <div style="
-                background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-                padding:14px;
-                border-radius:12px;
-                border-left:5px solid #7c3aed;
-                box-shadow:0 4px 12px rgba(0,0,0,0.1);
-                font-family:Arial;
-                font-size:14px;
-                color:#0f172a;
-            ">
-        
-                {header_html}
-        
-                {content_html}
-        
-                <hr style="margin:6px 0; opacity:0.2;">
-        
-                <div style="font-weight:bold;">
-                    Total : Rp {oc["total"]:,.0f}
-                </div>
-        
-            </div>
-            """
+        <div style="
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+            padding:12px;
+            border-radius:12px;
+            border-left:5px solid #7c3aed;
+            box-shadow:0 4px 12px rgba(0,0,0,0.25);
+            color:#0f172a;
+        ">
+        {header}
+        {content}
+        <hr style="margin:4px 0; opacity:0.2;">
+        <b>Total : Rp {oc["total"]:,.0f}</b>
+        </div>
+        """
         
         
         # =========================
@@ -1954,8 +1947,10 @@ if calculate:
         # =========================
         # ⚖️ RENDER
         # =========================
+        
         if compare_mode:
         
+            # ===== TITLE LUAR =====
             st.markdown(f"### 🏗️ {title} (Compare)")
         
             oc270 = get_oc("270 ft")
@@ -1965,13 +1960,13 @@ if calculate:
             c1, c2, c3 = st.columns(3)
         
             with c1:
-                components.html(render_card("270 ft", oc270, False), height=260)
+                st.markdown(render_card("270 ft", oc270, False), unsafe_allow_html=True)
         
             with c2:
-                components.html(render_card("300 ft", oc300, False), height=260)
+                st.markdown(render_card("300 ft", oc300, False), unsafe_allow_html=True)
         
             with c3:
-                components.html(render_card("330 ft", oc330, False), height=260)
+                st.markdown(render_card("330 ft", oc330, False), unsafe_allow_html=True)
         
         else:
         
@@ -1979,9 +1974,10 @@ if calculate:
         
             oc = get_oc(active_size)
         
-            components.html(
+            # ===== SINGLE CARD =====
+            st.markdown(
                 render_card(active_size, oc, True),
-                height=260
+                unsafe_allow_html=True
             )
             
         st.markdown(f"""
