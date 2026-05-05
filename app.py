@@ -1968,9 +1968,9 @@ if calculate:
             
                 oc = get_oc(active_size)
             
-                html = render_card(active_size, oc, True)
+        html = render_card(active_size, oc, True)
             
-                st.markdown(html, unsafe_allow_html=True)
+        st.markdown(html, unsafe_allow_html=True)
             
         st.markdown(f"""
         <div style="
