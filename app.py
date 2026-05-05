@@ -16,7 +16,7 @@ import json
 import os
 import uuid
 from auth import login_user, register_user
- import streamlit.components.v1 as components
+import streamlit.components.v1 as components
 from streamlit_cookies_manager import EncryptedCookieManager
 
 cookies = EncryptedCookieManager(
