@@ -1420,42 +1420,43 @@ def owner_charter_cost(size):
 
     preset = preset_params.get(size, {})
 
-    total_days = 0  # kita pakai base voyage dari function yang sama
-
     distance_pol_pod = find_distance(port_pol, port_pod)
     distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
 
     sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
     total_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
 
-    charter_local = preset.get("charter", 0)
-    crew_local = preset.get("crew", 0)
-    insurance_local = preset.get("insurance", 0)
-    docking_local = preset.get("docking", 0)
-    maintenance_local = preset.get("maintenance", 0)
-    certificate_local = preset.get("certificate", 0)
+    charter_cost = (preset.get("charter", 0) / 30) * total_days
 
-    charter_cost = (charter_local / 30) * total_days
-    crew_cost = (crew_local / 30) * total_days
-    insurance_cost = (insurance_local / 30) * total_days
-    docking_cost = (docking_local / 30) * total_days
-    maintenance_cost = (maintenance_local / 30) * total_days
-    certificate_cost = (certificate_local / 30) * total_days
+    crew_cost = (preset.get("crew", 0) / 30) * total_days
+    insurance_cost = (preset.get("insurance", 0) / 30) * total_days
+    docking_cost = (preset.get("docking", 0) / 30) * total_days
+    maintenance_cost = (preset.get("maintenance", 0) / 30) * total_days
+    certificate_cost = (preset.get("certificate", 0) / 30) * total_days
 
     if mode == "Owner":
-        total = charter_cost + crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
-    else:
-        total = charter_cost
 
-    return {
-        "charter": charter_cost,
-        "crew": crew_cost,
-        "insurance": insurance_cost,
-        "docking": docking_cost,
-        "maintenance": maintenance_cost,
-        "certificate": certificate_cost,
-        "total": total
-    }
+        return {
+            "charter": charter_cost,
+            "crew": crew_cost,
+            "insurance": insurance_cost,
+            "docking": docking_cost,
+            "maintenance": maintenance_cost,
+            "certificate": certificate_cost,
+            "total": charter_cost + crew_cost + insurance_cost + docking_cost + maintenance_cost + certificate_cost
+        }
+
+    else:
+
+        return {
+            "charter": charter_cost,
+            "crew": 0,
+            "insurance": 0,
+            "docking": 0,
+            "maintenance": 0,
+            "certificate": 0,
+            "total": charter_cost
+        }
         
 # ===== PERHITUNGAN =====
 
