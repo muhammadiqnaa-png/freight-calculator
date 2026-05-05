@@ -1816,7 +1816,61 @@ if calculate:
         
             </div>
             """, unsafe_allow_html=True)
+
+        # ===== OWNER / CHARTER TOTAL =====
+        if mode == "Owner":
+            owner_total = (
+                charter_cost +
+                crew_cost +
+                insurance_cost +
+                docking_cost +
+                maintenance_cost +
+                certificate_cost
+            )
+        else:
+            owner_total = charter_cost
         
+        
+        # ===== TAMPILAN =====
+        if mode == "Owner":
+        
+            st.markdown(f"""
+            <div style="
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-left:5px solid #7c3aed;
+            ">
+            <h4 style="color:#7c3aed;">🏗️ Owner Cost</h4>
+            • Installment : <b>Rp {charter_cost:,.0f}</b><br>
+            • Crew : <b>Rp {crew_cost:,.0f}</b><br>
+            • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
+            • Docking : <b>Rp {docking_cost:,.0f}</b><br>
+            • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
+            • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
+            <hr style="margin:2px 0; opacity:0.2;">
+            <b>Total : Rp {owner_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        else:
+        
+            st.markdown(f"""
+            <div style="
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-left:5px solid #7c3aed;
+            ">
+            <h4 style="color:#7c3aed;">🏗️ Charter Cost</h4>
+            • Charter Hire : <b>Rp {charter_cost:,.0f}</b><br>
+            <hr style="margin:2px 0; opacity:0.2;">
+            <b>Total : Rp {owner_total:,.0f}</b>
+            </div>
+            """, unsafe_allow_html=True)
+    
             
         st.markdown(f"""
         <div style="
