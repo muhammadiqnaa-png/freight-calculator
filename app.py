@@ -1864,9 +1864,7 @@ if calculate:
         def get_owner_charter_breakdown(size):
         
             preset = preset_params.get(size, {})
-        
-            # ambil hasil voyage biar konsisten
-            # ===== HITUNG VOYAGE REAL (FIX UTAMA) =====
+    
             distance_pol_pod = find_distance(port_pol, port_pod)
             distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
             
