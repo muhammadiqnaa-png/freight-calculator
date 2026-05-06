@@ -1586,10 +1586,16 @@ if calculate:
         
         if freight_price_input > 0 and total_voyage_days > 0:
         
-            # ===== REAL TCE (pakai harga user) =====
-            net_revenue = revenue_user - pph_user
-            tce_profit = net_revenue - voyage_cost
+            # =========================
+            # ⚓ TCE ACTUAL (NEW FORMULA)
+            # =========================
+            
+            tce_profit = revenue_user - total_cost   # 🔥 UPDATED FORMULA
+            
             label_tce = "TCE (Actual)"
+            
+            tce_per_day = tce_profit / total_voyage_days if total_voyage_days > 0 else 0
+            tce_per_month = tce_per_day * 30
         
         else:
         
@@ -1597,10 +1603,6 @@ if calculate:
             breakeven_revenue = freight_cost_mt * qyt_cargo
             tce_profit = breakeven_revenue - voyage_cost
             label_tce = "TCE (Minimum)"
-        
-        # ===== FINAL =====
-        tce_per_day = tce_profit / total_voyage_days if total_voyage_days > 0 else 0
-        tce_per_month = tce_per_day * 30
 
         save_input_history(
             port_pol,
