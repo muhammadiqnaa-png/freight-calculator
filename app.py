@@ -2162,8 +2162,8 @@ if calculate:
             • Port Stay POL : {port_stay_pol} Days<br/>
             • Port Stay POD : {port_stay_pod} Days<br/>
             • Speed Laden : {speed_laden} Knot<br/>
-            • Speed Ballast : {speed_ballast} Knot
-            • Weather Allowance : {weather_factor:.1f}% included in sailing time
+            • Speed Ballast : {speed_ballast} Knot<br/>
+            • Weather Factor : {weather_factor:.1f}% included in sailing time
             """
 
             elements.append(Paragraph("Notes", styles['SubHeader']))
