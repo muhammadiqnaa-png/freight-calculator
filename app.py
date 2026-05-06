@@ -750,6 +750,11 @@ with st.sidebar.expander("⚙️ Operational Input", expanded=False):
         step=0.1,
         format="%.2f"
     )
+    weather_factor = st.number_input(
+        "Weather Factor (%)",
+        value=float(st.session_state.get("weather_factor", 5)),
+        step=1.0
+    )
     consumption = st.number_input("Fuel Consumption (L/hr)", value=st.session_state.get("consumption", 0))
     price_fuel = st.number_input("Fuel Price (Rp/L)", value=st.session_state.get("price_fuel", 0))
 
@@ -1434,8 +1439,10 @@ if calculate:
         pol_pod_day = pol_pod_hour / 24
         pod_pol_day = pod_pol_hour / 24
             
-        # Waktu sailing (hour) based on speed inputs (hours)
-        sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
+        # ===== SAILING TIME (WITH WEATHER FACTOR) =====
+        base_sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
+        sailing_time = base_sailing_time * (1 + weather_factor / 100)
+        
         # total voyage in days (sailing hours converted to days + port stays)
         total_voyage_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
         total_voyage_days_round = int(total_voyage_days) if total_voyage_days % 1 < 0.5 else int(total_voyage_days) + 1
