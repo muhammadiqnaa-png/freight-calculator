@@ -1440,8 +1440,9 @@ if calculate:
         pod_pol_day = pod_pol_hour / 24
             
         # ===== SAILING TIME (WITH WEATHER FACTOR) =====
+        weather_multiplier = 1 + (weather_factor / 100)
         base_sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
-        sailing_time = base_sailing_time * (1 + weather_factor / 100)
+        sailing_time = base_sailing_time * weather_multiplier
         
         # total voyage in days (sailing hours converted to days + port stays)
         total_voyage_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
