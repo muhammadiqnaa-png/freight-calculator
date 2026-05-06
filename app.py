@@ -1416,52 +1416,6 @@ def variable_cost_for_barge(size):
         "port": port_cost,
         "total": cost_fuel + cost_fw + premi_cost + port_cost
     }
-
-def owner_cost_for_barge(size, mode):
-
-    preset = preset_params.get(size, {})
-
-    charter_local = preset.get("charter", 0)
-    crew_local = preset.get("crew", 0)
-    insurance_local = preset.get("insurance", 0)
-    docking_local = preset.get("docking", 0)
-    maintenance_local = preset.get("maintenance", 0)
-    certificate_local = preset.get("certificate", 0)
-
-    distance_pol_pod = find_distance(port_pol, port_pod)
-    distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
-
-    sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
-    total_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
-
-    charter_cost = (charter_local / 30) * total_days
-    crew_cost = (crew_local / 30) * total_days
-    insurance_cost = (insurance_local / 30) * total_days
-    docking_cost = (docking_local / 30) * total_days
-    maintenance_cost = (maintenance_local / 30) * total_days
-    certificate_cost = (certificate_local / 30) * total_days
-
-    if mode == "Owner":
-        total = sum([
-            charter_cost,
-            crew_cost,
-            insurance_cost,
-            docking_cost,
-            maintenance_cost,
-            certificate_cost
-        ])
-    else:
-        total = charter_cost
-
-    return {
-        "charter": charter_cost,
-        "crew": crew_cost,
-        "insurance": insurance_cost,
-        "docking": docking_cost,
-        "maintenance": maintenance_cost,
-        "certificate": certificate_cost,
-        "total": total
-    }
         
 # ===== PERHITUNGAN =====
 
@@ -1864,96 +1818,60 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        # ===== OWNER / CHARTER COST DISPLAY (FINAL BEHAVIOR) =====
+        # ===== OWNER / CHARTER TOTAL =====
+        if mode == "Owner":
+            owner_total = (
+                charter_cost +
+                crew_cost +
+                insurance_cost +
+                docking_cost +
+                maintenance_cost +
+                certificate_cost
+            )
+        else:
+            owner_total = charter_cost
         
-        title = "Owner Cost" if mode == "Owner" else "Charter Cost"
         
-        def render_card(size, oc, show_title_inside=True):
+        # ===== TAMPILAN =====
+        if mode == "Owner":
         
-            if mode == "Owner":
-                html = f"""
-                • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
-                • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
-                • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
-                • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
-                • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
-                • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
-                """
-            else:
-                html = f"""
-                • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
-                """
-        
-            # ===== TITLE INSIDE (ONLY FOR SINGLE MODE) =====
-            title_html = ""
-            if show_title_inside:
-                title_html = f"""
-                <h4 style="
-                    margin-bottom:6px;
-                    color:#7c3aed;
-                    display:flex;
-                    justify-content:space-between;
-                ">
-                    <span>🏗️ {title}</span>
-                    <span style="font-size:12px; color:#64748b;">{size}</span>
-                </h4>
-                """
-            else:
-                title_html = f"""
-                <h4 style="margin-bottom:6px; color:#7c3aed;">
-                    🚢 {size}
-                </h4>
-                """
-        
-            return f"""
+            st.markdown(f"""
             <div style="
-                background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-                padding:12px;
-                border-radius:12px;
-                border-left:5px solid #7c3aed;
-                box-shadow:0 4px 12px rgba(0,0,0,0.1);
-                color:#0f172a;
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-left:5px solid #7c3aed;
             ">
-        
-            {title_html}
-        
-            {html}
-        
-            <hr style="margin:4px 0; opacity:0.2;">
-            <b>Total : Rp {oc["total"]:,.0f}</b>
-        
+            <h4 style="color:#7c3aed;">🏗️ Owner Cost</h4>
+            • Installment : <b>Rp {charter_cost:,.0f}</b><br>
+            • Crew : <b>Rp {crew_cost:,.0f}</b><br>
+            • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
+            • Docking : <b>Rp {docking_cost:,.0f}</b><br>
+            • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
+            • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
+            <hr style="margin:2px 0; opacity:0.2;">
+            <b>Total : Rp {owner_total:,.0f}</b>
             </div>
-            """
-        
-        # ===== MODE SWITCH =====
-        if compare_mode:
-        
-            # 🔥 TITLE DI LUAR (SESUAI REQUEST LO)
-            st.markdown(f"### 🏗️ {title} (Compare)")
-        
-            oc270 = owner_cost_for_barge("270 ft", mode)
-            oc300 = owner_cost_for_barge("300 ft", mode)
-            oc330 = owner_cost_for_barge("330 ft", mode)
-        
-            c1, c2, c3 = st.columns(3)
-        
-            with c1:
-                st.markdown(render_card("270 ft", oc270, show_title_inside=False), unsafe_allow_html=True)
-        
-            with c2:
-                st.markdown(render_card("300 ft", oc300, show_title_inside=False), unsafe_allow_html=True)
-        
-            with c3:
-                st.markdown(render_card("330 ft", oc330, show_title_inside=False), unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
         
         else:
         
-            active_size = st.session_state.get("preset_control", "270 ft")
-        
-            oc = owner_cost_for_barge(active_size, mode)
-        
-            # 🔥 NO TITLE LUAR — MASUK KE DALAM CARD
-            st.markdown(render_card(active_size, oc, show_title_inside=True), unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style="
+            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-left:5px solid #7c3aed;
+            ">
+            <h4 style="color:#7c3aed;">🏗️ Charter Cost</h4>
+            • Charter Hire : <b>Rp {charter_cost:,.0f}</b><br>
+            <hr style="margin:2px 0; opacity:0.2;">
+            <b>Total : Rp {owner_total:,.0f}</b>
+            
+            </div>
+            """, unsafe_allow_html=True)
             
         st.markdown(f"""
         <div style="
