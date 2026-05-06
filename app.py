@@ -1675,6 +1675,9 @@ if calculate:
             <span style="font-size:11px; color:#bbb;">
             (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
             </span><br>
+            <span style="font-size:11px; color:#f59e0b;">
+            Note: Sailing time includes a {weather_factor:.1f}% weather allowance.
+            </span><br>
             • Freight Cost : <b>Rp {freight_cost_mt:,.0f}</b>
         
             {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
@@ -2155,6 +2158,7 @@ if calculate:
             • Port Stay POD : {port_stay_pod} Days<br/>
             • Speed Laden : {speed_laden} Knot<br/>
             • Speed Ballast : {speed_ballast} Knot
+            • Weather Allowance : {weather_factor:.1f}% included in sailing time
             """
 
             elements.append(Paragraph("Notes", styles['SubHeader']))
