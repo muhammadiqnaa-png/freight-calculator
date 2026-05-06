@@ -1686,7 +1686,7 @@ if calculate:
                 color:#334155;
             ">
             
-            <b>Note:</b>
+            <b>Note:</b><br>
             • Sailing Time:<br>
             &nbsp;&nbsp;POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
             &nbsp;&nbsp;POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
