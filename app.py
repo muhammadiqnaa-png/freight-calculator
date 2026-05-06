@@ -1676,24 +1676,17 @@ if calculate:
         
             {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
              if float(target_margin or 0) > 0 else ""}
-
-            <div style="
-                margin-top:6px;
-                padding:8px;
-                border-radius:8px;
-                background:#f1f5f9;
-                font-size:11px;
-                color:#334155;
-            ">
-            
+             
+            <br>
+            <span style="font-size:11px; color:#475569;">
             <b>Note:</b><br>
+            
             • Sailing Time:<br>
             &nbsp;&nbsp;POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
             &nbsp;&nbsp;POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
             • Weather Factor : <b>{weather_factor:.0f}%</b><br>
             • Fuel Price : <b>Rp {price_fuel:,.0f} / Ltr</b>
-            
-            </div>
+            </span>
         
             </div>
             """, unsafe_allow_html=True)
