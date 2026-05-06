@@ -1671,17 +1671,32 @@ if calculate:
             • Route : <b>{port_pol} → {port_pod}</b><br>
             • Distance POL → POD : <b>{distance_pol_pod:,.0f} NM</b><br>
             • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split("(")[-1].replace(")", "")}</b><br>
-            • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
-            <span style="font-size:11px; color:#bbb;">
-            (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
-            </span><br>
-            <span style="font-size:11px; color:#f59e0b;">
-            Note: Sailing time includes a {weather_factor:.1f}% weather allowance.
-            </span><br>
+            • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
             • Freight Cost : <b>Rp {freight_cost_mt:,.0f}</b>
         
             {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
              if float(target_margin or 0) > 0 else ""}
+
+            <br>
+
+            <div style="
+                margin-top:6px;
+                padding:8px;
+                border-radius:8px;
+                background:#f1f5f9;
+                font-size:11px;
+                color:#334155;
+            ">
+            
+            <b>Note:</b><br>
+            
+            • Sailing Time:<br>
+            &nbsp;&nbsp;POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
+            &nbsp;&nbsp;POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
+            • Weather Factor : <b>{weather_factor:.0f}%</b><br>
+            • Fuel Price : <b>Rp {price_fuel:,.0f} / Ltr</b>
+            
+            </div>
         
             </div>
             """, unsafe_allow_html=True)
