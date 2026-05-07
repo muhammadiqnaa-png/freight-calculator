@@ -1825,6 +1825,7 @@ if calculate:
                         background: linear-gradient(135deg, #fff7ed, #ffffff);
                         padding:14px;
                         border-radius:12px;
+                        margin-bottom:10px;
                         border-left:5px solid #f97316;
                         box-shadow:0 4px 12px rgba(0,0,0,0.08);
                         color:#0f172a;
@@ -1868,6 +1869,7 @@ if calculate:
                 background: linear-gradient(135deg, #fff7ed, #ffffff);
                 padding:14px;
                 border-radius:12px;
+                margin-bottom:10px;
                 border-left:5px solid #f97316;
                 box-shadow:0 4px 12px rgba(0,0,0,0.08);
                 color:#0f172a;
