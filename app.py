@@ -2356,68 +2356,69 @@ if calculate:
             st.caption("📌 TCE dihitung dari performa aktual berdasarkan freight input user")
 
         # ===== PROFIT SCENARIO =====
+
+        def build_profit_df(size):
+        
+            res = calculate_for_barge(size)
+        
+            total_cost_local = res["total_cost"]
+            qty_local = res["qty"]
+        
+            data = []
+        
+            for p in range(0, 80, 5):
+        
+                freight = (total_cost_local / qty_local) * (1 + p / 100)
+        
+                revenue = freight * qty_local
+        
+                pph = revenue * 0.012
+        
+                gross_profit = revenue - total_cost_local - pph
+        
+                data.append([
+                    f"{p}%",
+                    f"Rp {freight:,.0f}",
+                    f"Rp {revenue:,.0f}",
+                    f"Rp {pph:,.0f}",
+                    f"Rp {gross_profit:,.0f}"
+                ])
+        
+            return pd.DataFrame(
+                data,
+                columns=[
+                    "Profit %",
+                    "Freight (Rp)",
+                    "Revenue (Rp)",
+                    "PPH 1.2% (Rp)",
+                    "Gross Profit (Rp)"
+                ]
+            )
+        
+        # =====================================
+        # 🔥 COMPARE MODE
+        # =====================================
         if compare_mode:
         
-            ps270 = profit_scenario_for_barge("270 ft")
-            ps300 = profit_scenario_for_barge("300 ft")
-            ps330 = profit_scenario_for_barge("330 ft")
+            st.subheader("💹 Profit Scenario Compare")
         
-            st.markdown("### 💹 Profit Scenario Compare")
+            compare_sizes = ["270 ft", "300 ft", "330 ft"]
         
-            c1, c2, c3 = st.columns(3)
+            for size in compare_sizes:
         
-            def render_profit(col, title, rows):
+                st.markdown(f"### 🚢 {size}")
         
-                html = ""
+                df_profit_compare = build_profit_df(size)
         
-                for r in rows:
+                st.dataframe(
+                    df_profit_compare,
+                    use_container_width=True,
+                    height=250
+                )
         
-                    color = "#16a34a" if r["profit"] >= 0 else "#dc2626"
-        
-                    html += f"""
-                    <div style="
-                        padding:6px 0;
-                        border-bottom:1px solid rgba(0,0,0,0.08);
-                    ">
-                    <b>{r["percent"]}%</b><br>
-        
-                    Freight :
-                    Rp {r["freight"]:,.0f}<br>
-        
-                    Profit :
-                    <span style="color:{color};">
-                    Rp {r["profit"]:,.0f}
-                    </span>
-                    </div>
-                    """
-        
-                with col:
-        
-                    st.markdown(f"""
-                    <div style="
-                        background:white;
-                        padding:14px;
-                        border-radius:14px;
-                        border-left:5px solid #10b981;
-                        box-shadow:0 4px 12px rgba(0,0,0,0.08);
-                        color:#0f172a;
-                        max-height:650px;
-                        overflow-y:auto;
-                    ">
-        
-                    <h4 style="color:#10b981;">
-                    🚢 {title}
-                    </h4>
-        
-                    {html}
-        
-                    </div>
-                    """, unsafe_allow_html=True)
-        
-            render_profit(c1, "270 ft", ps270)
-            render_profit(c2, "300 ft", ps300)
-            render_profit(c3, "330 ft", ps330)
-        
+        # =====================================
+        # 🔥 NORMAL MODE
+        # =====================================
         else:
         
             data = []
@@ -2453,8 +2454,11 @@ if calculate:
         
             st.subheader("💹 Profit Scenario 0–75%")
         
-            st.dataframe(df_profit, use_container_width=True, height=250)
-
+            st.dataframe(
+                df_profit,
+                use_container_width=True,
+                height=250
+            )
 
         # ===== PDF GENERATOR =====
         def create_pdf(username):
