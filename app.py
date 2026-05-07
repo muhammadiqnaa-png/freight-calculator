@@ -1758,6 +1758,7 @@ if calculate:
                             background:#f0fdf4;
                             padding:12px;
                             border-radius:12px;
+                            margin-bottom:10px;
                             border-left:5px solid {profit_color};
                             color:black;
                         ">
@@ -1804,9 +1805,6 @@ if calculate:
         
                 </div>
                 """, unsafe_allow_html=True)
-
-            # ===== SPACING BIAR GA NEMPEL =====
-            st.divider()
 
         if compare_mode:
 
