@@ -1574,6 +1574,34 @@ def summary_cost_for_barge(size):
         "additional": additional_total_local,
         "total": total
     }
+
+def profit_scenario_for_barge(size):
+
+    res = calculate_for_barge(size)
+
+    total_cost_local = res["total_cost"]
+    qty_local = res["qty"]
+
+    rows = []
+
+    for p in range(0, 80, 5):
+
+        freight = (total_cost_local / qty_local) * (1 + p / 100)
+
+        revenue = freight * qty_local
+
+        pph = revenue * 0.012
+
+        profit = revenue - total_cost_local - pph
+
+        rows.append({
+            "percent": p,
+            "freight": freight,
+            "revenue": revenue,
+            "profit": profit
+        })
+
+    return rows
         
 # ===== PERHITUNGAN =====
 
@@ -2327,19 +2355,105 @@ if calculate:
         else:
             st.caption("📌 TCE dihitung dari performa aktual berdasarkan freight input user")
 
-
         # ===== PROFIT SCENARIO =====
-        data = []
-        for p in range(0, 80, 5):
-            freight_persen = freight_cost_mt * (1 + p / 100)
-            revenue = freight_persen * qyt_cargo
-            pph = revenue * 0.012
-            gross_profit = revenue - total_cost - pph
-            data.append([f"{p}%", f"Rp {freight_persen:,.0f}", f"Rp {revenue:,.0f}", f"Rp {pph:,.0f}", f"Rp {gross_profit:,.0f}"])
-        df_profit = pd.DataFrame(data, columns=["Profit %", "Freight (Rp)", "Revenue (Rp)", "PPH 1.2% (Rp)", "Gross Profit (Rp)"])
-
-        st.subheader("💹 Profit Scenario 0–75%")
-        st.dataframe(df_profit, use_container_width=True, height=250)
+        if compare_mode:
+        
+            ps270 = profit_scenario_for_barge("270 ft")
+            ps300 = profit_scenario_for_barge("300 ft")
+            ps330 = profit_scenario_for_barge("330 ft")
+        
+            st.markdown("### 💹 Profit Scenario Compare")
+        
+            c1, c2, c3 = st.columns(3)
+        
+            def render_profit(col, title, rows):
+        
+                html = ""
+        
+                for r in rows:
+        
+                    color = "#16a34a" if r["profit"] >= 0 else "#dc2626"
+        
+                    html += f"""
+                    <div style="
+                        padding:6px 0;
+                        border-bottom:1px solid rgba(0,0,0,0.08);
+                    ">
+                    <b>{r["percent"]}%</b><br>
+        
+                    Freight :
+                    Rp {r["freight"]:,.0f}<br>
+        
+                    Profit :
+                    <span style="color:{color};">
+                    Rp {r["profit"]:,.0f}
+                    </span>
+                    </div>
+                    """
+        
+                with col:
+        
+                    st.markdown(f"""
+                    <div style="
+                        background:white;
+                        padding:14px;
+                        border-radius:14px;
+                        border-left:5px solid #10b981;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.08);
+                        color:#0f172a;
+                        max-height:650px;
+                        overflow-y:auto;
+                    ">
+        
+                    <h4 style="color:#10b981;">
+                    🚢 {title}
+                    </h4>
+        
+                    {html}
+        
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+            render_profit(c1, "270 ft", ps270)
+            render_profit(c2, "300 ft", ps300)
+            render_profit(c3, "330 ft", ps330)
+        
+        else:
+        
+            data = []
+        
+            for p in range(0, 80, 5):
+        
+                freight_persen = freight_cost_mt * (1 + p / 100)
+        
+                revenue = freight_persen * qyt_cargo
+        
+                pph = revenue * 0.012
+        
+                gross_profit = revenue - total_cost - pph
+        
+                data.append([
+                    f"{p}%",
+                    f"Rp {freight_persen:,.0f}",
+                    f"Rp {revenue:,.0f}",
+                    f"Rp {pph:,.0f}",
+                    f"Rp {gross_profit:,.0f}"
+                ])
+        
+            df_profit = pd.DataFrame(
+                data,
+                columns=[
+                    "Profit %",
+                    "Freight (Rp)",
+                    "Revenue (Rp)",
+                    "PPH 1.2% (Rp)",
+                    "Gross Profit (Rp)"
+                ]
+            )
+        
+            st.subheader("💹 Profit Scenario 0–75%")
+        
+            st.dataframe(df_profit, use_container_width=True, height=250)
 
 
         # ===== PDF GENERATOR =====
