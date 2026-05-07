@@ -2355,6 +2355,7 @@ if calculate:
         else:
             st.caption("📌 TCE dihitung dari performa aktual berdasarkan freight input user")
 
+        df_profit = pd.DataFrame()
         # ===== PROFIT SCENARIO =====
 
         def build_profit_df(size):
