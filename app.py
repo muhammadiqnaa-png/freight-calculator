@@ -1446,16 +1446,37 @@ def owner_cost_for_barge(size):
 
     preset = preset_params.get(size, {})
 
-    charter_local = preset.get("charter", 0)
-    crew_local = preset.get("crew", 0)
-    insurance_local = preset.get("insurance", 0)
-    docking_local = preset.get("docking", 0)
-    maintenance_local = preset.get("maintenance", 0)
-    certificate_local = preset.get("certificate", 0)
+    active_barge = st.session_state.get("preset_control", "270 ft")
 
+    # =========================================
+    # 🔥 SIZE ACTIVE = PAKAI INPUT USER
+    # =========================================
+    if size == active_barge:
+
+        charter_local = charter
+        crew_local = crew
+        insurance_local = insurance
+        docking_local = docking
+        maintenance_local = maintenance
+        certificate_local = certificate
+
+    # =========================================
+    # 🔥 SIZE LAIN = PAKAI PRESET
+    # =========================================
+    else:
+
+        charter_local = preset.get("charter", 0)
+        crew_local = preset.get("crew", 0)
+        insurance_local = preset.get("insurance", 0)
+        docking_local = preset.get("docking", 0)
+        maintenance_local = preset.get("maintenance", 0)
+        certificate_local = preset.get("certificate", 0)
+
+    # ===== DISTANCE =====
     distance_pol_pod = find_distance(port_pol, port_pod)
     distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
 
+    # ===== TIME =====
     sailing_time = (
         (distance_pol_pod / speed_laden) +
         (distance_pod_pol / speed_ballast)
@@ -1467,6 +1488,7 @@ def owner_cost_for_barge(size):
         port_stay_pod
     )
 
+    # ===== COST =====
     charter_cost = (charter_local / 30) * total_days
     crew_cost = (crew_local / 30) * total_days
     insurance_cost = (insurance_local / 30) * total_days
@@ -1474,6 +1496,7 @@ def owner_cost_for_barge(size):
     maintenance_cost = (maintenance_local / 30) * total_days
     certificate_cost = (certificate_local / 30) * total_days
 
+    # ===== TOTAL =====
     if mode == "Owner":
 
         total = (
