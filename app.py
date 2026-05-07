@@ -1402,7 +1402,16 @@ def variable_cost_for_barge(size):
     distance_pol_pod = find_distance(port_pol, port_pod)
     distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
 
-    sailing_time = (distance_pol_pod / speed_laden_local) + (distance_pod_pol / speed_ballast_local)
+    # ===== WEATHER FACTOR =====
+    weather_multiplier = 1 + (weather_factor / 100)
+    
+    base_sailing_time = (
+        (distance_pol_pod / speed_laden_local)
+        + (distance_pod_pol / speed_ballast_local)
+    )
+    
+    sailing_time = base_sailing_time * weather_multiplier
+
     total_days = (sailing_time / 24) + (port_stay_pol_local + port_stay_pod_local)
 
     total_fuel = (sailing_time * consumption_local) + ((port_stay_pol_local + port_stay_pod_local) * 120)
