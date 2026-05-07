@@ -1830,14 +1830,12 @@ if calculate:
         
                     <h4 style="color:#f97316;">🚢 {title}</h4>
         
-                    • Fuel Cost : 
-                    <b>Rp {vc["fuel"]:,.0f}</b>
+                    • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b>
                     <span style="font-size:11px; color:#64748b;">
                     ({vc["fuel_cons"]:,.0f} Ltr)
                     </span><br>
                     
-                    • FW Cost : 
-                    <b>Rp {vc["fw"]:,.0f}</b>
+                    • FW Cost : <b>Rp {vc["fw"]:,.0f}</b>
                     <span style="font-size:11px; color:#64748b;">
                     ({vc["fw_cons"]:,.1f} Ton)
                     </span><br>
