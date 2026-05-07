@@ -1465,7 +1465,12 @@ def owner_cost_for_barge(size):
     # =========================================
     else:
 
-        charter_local = preset.get("charter", 0)
+        # ===== OWNER MODE =====
+        if mode == "Owner":
+            charter_local = 0
+        else:
+            charter_local = preset.get("charter", 0)
+    
         crew_local = preset.get("crew", 0)
         insurance_local = preset.get("insurance", 0)
         docking_local = preset.get("docking", 0)
