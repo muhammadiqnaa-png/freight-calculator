@@ -1590,26 +1590,39 @@ if calculate:
         # ===== TCE BASE COST (WAJIB DI SINI) =====
         tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
 
-        # ===== TCE CALCULATION (SMART MODE) =====
+        # ===== TCE CALCULATION =====
 
-        voyage_cost = cost_fuel + cost_fw + port_cost + premi_cost
+        # voyage cost = operational voyage only
+        voyage_cost = (
+            cost_fuel
+            + cost_fw
+            + port_cost
+            + premi_cost
+        )
         
-        if freight_price_input > 0 and total_voyage_days > 0:
+        # default
+        tce_per_day = 0
+        tce_per_month = 0
         
-            # =========================
-            # ⚓ TCE ACTUAL (NEW FORMULA)
-            # =========================
-            
-            tce_profit = revenue_user - total_cost   # 🔥 UPDATED FORMULA
-            
+        # ===== TCE ACTUAL =====
+        if freight_price_input > 0:
+        
+            revenue_tce = revenue_user
+        
+            tce_profit = revenue_tce - voyage_cost
+        
             label_tce = "TCE (Actual)"
-            
-            tce_per_day = tce_profit / total_voyage_days if total_voyage_days > 0 else 0
+        
+            tce_per_day = (
+                tce_profit / total_voyage_days
+                if total_voyage_days > 0 else 0
+            )
+        
             tce_per_month = tce_per_day * 30
         
+        # ===== TCE MINIMUM =====
         else:
-
-            # ===== MINIMUM TCE =====
+        
             breakeven_revenue = freight_cost_mt * qyt_cargo
         
             tce_profit = breakeven_revenue - voyage_cost
