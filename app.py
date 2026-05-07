@@ -1722,7 +1722,6 @@ if calculate:
             {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
              if float(target_margin or 0) > 0 else ""}
              
-            <br>
             <span style="font-size:11px; color:#475569;">
             <b>Note:</b><br>
             
