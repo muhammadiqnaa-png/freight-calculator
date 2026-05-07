@@ -1440,7 +1440,7 @@ def variable_cost_for_barge(size):
             + premi_cost
             + port_cost
         )
-}
+    }
         
 # ===== PERHITUNGAN =====
 
