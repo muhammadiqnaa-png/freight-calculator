@@ -1984,6 +1984,8 @@ if calculate:
             """, unsafe_allow_html=True)
 
         # ===== OWNER / CHARTER COST =====
+        # ===== DEFAULT OWNER TOTAL =====
+        owner_total = 0
 
         if compare_mode:
         
