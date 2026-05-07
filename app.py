@@ -652,7 +652,12 @@ st.session_state.preset_selected = st.session_state.preset_control
 
 # ===== MODE =====
 mode = st.sidebar.selectbox("Mode", ["Owner", "Charter"])
-
+# ===== DEFAULT VARIABLE =====
+crew = 0
+insurance = 0
+docking = 0
+maintenance = 0
+certificate = 0
 
 with st.sidebar.expander("➕ Add Distance"):
 
