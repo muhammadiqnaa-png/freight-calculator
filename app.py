@@ -768,7 +768,7 @@ with st.sidebar.expander("⚙️ Operational Input", expanded=False):
 
 if mode == "Owner":
     with st.sidebar.expander("🏗️ Cost (Owner)", expanded=False):
-        charter = st.number_input("Angsuran (Rp/Month)", value=st.session_state.get("charter", 0))
+        charter = st.number_input("Angsuran (Rp/Month)", value=0)
         crew = st.number_input("Crew (Rp/Month)", value=st.session_state.get("crew", 0))
         insurance = st.number_input("Insurance (Rp/Month)", value=st.session_state.get("insurance", 0))
         docking = st.number_input("Docking (Rp/Month)", value=st.session_state.get("docking", 0))
