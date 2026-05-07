@@ -1873,7 +1873,7 @@ if calculate:
                 color:#0f172a;
             ">
         
-            <h4 style="color:#f97316;">⛽ Variable Cost ({active_barge})</h4>
+            <h4 style="color:#f97316;">⛽ Variable Cost </h4>
         
             • Fuel Cost : 
             <b>Rp {vc["fuel"]:,.0f}</b>
