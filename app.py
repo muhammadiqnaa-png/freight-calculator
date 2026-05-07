@@ -1608,11 +1608,20 @@ if calculate:
             tce_per_month = tce_per_day * 30
         
         else:
-        
-            # ===== MINIMUM TCE (pakai freight cost) =====
+
+            # ===== MINIMUM TCE =====
             breakeven_revenue = freight_cost_mt * qyt_cargo
+        
             tce_profit = breakeven_revenue - voyage_cost
+        
             label_tce = "TCE (Minimum)"
+        
+            tce_per_day = (
+                tce_profit / total_voyage_days
+                if total_voyage_days > 0 else 0
+            )
+        
+            tce_per_month = tce_per_day * 30
 
         save_input_history(
             port_pol,
