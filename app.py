@@ -1441,6 +1441,63 @@ def variable_cost_for_barge(size):
             + port_cost
         )
     }
+
+def owner_cost_for_barge(size):
+
+    preset = preset_params.get(size, {})
+
+    charter_local = preset.get("charter", 0)
+    crew_local = preset.get("crew", 0)
+    insurance_local = preset.get("insurance", 0)
+    docking_local = preset.get("docking", 0)
+    maintenance_local = preset.get("maintenance", 0)
+    certificate_local = preset.get("certificate", 0)
+
+    distance_pol_pod = find_distance(port_pol, port_pod)
+    distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
+
+    sailing_time = (
+        (distance_pol_pod / speed_laden) +
+        (distance_pod_pol / speed_ballast)
+    )
+
+    total_days = (
+        (sailing_time / 24) +
+        port_stay_pol +
+        port_stay_pod
+    )
+
+    charter_cost = (charter_local / 30) * total_days
+    crew_cost = (crew_local / 30) * total_days
+    insurance_cost = (insurance_local / 30) * total_days
+    docking_cost = (docking_local / 30) * total_days
+    maintenance_cost = (maintenance_local / 30) * total_days
+    certificate_cost = (certificate_local / 30) * total_days
+
+    if mode == "Owner":
+
+        total = (
+            charter_cost +
+            crew_cost +
+            insurance_cost +
+            docking_cost +
+            maintenance_cost +
+            certificate_cost
+        )
+
+    else:
+
+        total = charter_cost
+
+    return {
+        "charter": charter_cost,
+        "crew": crew_cost,
+        "insurance": insurance_cost,
+        "docking": docking_cost,
+        "maintenance": maintenance_cost,
+        "certificate": certificate_cost,
+        "total": total
+    }
         
 # ===== PERHITUNGAN =====
 
@@ -1893,60 +1950,132 @@ if calculate:
             </div>
             """, unsafe_allow_html=True)
 
-        # ===== OWNER / CHARTER TOTAL =====
-        if mode == "Owner":
-            owner_total = (
-                charter_cost +
-                crew_cost +
-                insurance_cost +
-                docking_cost +
-                maintenance_cost +
-                certificate_cost
-            )
+        # ===== OWNER / CHARTER COST =====
+
+        if compare_mode:
+        
+            oc270 = owner_cost_for_barge("270 ft")
+            oc300 = owner_cost_for_barge("300 ft")
+            oc330 = owner_cost_for_barge("330 ft")
+        
+            title = "Owner Cost" if mode == "Owner" else "Charter Cost"
+        
+            st.markdown(f"### 🏗️ {title} (Compare)")
+        
+            c1, c2, c3 = st.columns(3)
+        
+            def render_owner(col, title_barge, oc):
+        
+                with col:
+        
+                    st.markdown(f"""
+                    <div style="
+                        background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                        padding:12px;
+                        border-radius:12px;
+                        margin-bottom:10px;
+                        border-left:5px solid #7c3aed;
+                        color:#0f172a;
+                    ">
+        
+                    <h4 style="color:#7c3aed;">{title_barge}</h4>
+                    """, unsafe_allow_html=True)
+        
+                    if mode == "Owner":
+        
+                        st.markdown(f"""
+                        • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
+                        • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
+                        • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
+                        • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
+                        • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
+                        • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+                        """, unsafe_allow_html=True)
+        
+                    else:
+        
+                        st.markdown(f"""
+                        • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+                        """, unsafe_allow_html=True)
+        
+                    st.markdown(f"""
+                    <hr style="margin:6px 0; opacity:0.2;">
+        
+                    <b>Total : Rp {oc["total"]:,.0f}</b>
+        
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+            render_owner(c1, "270 ft", oc270)
+            render_owner(c2, "300 ft", oc300)
+            render_owner(c3, "330 ft", oc330)
+        
         else:
-            owner_total = charter_cost
         
+            # ===== NORMAL MODE =====
         
-        # ===== TAMPILAN =====
-        if mode == "Owner":
+            if mode == "Owner":
         
-            st.markdown(f"""
-            <div style="
-            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            border-left:5px solid #7c3aed;
-            ">
-            <h4 style="color:#7c3aed;">🏗️ Owner Cost</h4>
-            • Installment : <b>Rp {charter_cost:,.0f}</b><br>
-            • Crew : <b>Rp {crew_cost:,.0f}</b><br>
-            • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
-            • Docking : <b>Rp {docking_cost:,.0f}</b><br>
-            • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
-            • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
-            <hr style="margin:2px 0; opacity:0.2;">
-            <b>Total : Rp {owner_total:,.0f}</b>
-            </div>
-            """, unsafe_allow_html=True)
+                owner_total = (
+                    charter_cost +
+                    crew_cost +
+                    insurance_cost +
+                    docking_cost +
+                    maintenance_cost +
+                    certificate_cost
+                )
         
-        else:
+            else:
         
-            st.markdown(f"""
-            <div style="
-            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            border-left:5px solid #7c3aed;
-            ">
-            <h4 style="color:#7c3aed;">🏗️ Charter Cost</h4>
-            • Charter Hire : <b>Rp {charter_cost:,.0f}</b><br>
-            <hr style="margin:2px 0; opacity:0.2;">
-            <b>Total : Rp {owner_total:,.0f}</b>
-            
-            </div>
-            """, unsafe_allow_html=True)
+                owner_total = charter_cost
+        
+            if mode == "Owner":
+        
+                st.markdown(f"""
+                <div style="
+                background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #7c3aed;
+                ">
+                <h4 style="color:#7c3aed;">🏗️ Owner Cost</h4>
+        
+                • Installment : <b>Rp {charter_cost:,.0f}</b><br>
+                • Crew : <b>Rp {crew_cost:,.0f}</b><br>
+                • Insurance : <b>Rp {insurance_cost:,.0f}</b><br>
+                • Docking : <b>Rp {docking_cost:,.0f}</b><br>
+                • Maintenance : <b>Rp {maintenance_cost:,.0f}</b><br>
+                • Certificate : <b>Rp {certificate_cost:,.0f}</b><br>
+        
+                <hr style="margin:2px 0; opacity:0.2;">
+        
+                <b>Total : Rp {owner_total:,.0f}</b>
+        
+                </div>
+                """, unsafe_allow_html=True)
+        
+            else:
+        
+                st.markdown(f"""
+                <div style="
+                background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                padding:12px;
+                border-radius:12px;
+                margin-bottom:10px;
+                border-left:5px solid #7c3aed;
+                ">
+        
+                <h4 style="color:#7c3aed;">🏗️ Charter Cost</h4>
+        
+                • Charter Hire : <b>Rp {charter_cost:,.0f}</b><br>
+        
+                <hr style="margin:2px 0; opacity:0.2;">
+        
+                <b>Total : Rp {owner_total:,.0f}</b>
+        
+                </div>
+                """, unsafe_allow_html=True)
             
         st.markdown(f"""
         <div style="
