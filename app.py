@@ -1965,46 +1965,61 @@ if calculate:
             c1, c2, c3 = st.columns(3)
         
             def render_owner(col, title_barge, oc):
-        
+
                 with col:
-        
-                    st.markdown(f"""
-                    <div style="
-                        background:linear-gradient(135deg, #f5f3ff, #ede9fe);
-                        padding:12px;
-                        border-radius:12px;
-                        margin-bottom:10px;
-                        border-left:5px solid #7c3aed;
-                        color:#0f172a;
-                    ">
-        
-                    <h4 style="color:#7c3aed;">{title_barge}</h4>
-                    """, unsafe_allow_html=True)
-        
+            
                     if mode == "Owner":
-        
+            
                         st.markdown(f"""
+                        <div style="
+                            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                            padding:12px;
+                            border-radius:12px;
+                            margin-bottom:10px;
+                            border-left:5px solid #7c3aed;
+                            color:#0f172a;
+                            box-shadow:0 4px 12px rgba(0,0,0,0.08);
+                        ">
+            
+                        <h4 style="color:#7c3aed;">🚢 {title_barge}</h4>
+            
                         • Installment : <b>Rp {oc["charter"]:,.0f}</b><br>
                         • Crew : <b>Rp {oc["crew"]:,.0f}</b><br>
                         • Insurance : <b>Rp {oc["insurance"]:,.0f}</b><br>
                         • Docking : <b>Rp {oc["docking"]:,.0f}</b><br>
                         • Maintenance : <b>Rp {oc["maintenance"]:,.0f}</b><br>
                         • Certificate : <b>Rp {oc["certificate"]:,.0f}</b><br>
+            
+                        <hr style="margin:6px 0; opacity:0.2;">
+            
+                        <b>Total : Rp {oc["total"]:,.0f}</b>
+            
+                        </div>
                         """, unsafe_allow_html=True)
-        
+            
                     else:
-        
+            
                         st.markdown(f"""
+                        <div style="
+                            background:linear-gradient(135deg, #f5f3ff, #ede9fe);
+                            padding:12px;
+                            border-radius:12px;
+                            margin-bottom:10px;
+                            border-left:5px solid #7c3aed;
+                            color:#0f172a;
+                            box-shadow:0 4px 12px rgba(0,0,0,0.08);
+                        ">
+            
+                        <h4 style="color:#7c3aed;">🚢 {title_barge}</h4>
+            
                         • Charter Hire : <b>Rp {oc["charter"]:,.0f}</b><br>
+            
+                        <hr style="margin:6px 0; opacity:0.2;">
+            
+                        <b>Total : Rp {oc["total"]:,.0f}</b>
+            
+                        </div>
                         """, unsafe_allow_html=True)
-        
-                    st.markdown(f"""
-                    <hr style="margin:6px 0; opacity:0.2;">
-        
-                    <b>Total : Rp {oc["total"]:,.0f}</b>
-        
-                    </div>
-                    """, unsafe_allow_html=True)
         
             render_owner(c1, "270 ft", oc270)
             render_owner(c2, "300 ft", oc300)
