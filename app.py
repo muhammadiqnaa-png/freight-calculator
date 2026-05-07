@@ -1880,7 +1880,6 @@ if calculate:
             <span style="font-size:11px; color:#64748b;">
             ({vc["fuel_cons"]:,.0f} Ltr)
             </span><br>
-            
             • FW Cost : 
             <b>Rp {vc["fw"]:,.0f}</b>
             <span style="font-size:11px; color:#64748b;">
