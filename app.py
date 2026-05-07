@@ -1426,10 +1426,21 @@ def variable_cost_for_barge(size):
     return {
         "fuel": cost_fuel,
         "fw": cost_fw,
+    
+        # 🔥 TOTAL CONSUMPTION
+        "fuel_cons": total_fuel,
+        "fw_cons": total_fw,
+    
         "premi": premi_cost,
         "port": port_cost,
-        "total": cost_fuel + cost_fw + premi_cost + port_cost
-    }
+    
+        "total": (
+            cost_fuel
+            + cost_fw
+            + premi_cost
+            + port_cost
+        )
+}
         
 # ===== PERHITUNGAN =====
 
@@ -1821,8 +1832,17 @@ if calculate:
         
                     <h4 style="color:#f97316;">🚢 {title}</h4>
         
-                    • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
-                    • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
+                    • Fuel Cost : 
+                    <b>Rp {vc["fuel"]:,.0f}</b>
+                    <span style="font-size:11px; color:#64748b;">
+                    ({vc["fuel_cons"]:,.0f} Ltr)
+                    </span><br>
+                    
+                    • FW Cost : 
+                    <b>Rp {vc["fw"]:,.0f}</b>
+                    <span style="font-size:11px; color:#64748b;">
+                    ({vc["fw_cons"]:,.1f} Ton)
+                    </span><br>
                     • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
                     • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
         
@@ -1855,8 +1875,17 @@ if calculate:
         
             <h4 style="color:#f97316;">⛽ Variable Cost ({active_barge})</h4>
         
-            • Fuel Cost : <b>Rp {vc["fuel"]:,.0f}</b><br>
-            • FW Cost : <b>Rp {vc["fw"]:,.0f}</b><br>
+            • Fuel Cost : 
+            <b>Rp {vc["fuel"]:,.0f}</b>
+            <span style="font-size:11px; color:#64748b;">
+            ({vc["fuel_cons"]:,.0f} Ltr)
+            </span><br>
+            
+            • FW Cost : 
+            <b>Rp {vc["fw"]:,.0f}</b>
+            <span style="font-size:11px; color:#64748b;">
+            ({vc["fw_cons"]:,.1f} Ton)
+            </span><br>
             • Premi : <b>Rp {vc["premi"]:,.0f}</b><br>
             • Port Cost : <b>Rp {vc["port"]:,.0f}</b><br>
         
