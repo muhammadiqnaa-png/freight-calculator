@@ -1531,6 +1531,49 @@ def owner_cost_for_barge(size):
         "certificate": certificate_cost,
         "total": total
     }
+
+def summary_cost_for_barge(size):
+
+    vc = variable_cost_for_barge(size)
+    oc = owner_cost_for_barge(size)
+
+    # ===== TOTAL OPEX =====
+    distance_pol_pod = find_distance(port_pol, port_pod)
+    distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
+
+    sailing_time = (
+        (distance_pol_pod / speed_laden) +
+        (distance_pod_pol / speed_ballast)
+    )
+
+    total_days = (
+        (sailing_time / 24) +
+        port_stay_pol +
+        port_stay_pod
+    )
+
+    opex_total = (
+        ((opex_office / 30) * total_days) +
+        ((depreciation_kapal / 30) * total_days) +
+        other_cost
+    )
+
+    additional_total_local = 0
+
+    total = (
+        vc["total"] +
+        oc["total"] +
+        opex_total +
+        additional_total_local
+    )
+
+    return {
+        "variable": vc["total"],
+        "owner": oc["total"],
+        "opex": opex_total,
+        "additional": additional_total_local,
+        "total": total
+    }
         
 # ===== PERHITUNGAN =====
 
@@ -2181,37 +2224,85 @@ if calculate:
             """, unsafe_allow_html=True)
             
 
-        variable_total = cost_fuel + cost_fw + premi_cost + port_cost
-        opex_total = total_general_overhead + depreciation_cost + other_cost
-        additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
+        # ===== SUMMARY COST =====
 
-        summary_total = total_cost
+        if compare_mode:
         
-        st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, #eff6ff, #ffffff);
-            padding:16px;
-            border-radius:14px;
-            margin-bottom:10px;
-            color:#0f172a;
-            border-left:5px solid #2563eb;
-            box-shadow:0 6px 16px rgba(0,0,0,0.08);
-        ">
-        <h4 style="color:#2563eb;">📊 Summary Cost</h4>
+            sc270 = summary_cost_for_barge("270 ft")
+            sc300 = summary_cost_for_barge("300 ft")
+            sc330 = summary_cost_for_barge("330 ft")
         
-        • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
-        • Owner/Charter : <b>Rp {owner_total:,.0f}</b><br>
-        • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
-        • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
+            st.markdown("### 📊 Summary Cost (Compare)")
         
-        <hr style="margin:2px 0; opacity:0.2;">
+            c1, c2, c3 = st.columns(3)
         
-        <h3 style="margin:0; color:#0f172a;">
-            Total : Rp {summary_total:,.0f}
-        </h3>
-        </div>
-        """, unsafe_allow_html=True)
-
+            def render_summary(col, title, sc):
+        
+                with col:
+        
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #eff6ff, #ffffff);
+                        padding:16px;
+                        border-radius:14px;
+                        margin-bottom:10px;
+                        color:#0f172a;
+                        border-left:5px solid #2563eb;
+                        box-shadow:0 6px 16px rgba(0,0,0,0.08);
+                    ">
+        
+                    <h4 style="color:#2563eb;">🚢 {title}</h4>
+        
+                    • Variable Cost : <b>Rp {sc["variable"]:,.0f}</b><br>
+                    • Owner/Charter : <b>Rp {sc["owner"]:,.0f}</b><br>
+                    • Opex Cost : <b>Rp {sc["opex"]:,.0f}</b><br>
+                    • Additional Cost : <b>Rp {sc["additional"]:,.0f}</b><br>
+        
+                    <hr style="margin:2px 0; opacity:0.2;">
+        
+                    <b>Total : Rp {sc["total"]:,.0f}</b>
+        
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+            render_summary(c1, "270 ft", sc270)
+            render_summary(c2, "300 ft", sc300)
+            render_summary(c3, "330 ft", sc330)
+        
+        else:
+        
+            variable_total = cost_fuel + cost_fw + premi_cost + port_cost
+            opex_total = total_general_overhead + depreciation_cost + other_cost
+            additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
+        
+            summary_total = total_cost
+        
+            st.markdown(f"""
+            <div style="
+                background: linear-gradient(135deg, #eff6ff, #ffffff);
+                padding:16px;
+                border-radius:14px;
+                margin-bottom:10px;
+                color:#0f172a;
+                border-left:5px solid #2563eb;
+                box-shadow:0 6px 16px rgba(0,0,0,0.08);
+            ">
+            <h4 style="color:#2563eb;">📊 Summary Cost</h4>
+        
+            • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
+            • Owner/Charter : <b>Rp {owner_total:,.0f}</b><br>
+            • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
+            • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
+        
+            <hr style="margin:2px 0; opacity:0.2;">
+        
+            <h3 style="margin:0; color:#0f172a;">
+                Total : Rp {summary_total:,.0f}
+            </h3>
+        
+            </div>
+            """, unsafe_allow_html=True)
+    
         st.markdown(f"""
         <div style="
             background:linear-gradient(135deg, #f8fafc, #eef5ff);
