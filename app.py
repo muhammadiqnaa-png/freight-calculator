@@ -1846,8 +1846,8 @@ if calculate:
         
                     <b>Total Variable Cost : Rp {vc["total"]:,.0f}</b>
         
-                </div>
-                """, unsafe_allow_html=True)
+                    </div>
+                    """, unsafe_allow_html=True)
         
             render(c1, "270 ft", vc270)
             render(c2, "300 ft", vc300)
