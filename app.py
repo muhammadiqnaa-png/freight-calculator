@@ -2461,6 +2461,7 @@ if calculate:
                 height=250
             )
 
+        
         # ===== PDF GENERATOR =====
         def create_pdf(username):
         
@@ -2499,52 +2500,53 @@ if calculate:
                 leading=12
             ))
         
-            # ===== ELEMENTS =====
+            styles.add(ParagraphStyle(
+                name='Bold',
+                fontSize=11,
+                fontName='Helvetica-Bold'
+            ))
+        
+            # =========================================================
+            # 🔥 ELEMENTS
+            # =========================================================
             elements = []
         
-            # ===== FORMAT RP =====
             def fmt_rp(x):
                 return f"Rp {x:,.0f}"
         
-            # ===== PERCENTAGE =====
-            def pct_of_total(x, total):
-                try:
-                    if total > 0:
-                        return f" ({(x / total) * 100:.1f}%)"
-                    return " (0.0%)"
-                except:
-                    return " (0.0%)"
-        
             # =========================================================
-            # 🔥 FUNCTION CREATE SECTION
+            # 🔥 FULL REPORT TEMPLATE
             # =========================================================
-            def add_report_section(
-                title_barge,
-                qty,
+            def add_full_report(
+                title_name,
+                qty_local,
                 total_cost_local,
                 freight_local,
-                voyage_days,
-                fuel_cost,
-                fw_cost,
+                voyage_days_local,
                 revenue_local,
                 pph_local,
                 profit_local,
-                tce_day,
-                tce_month,
-                profit_percent
+                profit_percent_local,
+                tce_day_local,
+                tce_month_local,
+                fuel_cost_local,
+                fw_cost_local,
+                fuel_cons_local,
+                fw_cons_local,
             ):
         
-                # ===== TITLE =====
-                elements.append(
-                    Paragraph(
-                        f"<b>Freight Calculation Report - {title_barge}</b>",
-                        styles['HeaderBlue']
-                    )
+                # ===== HEADER =====
+                title = Paragraph(
+                    f"<b>Freight Calculation Report - {title_name}</b>",
+                    styles['HeaderBlue']
                 )
         
+                elements.append(title)
                 elements.append(Spacer(1, 4))
         
-                # ===== VOYAGE INFO =====
+                # =========================================================
+                # 🚢 VOYAGE INFORMATION
+                # =========================================================
                 elements.append(
                     Paragraph("Voyage Information", styles['SubHeader'])
                 )
@@ -2552,13 +2554,17 @@ if calculate:
                 voyage_data = [
                     ["Port Of Loading", port_pol],
                     ["Port Of Discharge", port_pod],
-                    ["Next Port", next_port],
-                    ["Cargo Quantity", f"{qty:,.0f}"],
-                    ["Distance (NM)", f"{distance_pol_pod:,.0f}"],
-                    ["Total Voyage (Days)", f"{voyage_days:.2f}"],
+                    ["Next Port", next_port if next_port else "-"],
+                    ["Cargo Type", type_cargo],
+                    ["Cargo Quantity", f"{qty_local:,.0f}"],
+                    ["Distance POL → POD", f"{distance_pol_pod:,.0f} NM"],
+                    ["Total Voyage", f"{voyage_days_local:.2f} Days"],
                 ]
         
-                t_voyage = Table(voyage_data, colWidths=[8*cm, 8*cm])
+                t_voyage = Table(
+                    voyage_data,
+                    colWidths=[8.5*cm, 8.5*cm]
+                )
         
                 t_voyage.setStyle(TableStyle([
                     ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
@@ -2566,53 +2572,44 @@ if calculate:
                     ('FONTSIZE', (0,0), (-1,-1), 8),
                 ]))
         
-                elements.append(t_voyage)
-                elements.append(Spacer(1, 6))
+                elements += [t_voyage, Spacer(1, 6)]
         
-                # ===== COST SUMMARY =====
+                # =========================================================
+                # ⚙️ OPERATIONAL & COST SUMMARY
+                # =========================================================
                 elements.append(
                     Paragraph("Operational & Cost Summary", styles['SubHeader'])
                 )
         
                 calc_data = [
-                    ["Fuel Cost", f"{fmt_rp(fuel_cost)}{pct_of_total(fuel_cost, total_cost_local)}"],
-                    ["FW Cost", f"{fmt_rp(fw_cost)}{pct_of_total(fw_cost, total_cost_local)}"],
+                    ["Total Sailing Time", f"{sailing_time:.2f} Hours"],
+                    ["Fuel Consumption", f"{fuel_cons_local:,.0f} Ltr"],
+                    ["FW Consumption", f"{fw_cons_local:,.1f} Ton"],
+                    ["Fuel Cost", fmt_rp(fuel_cost_local)],
+                    ["Fresh Water Cost", fmt_rp(fw_cost_local)],
+                    ["Port Cost", fmt_rp(port_cost)],
+                    ["Premi Cost", fmt_rp(premi_cost)],
+                    ["Other Cost", fmt_rp(other_cost)],
                     ["Total Cost", fmt_rp(total_cost_local)],
                     ["Freight Cost", fmt_rp(freight_local)],
                 ]
         
-                t_calc = Table(calc_data, colWidths=[8*cm, 8*cm])
+                t_calc = Table(
+                    calc_data,
+                    colWidths=[8.5*cm, 8.5*cm]
+                )
         
                 t_calc.setStyle(TableStyle([
                     ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
-                    ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
+                    ('BACKGROUND', (0,-2), (-1,-1), colors.lightgrey),
                     ('FONTSIZE', (0,0), (-1,-1), 8),
                 ]))
         
-                elements.append(t_calc)
-                elements.append(Spacer(1, 6))
+                elements += [t_calc, Spacer(1, 6)]
         
-                # ===== TCE =====
-                elements.append(
-                    Paragraph("TCE", styles['SubHeader'])
-                )
-        
-                tce_data = [
-                    ["TCE Per Day", fmt_rp(tce_day)],
-                    ["TCE Per Month", fmt_rp(tce_month)],
-                ]
-        
-                t_tce = Table(tce_data, colWidths=[8*cm, 8*cm])
-        
-                t_tce.setStyle(TableStyle([
-                    ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
-                    ('FONTSIZE', (0,0), (-1,-1), 8),
-                ]))
-        
-                elements.append(t_tce)
-                elements.append(Spacer(1, 6))
-        
-                # ===== BUDGET CUSTOMER =====
+                # =========================================================
+                # 💼 BUDGET CUSTOMER
+                # =========================================================
                 if freight_price_input > 0:
         
                     elements.append(
@@ -2623,40 +2620,71 @@ if calculate:
                         ["Revenue", fmt_rp(revenue_local)],
                         ["PPH 1.2%", fmt_rp(pph_local)],
                         ["Profit", fmt_rp(profit_local)],
-                        ["Profit %", f"{profit_percent:.2f}%"],
+                        ["Profit %", f"{profit_percent_local:.2f}%"],
                     ]
         
-                    t_budget = Table(budget_data, colWidths=[8*cm, 8*cm])
+                    t_budget = Table(
+                        budget_data,
+                        colWidths=[8.5*cm, 8.5*cm]
+                    )
         
                     t_budget.setStyle(TableStyle([
                         ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
                         ('FONTSIZE', (0,0), (-1,-1), 8),
                     ]))
         
-                    elements.append(t_budget)
-                    elements.append(Spacer(1, 6))
+                    elements += [t_budget, Spacer(1, 6)]
         
-                # ===== PROFIT SCENARIO =====
+                # =========================================================
+                # ⏱️ TCE
+                # =========================================================
                 elements.append(
-                    Paragraph("Profit Scenario 0-75%", styles['SubHeader'])
+                    Paragraph("Time Charter Equivalent (TCE)", styles['SubHeader'])
+                )
+        
+                tce_data = [
+                    ["TCE Per Day", fmt_rp(tce_day_local)],
+                    ["TCE Per Month", fmt_rp(tce_month_local)],
+                ]
+        
+                t_tce = Table(
+                    tce_data,
+                    colWidths=[8.5*cm, 8.5*cm]
+                )
+        
+                t_tce.setStyle(TableStyle([
+                    ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
+                    ('FONTSIZE', (0,0), (-1,-1), 8),
+                ]))
+        
+                elements += [t_tce, Spacer(1, 6)]
+        
+                # =========================================================
+                # 💹 PROFIT SCENARIO
+                # =========================================================
+                elements.append(
+                    Paragraph("Profit Scenario 0–75%", styles['SubHeader'])
                 )
         
                 profit_table = [
-                    ["Profit %", "Freight"]
+                    ["Profit %", "Freight", "Revenue"]
                 ]
         
                 for p in range(0, 80, 5):
         
                     freight_persen = freight_local * (1 + p / 100)
         
+                    revenue_persen = freight_persen * qty_local
+        
                     profit_table.append([
                         f"{p}%",
-                        f"Rp {freight_persen:,.0f}"
+                        f"Rp {freight_persen:,.0f}",
+                        f"Rp {revenue_persen:,.0f}"
                     ])
         
                 t_profit = Table(
                     profit_table,
-                    colWidths=[4*cm, 6*cm]
+                    colWidths=[3*cm, 6*cm, 7*cm]
                 )
         
                 t_profit.setStyle(TableStyle([
@@ -2666,28 +2694,29 @@ if calculate:
                     ('FONTSIZE', (0,0), (-1,-1), 8),
                 ]))
         
-                elements.append(t_profit)
-                elements.append(Spacer(1, 15))
+                elements += [t_profit, Spacer(1, 12)]
         
             # =========================================================
             # 🔥 MODE OFF
             # =========================================================
             if not compare_mode:
         
-                add_report_section(
-                    title_barge=st.session_state.get("preset_selected", "Custom"),
-                    qty=qyt_cargo,
+                add_full_report(
+                    title_name=st.session_state.get("preset_selected", "Custom"),
+                    qty_local=qyt_cargo,
                     total_cost_local=total_cost,
                     freight_local=freight_cost_mt,
-                    voyage_days=total_voyage_days,
-                    fuel_cost=cost_fuel,
-                    fw_cost=cost_fw,
+                    voyage_days_local=total_voyage_days,
                     revenue_local=revenue_user,
                     pph_local=pph_user,
                     profit_local=profit_user,
-                    tce_day=tce_per_day,
-                    tce_month=tce_per_month,
-                    profit_percent=profit_percent_user
+                    profit_percent_local=profit_percent_user,
+                    tce_day_local=tce_per_day,
+                    tce_month_local=tce_per_month,
+                    fuel_cost_local=cost_fuel,
+                    fw_cost_local=cost_fw,
+                    fuel_cons_local=total_consumption_fuel,
+                    fw_cons_local=total_consumption_fw,
                 )
         
             # =========================================================
@@ -2695,49 +2724,55 @@ if calculate:
             # =========================================================
             else:
         
-                compare_sizes = ["270 ft", "300 ft", "330 ft"]
-        
-                for size in compare_sizes:
+                for size in ["270 ft", "300 ft", "330 ft"]:
         
                     res = calculate_for_barge(size)
+        
                     budget = calculate_budget_for_barge(size)
+        
                     vc = variable_cost_for_barge(size)
         
-                    voyage_days = res["hari"]
+                    voyage_days_compare = res["hari"]
         
-                    revenue_local = budget["revenue"]
-                    pph_local = budget["pph"]
-                    profit_local = budget["profit"]
+                    revenue_compare = budget["revenue"]
+                    pph_compare = budget["pph"]
+                    profit_compare = budget["profit"]
         
-                    profit_percent = (
-                        (profit_local / res["total_cost"]) * 100
+                    profit_percent_compare = (
+                        (profit_compare / res["total_cost"]) * 100
                         if res["total_cost"] > 0 else 0
                     )
         
-                    tce_day = (
-                        profit_local / voyage_days
-                        if voyage_days > 0 else 0
+                    tce_day_compare = (
+                        profit_compare / voyage_days_compare
+                        if voyage_days_compare > 0 else 0
                     )
         
-                    tce_month = tce_day * 30
+                    tce_month_compare = tce_day_compare * 30
         
-                    add_report_section(
-                        title_barge=size,
-                        qty=res["qty"],
+                    add_full_report(
+                        title_name=size,
+                        qty_local=res["qty"],
                         total_cost_local=res["total_cost"],
                         freight_local=res["freight"],
-                        voyage_days=voyage_days,
-                        fuel_cost=vc["fuel"],
-                        fw_cost=vc["fw"],
-                        revenue_local=revenue_local,
-                        pph_local=pph_local,
-                        profit_local=profit_local,
-                        tce_day=tce_day,
-                        tce_month=tce_month,
-                        profit_percent=profit_percent
+                        voyage_days_local=voyage_days_compare,
+                        revenue_local=revenue_compare,
+                        pph_local=pph_compare,
+                        profit_local=profit_compare,
+                        profit_percent_local=profit_percent_compare,
+                        tce_day_local=tce_day_compare,
+                        tce_month_local=tce_month_compare,
+                        fuel_cost_local=vc["fuel"],
+                        fw_cost_local=vc["fw"],
+                        fuel_cons_local=vc["fuel_cons"],
+                        fw_cons_local=vc["fw_cons"],
                     )
         
-            # ===== FOOTER =====
+                    elements.append(PageBreak())
+        
+            # =========================================================
+            # 🔥 FOOTER
+            # =========================================================
             footer_text = f"""
             Generated by {username}<br/>
             Generated: {datetime.now().strftime('%d %B %Y')}
@@ -2747,12 +2782,16 @@ if calculate:
                 Paragraph(footer_text, styles['NormalSmall'])
             )
         
-            # ===== BUILD PDF =====
+            # =========================================================
+            # 🔥 BUILD PDF
+            # =========================================================
             doc.build(elements)
         
             buffer.seek(0)
         
             return buffer
+        ```
+
 
         # ===== GENERATE PDF =====
         pdf_buffer = create_pdf(username=st.session_state.email)
