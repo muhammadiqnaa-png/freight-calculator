@@ -2599,33 +2599,59 @@ if calculate:
             
                     profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
             
-                    t_profit = Table(
-                        profit_table,
-                        colWidths=[3*cm, 3.8*cm, 3.8*cm, 3.8*cm, 3.8*cm]
-                    )
-            
-                    t_profit.setStyle(TableStyle([
-                        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#0d47a1")),
-                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-                        ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 8),
-                    ]))
-            
-                    elements += [t_profit, Spacer(1, 4)]
-            
                 else:
             
-                    elements.append(
-                        Paragraph("No Profit Scenario Data", styles['NormalSmall'])
-                    )
+                    profit_table = [
+                        [
+                            "Profit %",
+                            "Freight (Rp)",
+                            "Revenue (Rp)",
+                            "PPH 1.2% (Rp)",
+                            "Gross Profit (Rp)"
+                        ],
+                        [
+                            "0%",
+                            "-",
+                            "-",
+                            "-",
+                            "-"
+                        ]
+                    ]
             
             except Exception:
             
-                elements.append(
-                    Paragraph("Profit Scenario unavailable", styles['NormalSmall'])
-                )
+                profit_table = [
+                    [
+                        "Profit %",
+                        "Freight (Rp)",
+                        "Revenue (Rp)",
+                        "PPH 1.2% (Rp)",
+                        "Gross Profit (Rp)"
+                    ],
+                    [
+                        "0%",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                ]
+            
+            t_profit = Table(
+                profit_table,
+                colWidths=[3*cm, 3.8*cm, 3.8*cm, 3.8*cm, 3.8*cm]
+            )
+            
+            t_profit.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#0d47a1")),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ]))
+            
+            elements += [t_profit, Spacer(1, 4)]
 
 
             # ===== NOTES SIMPLE =====
