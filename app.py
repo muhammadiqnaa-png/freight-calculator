@@ -2463,173 +2463,500 @@ if calculate:
 
         # ===== PDF GENERATOR =====
         def create_pdf(username):
+        
             buffer = BytesIO()
+        
             doc = SimpleDocTemplate(
                 buffer,
                 pagesize=A4,
                 rightMargin=25,
                 leftMargin=25,
-                topMargin=0,
-                bottomMargin=0
+                topMargin=20,
+                bottomMargin=20
             )
-
+        
             styles = getSampleStyleSheet()
-            styles.add(ParagraphStyle(name='HeaderBlue', fontSize=16, textColor=colors.HexColor("#0d47a1"), alignment=1, spaceAfter=4))
-            styles.add(ParagraphStyle(name='SubHeader', fontSize=12, textColor=colors.HexColor("#0d47a1"), spaceAfter=4, fontName='Helvetica-Bold'))
-            styles.add(ParagraphStyle(name='NormalSmall', fontSize=8, leading=12))
-            styles.add(ParagraphStyle(name='Bold', fontSize=11, fontName='Helvetica-Bold'))
-
+        
+            styles.add(ParagraphStyle(
+                name='HeaderBlue',
+                fontSize=16,
+                textColor=colors.HexColor("#0d47a1"),
+                alignment=1,
+                spaceAfter=6
+            ))
+        
+            styles.add(ParagraphStyle(
+                name='SubHeader',
+                fontSize=12,
+                textColor=colors.HexColor("#0d47a1"),
+                spaceAfter=4,
+                fontName='Helvetica-Bold'
+            ))
+        
+            styles.add(ParagraphStyle(
+                name='NormalSmall',
+                fontSize=8,
+                leading=12
+            ))
+        
             elements = []
+        
             def fmt_rp(x):
                 return f"Rp {x:,.0f}"
-
-            def pct_of_total(x):
-                try:
-                    if total_cost and total_cost > 0:
-                        return f"   ({(x / total_cost) * 100:.1f}%)"
+        
+            # =====================================================
+            # 🔥 BUILD REPORT PER SIZE
+            # =====================================================
+            def add_report(size):
+        
+                # =========================================
+                # ACTIVE / PRESET LOGIC
+                # =========================================
+                is_active = size == st.session_state.get("preset_control")
+        
+                preset = preset_params.get(size, {})
+        
+                if is_active:
+        
+                    charter_local = charter
+                    crew_local = crew
+                    insurance_local = insurance
+                    docking_local = docking
+                    maintenance_local = maintenance
+                    certificate_local = certificate
+        
+                else:
+        
+                    charter_local = preset.get("charter", 0)
+        
+                    if mode == "Owner":
+                        crew_local = preset.get("crew", 0)
+                        insurance_local = preset.get("insurance", 0)
+                        docking_local = preset.get("docking", 0)
+                        maintenance_local = preset.get("maintenance", 0)
+                        certificate_local = preset.get("certificate", 0)
                     else:
-                        return " (0.0%)"
-                except Exception:
-                    return " (0.0%)"
-
-            # ===== HEADER =====
-            title = Paragraph("<b>Freight Calculation Report</b>", styles['HeaderBlue'])
-            elements.append(title)
-            elements.append(Spacer(1, 2))
-
-            # ===== VOYAGE INFO =====
-            elements.append(Paragraph("Voyage Information", styles['SubHeader']))
-            voyage_data = [
-                ["Port Of Loading", port_pol],
-                ["Port Of Discharge", port_pod],
-                ["Next Port", next_port],
-                ["Cargo Quantity", f"{qyt_cargo:,.0f} {type_cargo.split()[1]}"],
-                ["Distance (NM)", f"{distance_pol_pod:,.0f}"],
-                ["Total Voyage (Days)", f"{total_voyage_days:.2f}"],
-            ]
-            t_voyage = Table(voyage_data, colWidths=[9*cm, 9*cm])
-            t_voyage.setStyle(TableStyle([
-                ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
-                ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ]))
-            elements += [t_voyage, Spacer(1, 4)]
-
-            # ===== OPERATIONAL COST =====
-            elements.append(Paragraph("Operational & Cost Summary", styles['SubHeader']))
-            calc_data = [
-                ["Total Sailing Time (Hour)", f"{sailing_time:.2f}"],
-                ["Total Consumption Fuel (Ltr)", f"{total_consumption_fuel:,.0f}"],
-                ["Total Consumption Freshwater (Ton)", f"{total_consumption_fw:,.0f}"],
-                ["Fuel Cost (Rp)", f"{fmt_rp(cost_fuel)}{pct_of_total(cost_fuel)}"],
-                ["Freshwater Cost (Rp)", f"{fmt_rp(cost_fw)}{pct_of_total(cost_fw)}"],
-                ["Total General Overhead (Voyage)", fmt_rp(total_general_overhead) + pct_of_total(total_general_overhead)],
-            ]
-
-            for k, v in owner_data.items():
-                calc_data.append([k, f"{fmt_rp(v)}{pct_of_total(v)}"])
-
-            if additional_breakdown:
-                calc_data.append(["--- Additional Costs ---", ""])
-                for k, v in additional_breakdown.items():
-                    calc_data.append([k, f"{fmt_rp(v)}{pct_of_total(v)}"])
-
-            calc_data.append(["Total Cost (Rp)", f"Rp {total_cost:,.0f}"])
-            calc_data.append([f"Freight Cost ({type_cargo.split()[1]})", f"Rp {freight_cost_mt:,.0f}"])
-
-            t_calc = Table(calc_data, colWidths=[9*cm, 9*cm])
-            t_calc.setStyle(TableStyle([
-                ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
-                ('BACKGROUND', (0, -2), (-1, -1), colors.lightgrey),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ]))
-            elements += [t_calc, Spacer(1, 4)]
-
-            # ===== FREIGHT PRICE =====
-            if freight_price_input > 0:
-                elements.append(Paragraph("Freight Price Calculation User", styles['SubHeader']))
-                fpc_data = [
-                    ["Freight Price (Rp/MT)", f"Rp {freight_price_input:,.0f}"],
-                    ["Revenue", f"Rp {revenue_user:,.0f}"],
-                    ["PPH 1.2%", f"Rp {pph_user:,.0f}"],
-                    ["Profit", f"Rp {profit_user:,.0f}"],
-                    ["Profit %", f"{profit_percent_user:.2f} %"],
+                        crew_local = 0
+                        insurance_local = 0
+                        docking_local = 0
+                        maintenance_local = 0
+                        certificate_local = 0
+        
+                qty_local = cargo_qty_default.get(size, {}).get(type_cargo, 0)
+        
+                # =========================================
+                # DISTANCE & TIME
+                # =========================================
+                distance_pol_pod_local = find_distance(port_pol, port_pod)
+        
+                distance_pod_pol_local = (
+                    find_distance(port_pod, next_port)
+                    if next_port else 0
+                )
+        
+                base_sailing_time = (
+                    (distance_pol_pod_local / speed_laden)
+                    +
+                    (distance_pod_pol_local / speed_ballast)
+                )
+        
+                sailing_time_local = (
+                    base_sailing_time
+                    *
+                    (1 + weather_factor / 100)
+                )
+        
+                total_days_local = (
+                    (sailing_time_local / 24)
+                    +
+                    port_stay_pol
+                    +
+                    port_stay_pod
+                )
+        
+                # =========================================
+                # FUEL
+                # =========================================
+                consumption_local = preset.get("consumption", consumption)
+        
+                total_fuel_local = (
+                    sailing_time_local * consumption_local
+                ) + (
+                    (port_stay_pol + port_stay_pod) * 120
+                )
+        
+                cost_fuel_local = total_fuel_local * price_fuel
+        
+                # =========================================
+                # FW
+                # =========================================
+                fw_cons_local = preset.get(
+                    "consumption_fw",
+                    consumption_fw
+                )
+        
+                fw_price_local = preset.get(
+                    "price_fw",
+                    price_fw
+                )
+        
+                total_fw_local = fw_cons_local * total_days_local
+        
+                cost_fw_local = total_fw_local * fw_price_local
+        
+                # =========================================
+                # COSTS
+                # =========================================
+                charter_cost_local = (
+                    charter_local / 30
+                ) * total_days_local
+        
+                crew_cost_local = (
+                    crew_local / 30
+                ) * total_days_local
+        
+                insurance_cost_local = (
+                    insurance_local / 30
+                ) * total_days_local
+        
+                docking_cost_local = (
+                    docking_local / 30
+                ) * total_days_local
+        
+                maintenance_cost_local = (
+                    maintenance_local / 30
+                ) * total_days_local
+        
+                certificate_cost_local = (
+                    certificate_local / 30
+                ) * total_days_local
+        
+                premi_cost_local = (
+                    distance_pol_pod_local * premi_nm
+                )
+        
+                port_cost_local = (
+                    port_cost_pol
+                    +
+                    port_cost_pod
+                    +
+                    asist_tug
+                )
+        
+                overhead_local = (
+                    opex_office / 30
+                ) * total_days_local
+        
+                depreciation_local = (
+                    depreciation_kapal / 30
+                ) * total_days_local
+        
+                total_cost_local = sum([
+                    charter_cost_local,
+                    crew_cost_local,
+                    insurance_cost_local,
+                    docking_cost_local,
+                    maintenance_cost_local,
+                    certificate_cost_local,
+                    cost_fuel_local,
+                    cost_fw_local,
+                    premi_cost_local,
+                    port_cost_local,
+                    overhead_local,
+                    depreciation_local,
+                    other_cost
+                ])
+        
+                freight_local = (
+                    total_cost_local / qty_local
+                    if qty_local > 0 else 0
+                )
+        
+                # =========================================
+                # REVENUE
+                # =========================================
+                revenue_local = freight_price_input * qty_local
+        
+                pph_local = revenue_local * 0.012
+        
+                profit_local = (
+                    revenue_local
+                    -
+                    total_cost_local
+                    -
+                    pph_local
+                )
+        
+                # =========================================
+                # TCE
+                # =========================================
+                tce_per_day_local = (
+                    profit_local / total_days_local
+                    if total_days_local > 0 else 0
+                )
+        
+                tce_per_month_local = (
+                    tce_per_day_local * 30
+                )
+        
+                # =========================================
+                # HEADER
+                # =========================================
+                title = Paragraph(
+                    f"<b>Freight Report - {size}</b>",
+                    styles['HeaderBlue']
+                )
+        
+                elements.append(title)
+                elements.append(Spacer(1, 4))
+        
+                # =========================================
+                # VOYAGE INFO
+                # =========================================
+                elements.append(
+                    Paragraph(
+                        "Voyage Information",
+                        styles['SubHeader']
+                    )
+                )
+        
+                voyage_data = [
+                    ["POL", port_pol],
+                    ["POD", port_pod],
+                    ["Cargo", type_cargo],
+                    ["Quantity", f"{qty_local:,.0f}"],
+                    ["Distance", f"{distance_pol_pod_local:,.0f} NM"],
+                    ["Voyage Days", f"{total_days_local:.1f} Days"],
                 ]
-                t_fpc = Table(fpc_data, colWidths=[9*cm, 9*cm])
-                t_fpc.setStyle(TableStyle([
-                    ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
-                    ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                    ('FONTSIZE', (0, 0), (-1, -1), 8),
+        
+                t_voyage = Table(
+                    voyage_data,
+                    colWidths=[8*cm, 8*cm]
+                )
+        
+                t_voyage.setStyle(TableStyle([
+                    ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
+                    ('FONTSIZE', (0,0), (-1,-1), 8),
                 ]))
-                elements += [t_fpc, Spacer(1, 4)]
-
-            # ===== TCE =====
-            elements.append(Paragraph("Time Charter Equivalent (TCE)", styles['SubHeader']))
-
-            tce_data = [
-                ["Base Cost (Fuel + FW + Port + Premi)", fmt_rp(tce_base_cost)],
-                ["TCE Per Day", f"{fmt_rp(tce_per_day)} / Day"],
-                ["TCE Per Month", f"{fmt_rp(tce_per_month)} / Month"],
-            ]
-
-            t_tce = Table(tce_data, colWidths=[9*cm, 9*cm])
-            t_tce.setStyle(TableStyle([
-                ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
-                ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ]))
-
-            elements += [t_tce, Spacer(1, 4)]
-
-
-            # ===== PROFIT SCENARIO =====
-            elements.append(Paragraph("Profit Scenario 0–75%", styles['SubHeader']))
-            profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
-            t_profit = Table(profit_table, colWidths=[3*cm, 3.8*cm, 3.8*cm, 3.8*cm, 3.8*cm])
-            t_profit.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#0d47a1")),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-                ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ]))
-            elements += [t_profit, Spacer(1, 4)]
-
-
-            # ===== NOTES SIMPLE =====
-            notes_text = f"""
-            • Fuel Price : Rp {price_fuel:,.0f} / Ltr<br/>
-            • Port Stay POL : {port_stay_pol} Days<br/>
-            • Port Stay POD : {port_stay_pod} Days<br/>
-            • Speed Laden : {speed_laden} Knot<br/>
-            • Speed Ballast : {speed_ballast} Knot<br/>
-            • Weather Factor : {weather_factor:.1f}% included in sailing time
-            """
-
-            elements.append(Paragraph("Notes", styles['SubHeader']))
-            elements.append(Paragraph(notes_text, styles['NormalSmall']))
-            elements.append(Spacer(1, 6))
-
-            # ===== FOOTER =====
-            footer_text = f"Generated by {username} | https://freight-calculator-mobile.streamlit.app"
-            elements.append(Paragraph(footer_text, styles['NormalSmall']))
-
-            # Tanggal generated di bawah footer
-            generated_date = Paragraph(f"Generated: {datetime.now().strftime('%d %B %Y')}", styles['NormalSmall'])
-            elements.append(generated_date)
-
-            # ===== BUILD PDF =====
+        
+                elements += [t_voyage, Spacer(1, 6)]
+        
+                # =========================================
+                # OPERATIONAL
+                # =========================================
+                elements.append(
+                    Paragraph(
+                        "Operational & Cost Summary",
+                        styles['SubHeader']
+                    )
+                )
+        
+                op_data = [
+                    ["Fuel Cost", fmt_rp(cost_fuel_local)],
+                    ["FW Cost", fmt_rp(cost_fw_local)],
+                    ["Port Cost", fmt_rp(port_cost_local)],
+                    ["Premi", fmt_rp(premi_cost_local)],
+                ]
+        
+                if mode == "Owner":
+        
+                    op_data += [
+                        ["Installment", fmt_rp(charter_cost_local)],
+                        ["Crew", fmt_rp(crew_cost_local)],
+                        ["Insurance", fmt_rp(insurance_cost_local)],
+                        ["Docking", fmt_rp(docking_cost_local)],
+                        ["Maintenance", fmt_rp(maintenance_cost_local)],
+                        ["Certificate", fmt_rp(certificate_cost_local)],
+                    ]
+        
+                else:
+        
+                    op_data += [
+                        ["Charter Hire", fmt_rp(charter_cost_local)],
+                    ]
+        
+                op_data += [
+                    ["General Overhead", fmt_rp(overhead_local)],
+                    ["Depreciation", fmt_rp(depreciation_local)],
+                    ["Other Cost", fmt_rp(other_cost)],
+                    ["TOTAL COST", fmt_rp(total_cost_local)],
+                    ["FREIGHT COST", fmt_rp(freight_local)],
+                ]
+        
+                t_oper = Table(
+                    op_data,
+                    colWidths=[8*cm, 8*cm]
+                )
+        
+                t_oper.setStyle(TableStyle([
+                    ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
+                    ('BACKGROUND', (0,-2), (-1,-1), colors.lightgrey),
+                    ('FONTSIZE', (0,0), (-1,-1), 8),
+                ]))
+        
+                elements += [t_oper, Spacer(1, 6)]
+        
+                # =========================================
+                # BUDGET CUSTOMER
+                # =========================================
+                if freight_price_input > 0:
+        
+                    elements.append(
+                        Paragraph(
+                            "Budget Customer",
+                            styles['SubHeader']
+                        )
+                    )
+        
+                    budget_data = [
+                        ["Revenue", fmt_rp(revenue_local)],
+                        ["PPH 1.2%", fmt_rp(pph_local)],
+                        ["Profit", fmt_rp(profit_local)],
+                    ]
+        
+                    t_budget = Table(
+                        budget_data,
+                        colWidths=[8*cm, 8*cm]
+                    )
+        
+                    t_budget.setStyle(TableStyle([
+                        ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
+                        ('FONTSIZE', (0,0), (-1,-1), 8),
+                    ]))
+        
+                    elements += [t_budget, Spacer(1, 6)]
+        
+                # =========================================
+                # TCE
+                # =========================================
+                elements.append(
+                    Paragraph(
+                        "Time Charter Equivalent (TCE)",
+                        styles['SubHeader']
+                    )
+                )
+        
+                tce_data = [
+                    ["Per Day", fmt_rp(tce_per_day_local)],
+                    ["Per Month", fmt_rp(tce_per_month_local)],
+                ]
+        
+                t_tce = Table(
+                    tce_data,
+                    colWidths=[8*cm, 8*cm]
+                )
+        
+                t_tce.setStyle(TableStyle([
+                    ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
+                    ('FONTSIZE', (0,0), (-1,-1), 8),
+                ]))
+        
+                elements += [t_tce, Spacer(1, 6)]
+        
+                # =========================================
+                # PROFIT SCENARIO
+                # =========================================
+                elements.append(
+                    Paragraph(
+                        "Profit Scenario",
+                        styles['SubHeader']
+                    )
+                )
+        
+                ps_data = [[
+                    "Profit %",
+                    "Freight",
+                    "Revenue",
+                    "Profit"
+                ]]
+        
+                for p in range(0, 80, 5):
+        
+                    freight_scn = (
+                        freight_local * (1 + p / 100)
+                    )
+        
+                    revenue_scn = (
+                        freight_scn * qty_local
+                    )
+        
+                    pph_scn = revenue_scn * 0.012
+        
+                    profit_scn = (
+                        revenue_scn
+                        -
+                        total_cost_local
+                        -
+                        pph_scn
+                    )
+        
+                    ps_data.append([
+                        f"{p}%",
+                        fmt_rp(freight_scn),
+                        fmt_rp(revenue_scn),
+                        fmt_rp(profit_scn)
+                    ])
+        
+                t_ps = Table(
+                    ps_data,
+                    colWidths=[3*cm, 4*cm, 4*cm, 4*cm]
+                )
+        
+                t_ps.setStyle(TableStyle([
+                    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0d47a1")),
+                    ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+                    ('GRID', (0,0), (-1,-1), 0.3, colors.grey),
+                    ('FONTSIZE', (0,0), (-1,-1), 7),
+                ]))
+        
+                elements += [t_ps, Spacer(1, 8)]
+        
+            # =====================================================
+            # 🔥 MODE OFF
+            # =====================================================
+            if not compare_mode:
+        
+                active_size = st.session_state.get(
+                    "preset_control",
+                    "270 ft"
+                )
+        
+                add_report(active_size)
+        
+            # =====================================================
+            # 🔥 MODE ON
+            # =====================================================
+            else:
+        
+                compare_sizes = [
+                    "270 ft",
+                    "300 ft",
+                    "330 ft"
+                ]
+        
+                for i, size in enumerate(compare_sizes):
+        
+                    add_report(size)
+        
+                    if i < len(compare_sizes) - 1:
+                        elements.append(PageBreak())
+        
+            # =====================================================
+            # FOOTER
+            # =====================================================
+            elements.append(Spacer(1, 10))
+        
+            footer = Paragraph(
+                f"Generated by {username} | {datetime.now():%d %B %Y}",
+                styles['NormalSmall']
+            )
+        
+            elements.append(footer)
+        
             doc.build(elements)
+        
             buffer.seek(0)
+        
             return buffer
 
         # ===== GENERATE PDF =====
