@@ -2592,26 +2592,7 @@ if calculate:
 
             # ===== PROFIT SCENARIO =====
             elements.append(Paragraph("Profit Scenario 0–75%", styles['SubHeader']))
-            try:
-
-                if 'df_profit' in locals() and not df_profit.empty:
-            
-                    profit_table = (
-                        [df_profit.columns.to_list()]
-                        + df_profit.values.tolist()
-                    )
-            
-                else:
-            
-                    profit_table = [
-                        ["Profit %", "Freight", "Revenue"]
-                    ]
-            
-            except:
-            
-                profit_table = [
-                    ["Profit %", "Freight", "Revenue"]
-                ]
+            profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
             t_profit = Table(profit_table, colWidths=[3*cm, 3.8*cm, 3.8*cm, 3.8*cm, 3.8*cm])
             t_profit.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#0d47a1")),
