@@ -2595,28 +2595,20 @@ if calculate:
             
             try:
             
-                if df_profit is not None and not df_profit.empty:
+                profit_table = [df_profit.columns.to_list()]
             
-                    profit_table = [df_profit.columns.to_list()] + df_profit.values.tolist()
+                for row in df_profit.values.tolist():
             
-                else:
+                    clean_row = []
             
-                    profit_table = [
-                        [
-                            "Profit %",
-                            "Freight (Rp)",
-                            "Revenue (Rp)",
-                            "PPH 1.2% (Rp)",
-                            "Gross Profit (Rp)"
-                        ],
-                        [
-                            "0%",
-                            "-",
-                            "-",
-                            "-",
-                            "-"
-                        ]
-                    ]
+                    for item in row:
+            
+                        if item is None:
+                            clean_row.append("-")
+                        else:
+                            clean_row.append(str(item))
+            
+                    profit_table.append(clean_row)
             
             except Exception:
             
@@ -2652,7 +2644,6 @@ if calculate:
             ]))
             
             elements += [t_profit, Spacer(1, 4)]
-
 
             # ===== NOTES SIMPLE =====
             notes_text = f"""
