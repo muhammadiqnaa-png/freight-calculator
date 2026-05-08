@@ -2595,23 +2595,35 @@ if calculate:
             
             try:
             
-                profit_table = [df_profit.columns.to_list()]
+                # pastikan dataframe ada isi kolom
+                if (
+                    df_profit is not None
+                    and len(df_profit.columns) > 0
+                    and len(df_profit.values.tolist()) > 0
+                ):
             
-                for row in df_profit.values.tolist():
+                    profit_table = [df_profit.columns.to_list()]
             
-                    clean_row = []
+                    for row in df_profit.values.tolist():
             
-                    for item in row:
+                        clean_row = []
             
-                        if item is None:
-                            clean_row.append("-")
-                        else:
-                            clean_row.append(str(item))
+                        for item in row:
             
-                    profit_table.append(clean_row)
+                            if item is None or str(item).strip() == "":
+                                clean_row.append("-")
+                            else:
+                                clean_row.append(str(item))
+            
+                        profit_table.append(clean_row)
+            
+                else:
+            
+                    raise Exception("Empty Profit Table")
             
             except Exception:
             
+                # fallback aman supaya tidak crash
                 profit_table = [
                     [
                         "Profit %",
@@ -2629,6 +2641,7 @@ if calculate:
                     ]
                 ]
             
+            # ===== BUILD TABLE =====
             t_profit = Table(
                 profit_table,
                 colWidths=[3*cm, 3.8*cm, 3.8*cm, 3.8*cm, 3.8*cm]
