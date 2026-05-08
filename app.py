@@ -2650,22 +2650,3 @@ if calculate:
 
     except Exception as e:
         st.error(f"PDF Save Error: {e}")
-
-        # ===== GENERATE PDF =====
-        pdf_buffer = create_pdf(username=st.session_state.email)
-        pdf_bytes = pdf_buffer.getvalue()
-        pdf_base64 = base64.b64encode(pdf_bytes).decode()
-
-        selected_barge = st.session_state.get("preset_selected", "Custom")
-
-        file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
-        
-        # ===== DOWNLOAD PDF ===== 
-        st.download_button(
-            label="📥 Download PDF Report",
-            data=pdf_buffer,
-            file_name=file_name,
-            mime="application/pdf" )
-
-    except Exception as e:
-        st.error(f"PDF Save Error: {e}")
