@@ -2593,55 +2593,60 @@ if calculate:
             # ===== PROFIT SCENARIO =====
             elements.append(Paragraph("Profit Scenario 0–75%", styles['SubHeader']))
             
-            try:
+            profit_table = [[
+                "Profit %",
+                "Freight (Rp)",
+                "Revenue (Rp)",
+                "PPH 1.2% (Rp)",
+                "Gross Profit (Rp)"
+            ]]
             
-                # pastikan dataframe ada isi kolom
-                if (
-                    df_profit is not None
-                    and len(df_profit.columns) > 0
-                    and len(df_profit.values.tolist()) > 0
-                ):
+            # =========================================
+            # PAKAI SIZE YANG DIPILIH USER
+            # =========================================
+            selected_size = st.session_state.get("preset_control", "270 ft")
             
-                    profit_table = [df_profit.columns.to_list()]
+            # =========================================
+            # AMBIL DATA SESUAI SIZE TERPILIH
+            # =========================================
+            if compare_mode:
             
-                    for row in df_profit.values.tolist():
+                compare_result = calculate_for_barge(selected_size)
             
-                        clean_row = []
+                qty_scn = compare_result["qty"]
+                freight_scn = compare_result["freight"]
+                total_cost_scn = compare_result["total_cost"]
             
-                        for item in row:
+            else:
             
-                            if item is None or str(item).strip() == "":
-                                clean_row.append("-")
-                            else:
-                                clean_row.append(str(item))
+                qty_scn = qyt_cargo
+                freight_scn = freight_cost_mt
+                total_cost_scn = total_cost
             
-                        profit_table.append(clean_row)
+            # =========================================
+            # GENERATE SCENARIO
+            # =========================================
+            for p in range(0, 80, 5):
             
-                else:
+                freight_value = freight_scn * (1 + p / 100)
             
-                    raise Exception("Empty Profit Table")
+                revenue_value = freight_value * qty_scn
             
-            except Exception:
+                pph_value = revenue_value * 0.012
             
-                # fallback aman supaya tidak crash
-                profit_table = [
-                    [
-                        "Profit %",
-                        "Freight (Rp)",
-                        "Revenue (Rp)",
-                        "PPH 1.2% (Rp)",
-                        "Gross Profit (Rp)"
-                    ],
-                    [
-                        "0%",
-                        "-",
-                        "-",
-                        "-",
-                        "-"
-                    ]
-                ]
+                gross_profit = revenue_value - pph_value - total_cost_scn
             
-            # ===== BUILD TABLE =====
+                profit_table.append([
+                    f"{p}%",
+                    f"Rp {freight_value:,.0f}",
+                    f"Rp {revenue_value:,.0f}",
+                    f"Rp {pph_value:,.0f}",
+                    f"Rp {gross_profit:,.0f}",
+                ])
+            
+            # =========================================
+            # TABLE PDF
+            # =========================================
             t_profit = Table(
                 profit_table,
                 colWidths=[3*cm, 3.8*cm, 3.8*cm, 3.8*cm, 3.8*cm]
