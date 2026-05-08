@@ -1295,35 +1295,72 @@ calculate = st.button(
 
 def calculate_for_barge(size):
 
-    # ===== AMBIL PRESET =====
     preset = preset_params.get(size, {})
 
-    # ===== OVERRIDE (DARI SIDEBAR) =====
+    active_barge = st.session_state.get("preset_control", "270 ft")
+
+    # ==================================================
+    # 🔥 SEMUA SIZE IKUT SIDEBAR UNTUK INPUT INI
+    # ==================================================
     speed_laden_local = speed_laden
     speed_ballast_local = speed_ballast
+    weather_factor_local = weather_factor
     price_fuel_local = price_fuel
     port_stay_pol_local = port_stay_pol
     port_stay_pod_local = port_stay_pod
+    other_cost_local = other_cost
 
-    # ===== DARI PRESET =====
-    qty_local = cargo_qty_default.get(size, {}).get(type_cargo, 0)
-    consumption_local = preset.get("consumption", 0)
-    consumption_fw_local = preset.get("consumption_fw", 0)
-    price_fw_local = preset.get("price_fw", 0)
-    charter_local = preset.get("charter", 0)
-    crew_local = preset.get("crew", 0)
-    insurance_local = preset.get("insurance", 0)
-    docking_local = preset.get("docking", 0)
-    maintenance_local = preset.get("maintenance", 0)
-    certificate_local = preset.get("certificate", 0)
-    premi_nm_local = preset.get("premi_nm", 0)
+    # ==================================================
+    # 🔥 SIZE ACTIVE = FULL SIDEBAR
+    # ==================================================
+    if size == active_barge:
+
+        qty_local = qyt_cargo
+
+        consumption_local = consumption
+        consumption_fw_local = consumption_fw
+        price_fw_local = price_fw
+
+        charter_local = charter
+        crew_local = crew
+        insurance_local = insurance
+        docking_local = docking
+        maintenance_local = maintenance
+        certificate_local = certificate
+        premi_nm_local = premi_nm
+
+    # ==================================================
+    # 🔥 SIZE LAIN = PRESET
+    # ==================================================
+    else:
+
+        qty_local = cargo_qty_default.get(size, {}).get(type_cargo, 0)
+
+        consumption_local = preset.get("consumption", 0)
+        consumption_fw_local = preset.get("consumption_fw", 0)
+        price_fw_local = preset.get("price_fw", 0)
+
+        charter_local = preset.get("charter", 0)
+        crew_local = preset.get("crew", 0)
+        insurance_local = preset.get("insurance", 0)
+        docking_local = preset.get("docking", 0)
+        maintenance_local = preset.get("maintenance", 0)
+        certificate_local = preset.get("certificate", 0)
+        premi_nm_local = preset.get("premi_nm", 0)
 
     # ===== DISTANCE =====
     distance_pol_pod = find_distance(port_pol, port_pod)
     distance_pod_pol = find_distance(port_pod, next_port) if next_port else 0
 
     # ===== TIME =====
-    sailing_time = (distance_pol_pod / speed_laden_local) + (distance_pod_pol / speed_ballast_local)
+    base_sailing_time = (
+        (distance_pol_pod / speed_laden_local)
+        + (distance_pod_pol / speed_ballast_local)
+    )
+    
+    weather_multiplier = 1 + (weather_factor_local / 100)
+    
+    sailing_time = base_sailing_time * weather_multiplier
     total_days = (sailing_time / 24) + (port_stay_pol_local + port_stay_pod_local)
 
     # ===== FUEL =====
@@ -1357,7 +1394,7 @@ def calculate_for_barge(size):
         cost_fw,
         premi_cost,
         port_cost,
-        other_cost
+        other_cost_local
     ])
 
     freight = total_cost / qty_local if qty_local > 0 else 0
