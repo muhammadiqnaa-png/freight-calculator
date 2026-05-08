@@ -1408,13 +1408,26 @@ def calculate_for_barge(size):
 
 def calculate_budget_for_barge(size):
 
-    res = calculate_for_barge(size)
+    sc = summary_cost_for_barge(size)
 
-    qty = res["qty"]
-    total_cost_local = res["total_cost"]
+    # ===== QTY =====
+    active_barge = st.session_state.get("preset_control", "270 ft")
 
+    if size == active_barge:
+        qty = qyt_cargo
+    else:
+        qty = cargo_qty_default.get(size, {}).get(type_cargo, 0)
+
+    # ===== TOTAL COST =====
+    total_cost_local = sc["total"]
+
+    # ===== REVENUE =====
     revenue = freight_price_input * qty
+
+    # ===== PPH =====
     pph = revenue * 0.012
+
+    # ===== PROFIT =====
     profit = revenue - total_cost_local - pph
 
     return {
