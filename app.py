@@ -1275,6 +1275,13 @@ if margin_type == "%":
 else:
     st.caption("📌 Mode Rp = Target profit dihitung dari Freight Cost dengan nominal")
 
+owner_margin_percent = st.number_input(
+    "Owner Target Margin (%)",
+    min_value=0.0,
+    value=15.0,
+    step=1.0
+)
+
 
 if not port_pol or not port_pod:
     st.error("⚠️ Pilih POL & POD")
@@ -2354,6 +2361,8 @@ if calculate:
             additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
         
             summary_total = total_cost
+            # ===== OWNER TARGET MARGIN =====
+            owner_margin = total_cost * (owner_margin_percent / 100)
         
             st.markdown(f"""
             <div style="
