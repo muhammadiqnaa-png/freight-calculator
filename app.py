@@ -1278,8 +1278,8 @@ else:
 owner_margin_percent = st.number_input(
     "Owner Target Margin (%)",
     min_value=0.0,
-    value=15.0,
-    step=1.0
+    value=0.0,
+    step=0.1
 )
 
 
