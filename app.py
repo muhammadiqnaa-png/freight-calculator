@@ -845,9 +845,17 @@ with col2:
         label_visibility="collapsed"
     )
 
-st.markdown("### 💸 Freight Costumer")
+st.markdown("### 💸 Freight Customer")
 
-freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
+freight_mode = st.selectbox(
+    "Freight Mode",
+    ["Per MT", "Lumpsum"]
+)
+
+if freight_mode == "Per MT":
+    freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
+else:
+    freight_price_input = st.number_input("Lumpsum Freight (Rp)", 0)
 
 st.markdown("### 🎯 Target Profit")
 
@@ -1024,7 +1032,10 @@ if calculate:
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
         # ===== REVENUE CALC =====
-        revenue_user = freight_price_input * qyt_cargo
+        if freight_mode == "Per MT":
+            revenue_user = freight_price_input * qyt_cargo
+        else:
+            revenue_user = freight_price_input
         pph_user = revenue_user * 0.012
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
@@ -1375,6 +1386,7 @@ if calculate:
             "freight_cost_mt": freight_cost_mt,
         
             "freight_price_input": freight_price_input,
+            "freight_mode": freight_mode,
             "revenue_user": revenue_user,
             "pph_user": pph_user,
             "profit_user": profit_user,
