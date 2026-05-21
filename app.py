@@ -1170,7 +1170,7 @@ if calculate:
         • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
         • Freight Cost : <b style="color:#0f172a;"> Rp {freight_cost_mt:,.0f}/{unit}</b><br>
-         (Save Cost (Certificate dll) : <b>Rp {save_cost:,.0f}</b><br>)
+         (Save Cost : <b>Rp {owner_total:,.0f})</b><br>
         
         <hr style="margin:6px 0; opacity:0.2;">
         
@@ -1178,7 +1178,7 @@ if calculate:
         • Sailing POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
         • Sailing POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
         • Weather Factor : <b>{weather_factor:.1f}%</b><br>
-        • Weather Delay : <b>{weather_delay:.1f} Hours</b><br>
+        • Save Cost : <b>Insurance,Docking,Maintenance,Certificate </b>
         • Fuel Price : <b>Rp {price_fuel:,.0f}/Ltr</b>
 
         </div>
