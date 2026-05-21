@@ -33,7 +33,7 @@ if not cookies.ready():
 # =========================
 # 🔐 ADMIN CONTROL
 # =========================
-ADMIN_EMAIL = "muhammadiqnaa@gmail.com"
+ADMIN_EMAIL = "Muhammadiqnaa@gmail.com"
 
 def is_admin():
     email = st.session_state.get("email") or cookies.get("email")
