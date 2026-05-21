@@ -897,7 +897,6 @@ calculate = st.button(
 
 # ===== PERHITUNGAN =====
 
-
 if calculate:
     try:
         distance_pol_pod = find_distance(port_pol, port_pod)
@@ -910,21 +909,48 @@ if calculate:
 
         pol_pod_hour = distance_pol_pod / speed_laden if speed_laden else 0
         pod_pol_hour = distance_pod_pol / speed_ballast if speed_ballast else 0
+
+        # ===== SAILING TIME =====
+        base_sailing_time = (
+            (distance_pol_pod / speed_laden if speed_laden else 0)
+            + (distance_pod_pol / speed_ballast if speed_ballast else 0)
+        )
+
+        # ===== WEATHER FACTOR =====
+        weather_delay = base_sailing_time * (weather_factor / 100)
+
+        # ===== FINAL SAILING TIME =====
+        sailing_time = base_sailing_time + weather_delay
+
+        # ===== DAY CONVERSION =====
         pol_pod_day = pol_pod_hour / 24
         pod_pol_day = pod_pol_hour / 24
-            
-        # Waktu sailing (hour) based on speed inputs (hours)
-        sailing_time = (distance_pol_pod / speed_laden) + (distance_pod_pol / speed_ballast)
-        # total voyage in days (sailing hours converted to days + port stays)
-        total_voyage_days = (sailing_time / 24) + (port_stay_pol + port_stay_pod)
-        total_voyage_days_round = int(total_voyage_days) if total_voyage_days % 1 < 0.5 else int(total_voyage_days) + 1
 
-        # consumptions
-        total_consumption_fuel = (sailing_time * consumption) + ((port_stay_pol + port_stay_pod) * 120)
-        total_consumption_fw = consumption_fw * total_voyage_days_round
+        # ===== TOTAL VOYAGE =====
+        total_voyage_days = (
+            (sailing_time / 24)
+            + (port_stay_pol + port_stay_pod)
+        )
+
+        total_voyage_days_round = (
+            int(total_voyage_days)
+            if total_voyage_days % 1 < 0.5
+            else int(total_voyage_days) + 1
+        )
+
+        # ===== CONSUMPTION =====
+        total_consumption_fuel = (
+            (sailing_time * consumption)
+            + ((port_stay_pol + port_stay_pod) * 120)
+        )
+
+        total_consumption_fw = (
+            consumption_fw * total_voyage_days_round
+        )
+
         cost_fw = total_consumption_fw * price_fw
         cost_fuel = total_consumption_fuel * price_fuel
-
+        
         # core costs
         charter_cost = (charter / 30) * total_voyage_days
         crew_cost = (crew / 30) * total_voyage_days if mode == "Owner" else 0
