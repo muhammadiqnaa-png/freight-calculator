@@ -1166,58 +1166,57 @@ if calculate:
         🚢 Voyage Summary
         </h4>
 
-        • Cargo Type : <b>{type_cargo}</b><br>
+        • Cargo Type :
+        <b>{type_cargo}</b><br><br>
 
         • Total Cargo :
-        <b>{qyt_cargo:,.0f} {unit}</b><br>
+        <b>{qyt_cargo:,.0f} {unit}</b><br><br>
 
         • Route :
         <b>{port_pol} → {port_pod}</b>
         {" - " + next_port if next_port else ""}
-        <br>
+        <br><br>
 
         • Distance :
-        <b>{distance_pol_pod:,.0f} NM</b><br>
+        <b>{distance_pol_pod:,.0f} NM</b><br><br>
 
         • Total Voyage :
-        <b>{total_voyage_days:.1f} Days</b><br>
+        <b>{total_voyage_days:.1f} Days</b>
+
+        <span style="
+            font-size:11px;
+            color:#64748b;
+        ">
+        (Sailing Time)
+        </span>
+        <br><br>
+
+        • Save Cost (Certificate etc) :
+        <b>Rp {save_cost:,.0f}</b><br><br>
 
         • Freight Cost :
         <b style="color:#0f172a;">
         Rp {freight_cost_mt:,.0f}/{unit}
-        </b><br>
+        </b>
 
-        <span style="
-            font-size:11px;
-            color:#64748b;
-        ">
-        (Save Cost Certificate etc :
-        Rp {save_cost:,.0f})
-        </span>
+        <hr style="margin:6px 0; opacity:0.2;">
 
-        <br><br>
+        <b>Note :</b><br><br>
 
-        <b>Note :</b><br>
-
-        <span style="
-            font-size:11px;
-            color:#64748b;
-        ">
         • Sailing POL → POD :
-        {pol_pod_day:.1f} Days<br>
+        <b>{pol_pod_day:.1f} Days</b><br><br>
 
         • Sailing POD → POL :
-        {pod_pol_day:.1f} Days<br>
+        <b>{pod_pol_day:.1f} Days</b><br><br>
 
         • Weather Factor :
-        {weather_factor:.1f}%<br>
+        <b>{weather_factor:.1f}%</b><br><br>
 
         • Weather Delay :
-        {weather_delay:.1f} Hours<br>
+        <b>{weather_delay:.1f} Hours</b><br><br>
 
         • Fuel Price :
-        Rp {price_fuel:,.0f}/Ltr
-        </span>
+        <b>Rp {price_fuel:,.0f}/Ltr</b>
 
         </div>
         """, unsafe_allow_html=True)
