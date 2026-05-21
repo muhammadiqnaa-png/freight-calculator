@@ -1169,18 +1169,31 @@ if calculate:
         • Route : <b>{port_pol} → {port_pod}</b>{" - " + next_port if next_port else ""}<br>
         • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
-        • Freight Cost : <bstyle="color:#0f172a;">Rp {freight_cost_mt:,.0f}/{unit}</b><br>
-         (Save Cost : <b>Rp {save_cost:,.0f}</b>)<br>
+        • Freight Cost : 
+        <b style="color:#2563eb; font-size:22px;">
+        Rp {freight_cost_mt:,.0f}/{unit}
+        </b><br>
         
-        <hr style="margin:6px 0; opacity:0.2;">
+        <span style="font-size:13px; color:#64748b;">
+        Save Cost : Rp {save_cost:,.0f}
+        </span><br>
         
-        <b>Note :</b><br>
-        • Sailing POL → POD : <b>{pol_pod_day:.1f} Days<br>
-        • Sailing POD → POL : <b>{pod_pol_day:.1f} Days<br>
-        • Weather Factor : <b>{weather_factor:.1f}%<br>
-        • Save Cost : <b>Insurance,Docking,Maintenance,Certificate<br>
-        • Fuel Price : <b>Rp {price_fuel:,.0f}/Ltr
-
+        <hr style="margin:6px 0; opacity:0.15;">
+        
+        <div style="
+            color:#64748b;
+            font-size:13px;
+            line-height:1.6;
+        ">
+        
+        <b style="color:#475569;">Note :</b><br>
+        
+        • Sailing POL → POD : {pol_pod_day:.1f} Days<br>
+        • Sailing POD → POL : {pod_pol_day:.1f} Days<br>
+        • Weather Factor : {weather_factor:.1f}%<br>
+        • Save Cost : Insurance, Docking, Maintenance, Certificate<br>
+        • Fuel Price : Rp {price_fuel:,.0f}/Ltr
+    
         </div>
         """, unsafe_allow_html=True)
             
