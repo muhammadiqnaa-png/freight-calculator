@@ -873,14 +873,6 @@ if margin_type == "%":
 else:
     st.caption("📌 Mode Rp = Target profit dihitung dari Freight Cost dengan nominal")
 
-owner_margin_percent = st.number_input(
-    "Owner Target Margin (%)",
-    min_value=0,
-    value=0,
-    step=1
-)
-
-
 if not port_pol or not port_pod:
     st.error("⚠️ Pilih POL & POD")
     st.stop()
@@ -1031,94 +1023,11 @@ if calculate:
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
-        # ===== IDEAL PRICE CALC =====
-        ideal_freight = 0
-        ideal_revenue = 0
-        ideal_pph = 0
-        ideal_profit = 0
-        
-        margin_value_rp = 0
-        margin_value_pct = 0
-
-        # ===== FIX TARGET MARGIN TEXT =====
-        if margin_type == "%":
-            target_margin_text = f"{target_margin:.1f} %"
-            margin_value_rp = freight_cost_mt * (target_margin / 100) if freight_cost_mt else 0
-        else:
-            target_margin_text = f"Rp {target_margin:,.0f}"
-            margin_value_rp = target_margin
-        
-        if float(target_margin or 0) > 0:
-        
-            # ===== HITUNG IDEAL FREIGHT =====
-            if margin_type == "%":
-                ideal_freight = freight_cost_mt * (1 + target_margin / 100)
-        
-                margin_value_pct = target_margin
-                margin_value_rp = freight_cost_mt * (target_margin / 100)
-        
-            else:  # Rp
-                ideal_freight = freight_cost_mt + target_margin
-        
-                margin_value_rp = target_margin
-                margin_value_pct = (target_margin / freight_cost_mt) * 100
-        
-            # ===== OUTPUT CALC =====
-            ideal_revenue = ideal_freight * qyt_cargo
-            ideal_pph = ideal_revenue * 0.012
-            ideal_profit = ideal_revenue - total_cost - ideal_pph
-
-    
         # ===== REVENUE CALC =====
         revenue_user = freight_price_input * qyt_cargo
         pph_user = revenue_user * 0.012
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
-
-        # ===== OWNER TARGET =====
-        owner_margin_value = total_cost * (owner_margin_percent / 100)
-
-        freight_to_owner = (
-            (total_cost + owner_margin_value)
-            / qyt_cargo
-            if qyt_cargo > 0 else 0
-        )
-
-        revenue_owner = freight_to_owner * qyt_cargo
-
-        pph_owner = revenue_owner * 0.012
-
-        gross_profit_owner = (
-            revenue_owner
-            - total_cost
-            - pph_owner
-        )
-
-        gross_profit_owner_percent = (
-            (gross_profit_owner / revenue_owner) * 100
-            if revenue_owner > 0 else 0
-        )
-
-        # ===== SHIPPER PRICE =====
-        freight_to_shipper = (
-            freight_to_owner
-            + target_margin
-        )
-
-        revenue_shipper = freight_to_shipper * qyt_cargo
-
-        pph_shipper = revenue_shipper * 0.012
-
-        gross_profit_shipper = (
-            revenue_shipper
-            - revenue_owner
-            - pph_shipper
-        )
-
-        gross_profit_shipper_percent = (
-            (gross_profit_shipper / revenue_shipper) * 100
-            if revenue_shipper > 0 else 0
-        )
 
         # ===== SAVE COST =====
         save_cost = (
