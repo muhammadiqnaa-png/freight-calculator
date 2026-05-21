@@ -30,29 +30,6 @@ def create_pdf(data):
     styles = getSampleStyleSheet()
 
     styles.add(ParagraphStyle(
-        name='LabelSoft',
-        fontSize=9,
-        textColor=colors.HexColor("#64748b"),
-        leading=14
-    ))
-    
-    styles.add(ParagraphStyle(
-        name='ValueBold',
-        fontSize=9,
-        textColor=colors.HexColor("#0f172a"),
-        leading=14,
-        fontName='Helvetica-Bold'
-    ))
-    
-    styles.add(ParagraphStyle(
-        name='FreightHighlight',
-        fontSize=11,
-        textColor=colors.HexColor("#2563eb"),
-        leading=16,
-        fontName='Helvetica-Bold'
-    ))
-
-    styles.add(ParagraphStyle(
         name='HeaderBlue',
         fontSize=16,
         textColor=colors.HexColor("#0d47a1"),
@@ -102,32 +79,24 @@ def create_pdf(data):
         styles['SubHeader']
     ))
 
-    elements.append(Paragraph(
-        "Voyage Summary",
-        styles['SubHeader']
-    ))
-    
-    voyage_summary = f"""
-    <b>Cargo Type :</b> {data['type_cargo']}<br/>
-    <b>Total Cargo :</b> {data['qyt_cargo']:,.0f}<br/>
-    <b>Route :</b> {data['port_pol']} → {data['port_pod']}<br/>
-    <b>Distance :</b> {data['distance_pol_pod']:,.0f} NM<br/>
-    <b>Total Voyage :</b> {data['total_voyage_days']:.1f} Days<br/><br/>
-    
-    <b><font color='#2563eb'>
-    Freight Cost : {fmt_rp(data['freight_cost_mt'])}
-    </font></b><br/><br/>
-    
-    <font color='#64748b'>
-    Note:<br/>
-    • Freight Cost calculated from total voyage cost<br/>
-    • Weather factor already included<br/>
-    • Auto generated system calculation
-    </font>
-    """
-    
-    elements.append(Paragraph(voyage_summary, styles['Normal']))
-    elements.append(Spacer(1, 8))
+    voyage_data = [
+        ["Port Of Loading", data["port_pol"]],
+        ["Port Of Discharge", data["port_pod"]],
+        ["Next Port", data["next_port"]],
+        ["Cargo Quantity", f"{data['qyt_cargo']:,.0f} {data['type_cargo']}"],
+        ["Distance (NM)", f"{data['distance_pol_pod']:,.0f}"],
+        ["Total Voyage (Days)", f"{data['total_voyage_days']:.2f}"],
+    ]
+
+    t_voyage = Table(voyage_data, colWidths=[9*cm, 9*cm])
+
+    t_voyage.setStyle(TableStyle([
+        ('GRID', (0, 0), (-1, -1), 0.3, colors.grey),
+        ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+    ]))
+
+    elements += [t_voyage, Spacer(1, 4)]
 
     # ===== COST =====
     elements.append(Paragraph(
