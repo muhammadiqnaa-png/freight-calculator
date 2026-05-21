@@ -1109,7 +1109,7 @@ if calculate:
         • Fuel Price : Rp {price_fuel:,.0f}/Ltr<br>
         • Sailing POL → POD : {pol_pod_day:.1f} Days<br>
         • Sailing POD → POL : {pod_pol_day:.1f} Days<br>
-        • Weather Factor : {weather_factor:.1f}%<br>
+        • Weather Factor : {weather_factor:.0f}%<br>
         • Save Cost : Insurance, Docking, Maintenance, Certificate<br>
         • Freight Cost based on Total Cost Calculation
 
