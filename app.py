@@ -1170,7 +1170,7 @@ if calculate:
         • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
         • Freight Cost : <b style="color:#0f172a;"> Rp {freight_cost_mt:,.0f}/{unit}</b><br>
-         (Save Cost : <b>Rp {owner_total:,.0f})</b><br>
+         (Save Cost : <b>Rp {save_cost:,.0f}</b>)<br>
         
         <hr style="margin:6px 0; opacity:0.2;">
         
