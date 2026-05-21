@@ -1175,11 +1175,11 @@ if calculate:
         <hr style="margin:6px 0; opacity:0.2;">
         
         <b>Note :</b><br>
-        • Sailing POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
-        • Sailing POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
-        • Weather Factor : <b>{weather_factor:.1f}%</b><br>
-        • Save Cost : <b>Insurance,Docking,Maintenance,Certificate </b>
-        • Fuel Price : <b>Rp {price_fuel:,.0f}/Ltr</b>
+        • Sailing POL → POD : <b>{pol_pod_day:.1f} Days<br>
+        • Sailing POD → POL : <b>{pod_pol_day:.1f} Days<br>
+        • Weather Factor : <b>{weather_factor:.1f}%<br>
+        • Save Cost : <b>Insurance,Docking,Maintenance,Certificate<br>
+        • Fuel Price : <b>Rp {price_fuel:,.0f}/Ltr
 
         </div>
         """, unsafe_allow_html=True)
