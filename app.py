@@ -1086,6 +1086,14 @@ if calculate:
         <span style="color:#64748b;">
         (Save Cost : Rp {save_cost:,.0f})
         </span><br>
+
+        {
+        f'''• Rekomendasi Freight : 
+        <b style="color:#16a34a;">
+        Rp {ideal_freight:,.0f}/{unit}
+        </b><br>'''
+        if float(target_margin or 0) > 0 else ""
+        }
         
         <hr style="margin:6px 0; opacity:0.15;">
         
