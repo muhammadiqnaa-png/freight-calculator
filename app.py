@@ -1169,13 +1169,12 @@ if calculate:
         • Route : <b>{port_pol} → {port_pod}</b>{" - " + next_port if next_port else ""}<br>
         • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
-        • Save Cost (Certificate etc) : <b>Rp {save_cost:,.0f}</b><br>
         • Freight Cost : <b style="color:#0f172a;"> Rp {freight_cost_mt:,.0f}/{unit}</b>
+         (Save Cost (Certificate dll) : <b>Rp {save_cost:,.0f}</b><br>)
         
         <hr style="margin:6px 0; opacity:0.2;">
         
-        <b>Note :</b><br><br>
-
+        <b>Note :</b><br>
         • Sailing POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
         • Sailing POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
         • Weather Factor : <b>{weather_factor:.1f}%</b><br>
