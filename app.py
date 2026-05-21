@@ -1384,7 +1384,7 @@ if calculate:
             "tce_per_day": tce_per_day,
             "tce_per_month": tce_per_month,
         
-            "df_profit": df_profit
+            "df_profit": df_profit,
 
             "note": True,  # <- ini pemicu tampilkan note
 
