@@ -845,17 +845,28 @@ with col2:
         label_visibility="collapsed"
     )
 
-st.markdown("### 💸 Freight Customer")
+st.markdown("### 💸 Freight Pricing")
 
-freight_mode = st.selectbox(
-    "Freight Mode",
-    ["Per MT", "Lumpsum"]
-)
+col_mode, col_value = st.columns([1, 2])
 
-if freight_mode == "Per MT":
-    freight_price_input = st.number_input("Freight Rate (Rp/MT)", 0)
-else:
-    freight_price_input = st.number_input("Lumpsum Freight (Rp)", 0)
+with col_mode:
+    freight_mode = st.selectbox(
+        "Type",
+        ["Per MT", "Lump Sum"],
+        label_visibility="collapsed"
+    )
+
+with col_value:
+    if freight_mode == "Per MT":
+        freight_price_input = st.number_input(
+            "Freight Rate (Rp/MT)",
+            min_value=0
+        )
+    else:
+        freight_price_input = st.number_input(
+            "Lump Sum Freight (Rp)",
+            min_value=0
+        )
 
 st.markdown("### 🎯 Target Profit")
 
