@@ -1125,6 +1125,7 @@ if calculate:
             certificate_cost
             + docking_cost
             + insurance_cost
+            + maintenance_cost
         )
 
         # ===== TCE CALCULATION =====
@@ -1166,7 +1167,7 @@ if calculate:
 
         • Cargo Type : <b>{type_cargo}</b><br>
         • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br>
-        • Route : <b>{port_pol} → {port_pod}</b>{" - " + next_port if next_port else ""}<br>
+        • Route : <b>{port_pol} → {port_pod} → {" - " + next_port if next_port else ""}</b><br>
         • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
         • Freight Cost : 
