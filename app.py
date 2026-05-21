@@ -1385,6 +1385,16 @@ if calculate:
             "tce_per_month": tce_per_month,
         
             "df_profit": df_profit
+
+            "note": True,  # <- ini pemicu tampilkan note
+
+            "fuel_price": price_fuel,
+            "port_stay_pol": port_stay_pol,
+            "port_stay_pod": port_stay_pod,
+            "speed_laden": speed_laden,
+            "speed_ballast": speed_ballast,
+            "weather_factor": weather_factor,
+            
         })
         selected_barge = st.session_state.get("preset_selected", "Custom")
         file_name = f"Freight Report {selected_barge} {port_pol}-{port_pod} ({datetime.now():%d%m%Y}).pdf"
