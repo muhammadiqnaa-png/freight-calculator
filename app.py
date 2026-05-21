@@ -1173,7 +1173,6 @@ if calculate:
         <b style="color:#2563eb;">
         Rp {freight_cost_mt:,.0f}/{unit}
         </b><br>
-        
         <span style="color:#64748b;">
         (Save Cost : Rp {save_cost:,.0f})
         </span><br>
@@ -1183,7 +1182,6 @@ if calculate:
         <div style="color:#64748b;">
         
         <b>Note :</b><br>
-        
         • Sailing POL → POD : {pol_pod_day:.1f} Days<br>
         • Sailing POD → POL : {pod_pol_day:.1f} Days<br>
         • Weather Factor : {weather_factor:.1f}%<br>
