@@ -1150,6 +1150,7 @@ if calculate:
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
+        
         st.markdown(f"""
         <div style="
             background:linear-gradient(135deg, #f8fafc, #eef5ff);
@@ -1161,82 +1162,76 @@ if calculate:
             box-shadow:0 4px 12px rgba(0,0,0,0.15);
         ">
 
-        <h3 style="color:#2563eb; margin-top:0;">
+        <h3 style="
+            color:#2563eb;
+            margin-top:0;
+            margin-bottom:12px;
+        ">
         🚢 Summary Voyage
         </h3>
 
-        • Cargo Type : <b>{type_cargo}</b><br>
-        • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br>
-        • Route : <b>{port_pol} → {port_pod}</b><br>
-        • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
+        • Cargo Type :
+        <b>{type_cargo}</b><br>
+
+        • Total Cargo :
+        <b>{qyt_cargo:,.0f} {unit}</b><br>
+
+        • Route :
+        <b>{port_pol} → {port_pod}</b>
+
+        {"- " + next_port if next_port else ""}
+        <br>
+
+        • Distance :
+        <b>{distance_pol_pod:,.0f} NM</b><br>
 
         • Total Voyage :
-        <b>{total_voyage_days:.1f} Days</b>
-
-        <span style="
-            font-size:11px;
-            color:#64748b;
-        ">
-        (Sailing {sailing_time/24:.1f} Days)
-        </span><br>
-
-        • Weather Delay :
-        <b>{weather_delay:.1f} Hours ({weather_factor:.1f}%)</b><br>
-
-        • Save Cost (Certificate etc) :
-        <b>Rp {save_cost:,.0f}</b><br>
+        <b>{total_voyage_days:.1f} Days</b><br>
 
         • Freight Cost :
         <b style="color:#2563eb;">
         Rp {freight_cost_mt:,.0f}/{unit}
-        </b>
+        </b><br>
 
-        <hr style="margin:8px 0; opacity:0.2;">
+        <span style="
+            color:#64748b;
+            font-size:13px;
+        ">
+        (Save Cost Certificate etc :
+        Rp {save_cost:,.0f})
+        </span>
 
-        • Target Margin Owner ({owner_margin_percent:.0f}%) :
-        <b>Rp {owner_margin_value:,.0f}</b><br>
+        <hr style="
+            margin:10px 0;
+            opacity:0.2;
+        ">
 
-        <hr style="margin:8px 0; opacity:0.2;">
+        <b>Note :</b><br><br>
 
-        <h4 style="color:#7c3aed; margin-bottom:6px;">
-        🏗️ Owner Calculation
-        </h4>
+        • Sailing Time<br>
 
-        • Freight To Owner :
-        <b>Rp {freight_to_owner:,.0f}/{unit}</b><br>
+        <div style="
+            margin-left:14px;
+            color:#475569;
+            font-size:13px;
+        ">
+            POL → POD :
+            {pol_pod_day:.1f} Days<br>
 
-        • Revenue Owner :
-        <b>Rp {revenue_owner:,.0f}</b><br>
+            POD → POL :
+            {pod_pol_day:.1f} Days
+        </div>
 
-        • PPH 1.2% :
-        <b>Rp {pph_owner:,.0f}</b><br>
+        <br>
 
-        • Gross Profit Owner :
-        <b style="color:#16a34a;">
-        Rp {gross_profit_owner:,.0f}
-        ({gross_profit_owner_percent:.0f}%)
-        </b>
+        • Weather Factor :
+        <b>{weather_factor:.1f}%</b><br>
 
-        <hr style="margin:8px 0; opacity:0.2;">
+        • Weather Delay :
+        <b>{weather_delay:.1f} Hours</b><br>
 
-        <h4 style="color:#f97316; margin-bottom:6px;">
-        💼 Shipper Calculation
-        </h4>
-
-        • Freight To Shipper :
-        <b>Rp {freight_to_shipper:,.0f}/{unit}</b><br>
-
-        • Revenue :
-        <b>Rp {revenue_shipper:,.0f}</b><br>
-
-        • PPH 1.2% :
-        <b>Rp {pph_shipper:,.0f}</b><br>
-
-        • Gross Profit :
-        <b style="color:#16a34a;">
-        Rp {gross_profit_shipper:,.0f}
-        ({gross_profit_shipper_percent:.0f}%)
-        </b>
+        • Fuel Price :
+        <b>Rp {price_fuel:,.0f}/Ltr</b>
 
         </div>
         """, unsafe_allow_html=True)
