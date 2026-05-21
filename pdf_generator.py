@@ -163,7 +163,8 @@ def create_pdf(data):
         ))
 
         fpc_data = [
-            ["Freight Price", fmt_rp(data["freight_price_input"])],
+            ["Freight Mode", data["freight_mode"]],
+            ["Freight Input", fmt_rp(data["freight_price_input"])],
             ["Revenue", fmt_rp(data["revenue_user"])],
             ["PPH 1.2%", fmt_rp(data["pph_user"])],
             ["Profit", fmt_rp(data["profit_user"])],
