@@ -228,14 +228,21 @@ def create_pdf(data):
     # ===== NOTE SECTION =====
     if data.get("note"):
     
+        fuel_price = data.get("fuel_price", 0)
+        port_stay_pol = data.get("port_stay_pol", 0)
+        port_stay_pod = data.get("port_stay_pod", 0)
+        speed_laden = data.get("speed_laden", 0)
+        speed_ballast = data.get("speed_ballast", 0)
+        weather_factor = data.get("weather_factor", 0)
+    
         note_text = f"""
     <b>Note :</b><br/>
-    • Fuel Price : Rp {data.get('fuel_price', 0):,.0f} / Ltr<br/>
-    • Port Stay POL : {data.get('port_stay_pol', 0)} Days<br/>
-    • Port Stay POD : {data.get('port_stay_pod', 0)} Days<br/>
-    • Speed Laden : {data.get('speed_laden', 0)} Knot<br/>
-    • Speed Ballast : {data.get('speed_ballast', 0)} Knot<br/>
-    • Weather Factor : {data.get('weather_factor', 0)}% included in sailing time<br/>
+    • Fuel Price : Rp {fuel_price:,.0f} / Ltr<br/>
+    • Port Stay POL : {port_stay_pol} Days<br/>
+    • Port Stay POD : {port_stay_pod} Days<br/>
+    • Speed Laden : {speed_laden} Knot<br/>
+    • Speed Ballast : {speed_ballast} Knot<br/>
+    • Weather Factor : {weather_factor}% included in sailing time<br/>
     """
     
         elements.append(Paragraph(note_text, styles['NormalSmall']))
