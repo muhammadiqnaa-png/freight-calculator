@@ -1029,6 +1029,12 @@ if calculate:
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
+        # ===== REKOMENDASI FREIGHT =====
+        if margin_type == "%":
+            ideal_freight = freight_cost_mt * (1 + target_margin / 100)
+        else:
+            ideal_freight = freight_cost_mt + target_margin
+
         # ===== SAVE COST =====
         save_cost = (
             certificate_cost
