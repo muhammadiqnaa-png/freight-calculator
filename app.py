@@ -1075,6 +1075,58 @@ if calculate:
         profit_user = revenue_user - total_cost - pph_user
         profit_percent_user = (profit_user / total_cost * 100) if total_cost > 0 else 0
 
+                # ===== OWNER TARGET =====
+        owner_margin_value = total_cost * (owner_margin_percent / 100)
+
+        freight_to_owner = (
+            (total_cost + owner_margin_value)
+            / qyt_cargo
+            if qyt_cargo > 0 else 0
+        )
+
+        revenue_owner = freight_to_owner * qyt_cargo
+
+        pph_owner = revenue_owner * 0.012
+
+        gross_profit_owner = (
+            revenue_owner
+            - total_cost
+            - pph_owner
+        )
+
+        gross_profit_owner_percent = (
+            (gross_profit_owner / revenue_owner) * 100
+            if revenue_owner > 0 else 0
+        )
+
+        # ===== SHIPPER PRICE =====
+        freight_to_shipper = (
+            freight_to_owner
+            + target_margin
+        )
+
+        revenue_shipper = freight_to_shipper * qyt_cargo
+
+        pph_shipper = revenue_shipper * 0.012
+
+        gross_profit_shipper = (
+            revenue_shipper
+            - revenue_owner
+            - pph_shipper
+        )
+
+        gross_profit_shipper_percent = (
+            (gross_profit_shipper / revenue_shipper) * 100
+            if revenue_shipper > 0 else 0
+        )
+
+        # ===== SAVE COST =====
+        save_cost = (
+            certificate_cost
+            + docking_cost
+            + insurance_cost
+        )
+
         # ===== TCE CALCULATION =====
         tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
 
@@ -1099,34 +1151,142 @@ if calculate:
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #f8fafc, #eef5ff);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            color:#0f172a;
-            border-left:5px solid #93c5fd;
-            box-shadow:0 4px 12px rgba(0,0,0,0.4);
-        ">
-            <h4 style="color:#93c5fd;">🚢 Voyage Summary</h4>
-
-        • Cargo Type : <b>{type_cargo}</b><br>
-        • Route : <b>{port_pol} → {port_pod}</b><br>
-        • Distance POL → POD : <b>{distance_pol_pod:,.0f} NM</b><br>
-        • Total Cargo : <b>{qyt_cargo:,.0f} {type_cargo.split()[1]}</b><br>
-        • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
-        <span style="font-size:11px; color:#bbb;">
-        (sailing POL→POD {pol_pod_day:.1f} Days - POD→POL {pod_pol_day:.1f} Days)
-        </span><br>
-        • Freight Cost : <b style="color:#0f172a;">Rp {freight_cost_mt:,.0f}</b>
+                st.markdown(f"""
+                <div style="
+                    background:linear-gradient(135deg, #f8fafc, #eef5ff);
+                    padding:18px;
+                    border-radius:14px;
+                    margin-bottom:12px;
+                    color:#0f172a;
+                    border-left:5px solid #2563eb;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                ">
         
-        {"• <b>Recommended Freight</b> : <b style='color:#f97316;'>Rp {:,.0f}</b><br>".format(ideal_freight) 
-         if float(target_margin or 0) > 0 else ""}
+                <h3 style="margin-top:0; color:#2563eb;">
+                🚢 Summary Voyage
+                </h3>
         
-        </div>
-        """, unsafe_allow_html=True)
-
+                <table style="width:100%; font-size:14px;">
+        
+                <tr>
+                    <td><b>Cargo Type</b></td>
+                    <td>{type_cargo}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Total Cargo</b></td>
+                    <td>{qyt_cargo:,.0f}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Route</b></td>
+                    <td>{port_pol} → {port_pod}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Distance</b></td>
+                    <td>{distance_pol_pod:,.0f} NM</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Total Voyage</b></td>
+                    <td>
+                        {total_voyage_days:.1f} Days
+                        (Sailing {sailing_time/24:.1f} Days)
+                    </td>
+                </tr>
+        
+                <tr>
+                    <td><b>Weather Delay</b></td>
+                    <td>{weather_delay:.1f} Hours ({weather_factor:.1f}%)</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Save Cost (Certificate etc)</b></td>
+                    <td>Rp {save_cost:,.0f}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Freight Cost</b></td>
+                    <td>
+                        Rp {freight_cost_mt:,.0f}
+                        /{unit}
+                    </td>
+                </tr>
+        
+                </table>
+        
+                <hr>
+        
+                <table style="width:100%; font-size:14px;">
+        
+                <tr>
+                    <td><b>Target Margin Owner ({owner_margin_percent:.0f}%)</b></td>
+                    <td>Rp {owner_margin_value:,.0f}</td>
+                </tr>
+        
+                </table>
+        
+                <hr>
+        
+                <table style="width:100%; font-size:14px;">
+        
+                <tr>
+                    <td><b>Freight To Owner</b></td>
+                    <td>Rp {freight_to_owner:,.0f}/{unit}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Revenue Owner</b></td>
+                    <td>Rp {revenue_owner:,.0f}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>PPH 1.2%</b></td>
+                    <td>Rp {pph_owner:,.0f}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Gross Profit Owner</b></td>
+                    <td>
+                        Rp {gross_profit_owner:,.0f}
+                        ({gross_profit_owner_percent:.0f}%)
+                    </td>
+                </tr>
+        
+                </table>
+        
+                <hr>
+        
+                <table style="width:100%; font-size:14px;">
+        
+                <tr>
+                    <td><b>Freight To Shipper</b></td>
+                    <td>Rp {freight_to_shipper:,.0f}/{unit}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Revenue</b></td>
+                    <td>Rp {revenue_shipper:,.0f}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>PPH 1.2%</b></td>
+                    <td>Rp {pph_shipper:,.0f}</td>
+                </tr>
+        
+                <tr>
+                    <td><b>Gross Profit</b></td>
+                    <td>
+                        Rp {gross_profit_shipper:,.0f}
+                        ({gross_profit_shipper_percent:.0f}%)
+                    </td>
+                </tr>
+        
+                </table>
+        
+                </div>
+                """, unsafe_allow_html=True)
             
         if freight_price_input > 0:
 
