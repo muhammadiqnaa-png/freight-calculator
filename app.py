@@ -20,6 +20,7 @@ import streamlit.components.v1 as components
 from streamlit_cookies_manager import EncryptedCookieManager
 from pdf_generator import create_pdf
 from styles import load_css
+from intro import show_intro
 
 cookies = EncryptedCookieManager(
     prefix="freight_app",
