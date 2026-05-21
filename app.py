@@ -1164,22 +1164,22 @@ if calculate:
 
         <h4 style="color:#93c5fd;"> 🚢 Voyage Summary </h4>
 
-        • Cargo Type : <b>{type_cargo}</b><br><br>
-        • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br><br>
-        • Route : <b>{port_pol} → {port_pod}</b>{" - " + next_port if next_port else ""}<br><br>
-        • Distance : <b>{distance_pol_pod:,.0f} NM</b><br><br>
-        • Total Voyage : <b>{total_voyage_days:.1f} Days</b>
-        • Save Cost (Certificate etc) : <b>Rp {save_cost:,.0f}</b><br><br>
+        • Cargo Type : <b>{type_cargo}</b><br>
+        • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br>
+        • Route : <b>{port_pol} → {port_pod}</b>{" - " + next_port if next_port else ""}<br>
+        • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
+        • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
+        • Save Cost (Certificate etc) : <b>Rp {save_cost:,.0f}</b><br>
         • Freight Cost : <b style="color:#0f172a;"> Rp {freight_cost_mt:,.0f}/{unit}</b>
         
         <hr style="margin:6px 0; opacity:0.2;">
         
         <b>Note :</b><br><br>
 
-        • Sailing POL → POD : <b>{pol_pod_day:.1f} Days</b><br><br>
-        • Sailing POD → POL : <b>{pod_pol_day:.1f} Days</b><br><br>
-        • Weather Factor : <b>{weather_factor:.1f}%</b><br><br>
-        • Weather Delay : <b>{weather_delay:.1f} Hours</b><br><br>
+        • Sailing POL → POD : <b>{pol_pod_day:.1f} Days</b><br>
+        • Sailing POD → POL : <b>{pod_pol_day:.1f} Days</b><br>
+        • Weather Factor : <b>{weather_factor:.1f}%</b><br>
+        • Weather Delay : <b>{weather_delay:.1f} Hours</b><br>
         • Fuel Price : <b>Rp {price_fuel:,.0f}/Ltr</b>
 
         </div>
