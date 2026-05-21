@@ -1154,32 +1154,26 @@ if calculate:
         st.markdown(f"""
         <div style="
             background:linear-gradient(135deg, #f8fafc, #eef5ff);
-            padding:16px;
-            border-radius:14px;
+            padding:12px;
+            border-radius:12px;
             margin-bottom:10px;
             color:#0f172a;
-            border-left:5px solid #2563eb;
-            box-shadow:0 4px 12px rgba(0,0,0,0.15);
+            border-left:5px solid #93c5fd;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4);
         ">
 
-        <h3 style="
-            color:#2563eb;
-            margin-top:0;
-            margin-bottom:12px;
-        ">
-        🚢 Summary Voyage
-        </h3>
+        <h4 style="color:#93c5fd;">
+        🚢 Voyage Summary
+        </h4>
 
-        • Cargo Type :
-        <b>{type_cargo}</b><br>
+        • Cargo Type : <b>{type_cargo}</b><br>
 
         • Total Cargo :
         <b>{qyt_cargo:,.0f} {unit}</b><br>
 
         • Route :
         <b>{port_pol} → {port_pod}</b>
-
-        {"- " + next_port if next_port else ""}
+        {" - " + next_port if next_port else ""}
         <br>
 
         • Distance :
@@ -1189,49 +1183,41 @@ if calculate:
         <b>{total_voyage_days:.1f} Days</b><br>
 
         • Freight Cost :
-        <b style="color:#2563eb;">
+        <b style="color:#0f172a;">
         Rp {freight_cost_mt:,.0f}/{unit}
         </b><br>
 
         <span style="
+            font-size:11px;
             color:#64748b;
-            font-size:13px;
         ">
         (Save Cost Certificate etc :
         Rp {save_cost:,.0f})
         </span>
 
-        <hr style="
-            margin:10px 0;
-            opacity:0.2;
+        <br><br>
+
+        <b>Note :</b><br>
+
+        <span style="
+            font-size:11px;
+            color:#64748b;
         ">
+        • Sailing POL → POD :
+        {pol_pod_day:.1f} Days<br>
 
-        <b>Note :</b><br><br>
-
-        • Sailing Time<br>
-
-        <div style="
-            margin-left:14px;
-            color:#475569;
-            font-size:13px;
-        ">
-            POL → POD :
-            {pol_pod_day:.1f} Days<br>
-
-            POD → POL :
-            {pod_pol_day:.1f} Days
-        </div>
-
-        <br>
+        • Sailing POD → POL :
+        {pod_pol_day:.1f} Days<br>
 
         • Weather Factor :
-        <b>{weather_factor:.1f}%</b><br>
+        {weather_factor:.1f}%<br>
 
         • Weather Delay :
-        <b>{weather_delay:.1f} Hours</b><br>
+        {weather_delay:.1f} Hours<br>
 
         • Fuel Price :
-        <b>Rp {price_fuel:,.0f}/Ltr</b>
+        Rp {price_fuel:,.0f}/Ltr
+        </span>
 
         </div>
         """, unsafe_allow_html=True)
