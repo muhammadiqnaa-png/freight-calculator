@@ -1059,6 +1059,18 @@ if calculate:
 
         tce_per_month = tce_per_day * 30
 
+        # ===== SAVE HISTORY =====
+        save_input_history(
+            pol=port_pol,
+            pod=port_pod,
+            cargo=type_cargo,
+            qty=qyt_cargo,
+            freight_input=freight_price_input,
+            freight_cost=freight_cost_mt,
+            fuel_price=price_fuel,
+            email=st.session_state.email
+        )
+
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
         
         st.markdown(f"""
