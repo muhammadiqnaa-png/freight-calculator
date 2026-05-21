@@ -1157,10 +1157,6 @@ if calculate:
             <h4 style="color:{profit_color};">💼 Budget Customer</h4>
 
             • Freight Input User: <b>Rp {freight_price_input:,.0f} / {type_cargo.split()[1]}</b><br>
-            if freight_mode == "Per MT":
-                freight_text = f"Freight Input User : <b>Rp {freight_price_input:,.0f} / MT</b>"
-            else:
-                freight_text = f"Lump Sum : <b>Rp {freight_price_input:,.0f}</b>"
             • Revenue: <b>Rp {revenue_user:,.0f}</b><br>
             • PPH 1.2%: <b>Rp {pph_user:,.0f}</b><br>
             • Total Cost : <b>Rp {total_cost:,.0f}</b><br>
