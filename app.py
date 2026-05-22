@@ -1053,7 +1053,7 @@ if calculate:
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
         # ===== REVENUE CALC =====
-        if freight_mode == "Per MT":
+        if freight_mode == "Freight Rate / MT":
             revenue_user = freight_price_input * qyt_cargo
         else:
             revenue_user = freight_price_input
