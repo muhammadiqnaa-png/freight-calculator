@@ -847,7 +847,7 @@ with col2:
 
 st.markdown("### 💰 Budget Shipper")
 
-col_mode, col_value = st.columns([1, 2])
+col_mode, col_input = st.columns([1, 3])
 
 with col_mode:
     freight_mode = st.selectbox(
@@ -856,7 +856,7 @@ with col_mode:
         label_visibility="collapsed"
     )
 
-with col_value:
+with col_input:
     if freight_mode == "Freight Rate / MT":
         freight_price_input = st.number_input(
             "Freight Rate (Rp/MT)",
