@@ -375,63 +375,6 @@ with st.sidebar.expander("➕ Add Distance"):
         else:
             st.error("❌ Semua field wajib diisi!")
 
-
-with st.sidebar.expander("📋 Saved Distance"):
-
-    data = load_distances()
-
-    # ===== NOTIF (MUNCUL SETELAH DELETE) =====
-    if st.session_state.delete_success:
-        st.success("Distance berhasil dihapus 🚀")
-        st.session_state.delete_success = False
-
-    if not data:
-        st.info("Belum ada data distance")
-
-    else:
-        routes = list(data.keys())
-
-        selected_route = st.selectbox(
-            "Pilih route",
-            routes
-        )
-
-        # ===== RESET CONFIRM KALAU GANTI ROUTE =====
-        if st.session_state.last_route != selected_route:
-            st.session_state.confirm_delete = False
-            st.session_state.last_route = selected_route
-
-        st.caption(f"Distance: {data[selected_route]:,.0f} NM")
-
-        # ===== STEP 1: BUTTON DELETE =====
-        if not st.session_state.confirm_delete:
-            if st.button("🗑️ Delete Distance", use_container_width=True):
-                st.session_state.confirm_delete = True
-                st.rerun()
-
-        # ===== STEP 2: KONFIRMASI =====
-        else:
-            st.warning("⚠️ Yakin mau hapus data ini?")
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                if st.button("❌ Cancel", use_container_width=True):
-                    st.session_state.confirm_delete = False
-                    st.rerun()
-
-            with col2:
-                if st.button("✅ Confirm Delete", use_container_width=True):
-
-                    del data[selected_route]
-                    save_distances(data)
-
-                    # 🔥 TRIGGER NOTIF
-                    st.session_state.delete_success = True
-                    st.session_state.confirm_delete = False
-
-                    st.rerun()
-
 # ===== SIDEBAR PARAMETERS =====
 with st.sidebar.expander("⚙️ Operational Input", expanded=False):
     
@@ -550,6 +493,62 @@ with st.sidebar.expander("➕ Additional Cost"):
                 "consumption": additional_consumption
             })
     st.session_state.additional_costs = updated_costs
+
+with st.sidebar.expander("📋 Saved Distance"):
+
+    data = load_distances()
+
+    # ===== NOTIF (MUNCUL SETELAH DELETE) =====
+    if st.session_state.delete_success:
+        st.success("Distance berhasil dihapus 🚀")
+        st.session_state.delete_success = False
+
+    if not data:
+        st.info("Belum ada data distance")
+
+    else:
+        routes = list(data.keys())
+
+        selected_route = st.selectbox(
+            "Pilih route",
+            routes
+        )
+
+        # ===== RESET CONFIRM KALAU GANTI ROUTE =====
+        if st.session_state.last_route != selected_route:
+            st.session_state.confirm_delete = False
+            st.session_state.last_route = selected_route
+
+        st.caption(f"Distance: {data[selected_route]:,.0f} NM")
+
+        # ===== STEP 1: BUTTON DELETE =====
+        if not st.session_state.confirm_delete:
+            if st.button("🗑️ Delete Distance", use_container_width=True):
+                st.session_state.confirm_delete = True
+                st.rerun()
+
+        # ===== STEP 2: KONFIRMASI =====
+        else:
+            st.warning("⚠️ Yakin mau hapus data ini?")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if st.button("❌ Cancel", use_container_width=True):
+                    st.session_state.confirm_delete = False
+                    st.rerun()
+
+            with col2:
+                if st.button("✅ Confirm Delete", use_container_width=True):
+
+                    del data[selected_route]
+                    save_distances(data)
+
+                    # 🔥 TRIGGER NOTIF
+                    st.session_state.delete_success = True
+                    st.session_state.confirm_delete = False
+
+                    st.rerun()
     
 if is_admin():
     show_admin_panel()
