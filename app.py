@@ -859,20 +859,24 @@ with col_mode:
 with col_input:
     if freight_mode == "Freight Rate / MT":
         freight_price_input = st.number_input(
-            "Freight Rate (Rp/MT)",
-            min_value=0
+            "Input Freight",
+            min_value=0.0,
+            step=1000.0,
+            label_visibility="collapsed"
         )
     else:
         freight_price_input = st.number_input(
-            "Lump Sum Freight (Rp)",
-            min_value=0
+            "Input Lump Sum",
+            min_value=0.0,
+            step=1000000.0,
+            label_visibility="collapsed"
         )
 
-# NOTE
+# ===== NOTE =====
 if freight_mode == "Freight Rate / MT":
-    st.caption("📌 Freight dihitung berdasarkan quantity cargo × freight rate.")
+    st.caption("📌 Freight dihitung berdasarkan quantity cargo × freight rate per MT")
 else:
-    st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight).")
+    st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight)")
 
 st.markdown("### 🎯 Target Profit")
 
