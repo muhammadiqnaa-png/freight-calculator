@@ -494,7 +494,7 @@ with st.sidebar.expander("➕ Additional Cost"):
             })
     st.session_state.additional_costs = updated_costs
 
-with st.sidebar.expander("📋 Saved Distance"):
+with st.sidebar.expander("📍 Distance List"):
 
     data = load_distances()
 
