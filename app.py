@@ -845,21 +845,21 @@ with col2:
         label_visibility="collapsed"
     )
 
-st.markdown("### 💰 Budget Shipper")
+st.markdown("### 💰 Customer Freight")
 
 col_mode, col_input = st.columns([1, 3])
 
 with col_mode:
     freight_mode = st.selectbox(
         "Mode",
-        ["Freight Rate / MT", "Lump Sum"],
+        ["Freight Rate", "Lump Sum"],
         label_visibility="collapsed"
     )
 
 with col_input:
-    if freight_mode == "Freight Rate / MT":
+    if freight_mode == "Freight Rate":
         freight_price_input = st.number_input(
-            "Input Freight",
+            f"Freight Rate (Rp/{unit})",
             min_value=0.0,
             step=1000.0,
             label_visibility="collapsed"
@@ -873,7 +873,13 @@ with col_input:
         )
 
 # ===== NOTE =====
-if freight_mode == "Freight Rate / MT":
+if freight_mode == "Freight Rate":
+    st.caption(f"📌 Freight dihitung berdasarkan quantity cargo × freight rate per {unit}")
+else:
+    st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight)")
+
+# ===== NOTE =====
+if freight_mode == "Freight Rate":
     st.caption("📌 Freight dihitung berdasarkan quantity cargo × freight rate per MT")
 else:
     st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight)")
@@ -1053,7 +1059,7 @@ if calculate:
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
         # ===== REVENUE CALC =====
-        if freight_mode == "Freight Rate / MT":
+        if freight_mode == "Freight Rate":
             revenue_user = freight_price_input * qyt_cargo
         else:
             revenue_user = freight_price_input
