@@ -49,7 +49,8 @@ cargo_qty_default = {
         "Bauxite (MT)": 5500,
         "Sand (M3)": 3500,
         "Split (M3)": 3500,
-        "Palm kernel (MT)": 3500
+        "Palm kernel (MT)": 3500,
+        "Cement Bag (MT)": 5000
     },
     "300 ft": {
         "Coal (MT)": 7500,
@@ -57,7 +58,8 @@ cargo_qty_default = {
         "Bauxite (MT)": 7500,
         "Sand (M3)": 4700,
         "Split (M3)": 5000,
-        "Palm kernel (MT)": 5500
+        "Palm kernel (MT)": 5500,
+        "Cement Bag (MT)": 6000
     },
     "330 ft": {
         "Coal (MT)": 10500,
@@ -65,7 +67,8 @@ cargo_qty_default = {
         "Bauxite (MT)": 10500,
         "Sand (M3)": 5500,
         "Split (M3)": 6300,
-        "Palm kernel (MT)": 7500
+        "Palm kernel (MT)": 7500,
+        "Cement Bag (MT)": 7000
     }
 }
 
