@@ -806,9 +806,19 @@ col1, col2 = st.columns(2)
 
 # ===== TYPE CARGO =====
 with col1:
+    cargo_types = [
+        "Coal (MT)",
+        "Nickel (MT)",
+        "Bauxite (MT)",
+        "Palm Kernel (MT)",
+        "Sand (M3)",
+        "Split (M3)",
+        "Cement Bag (MT)",
+    ]
+    
     type_cargo = st.selectbox(
-        "Type",
-        ["Bauxite (MT)", "Sand (M3)", "Coal (MT)", "Nickel (MT)", "Split (M3)", "Palm kernel (MT)"],
+        "Type Cargo",
+        cargo_types,
         key="type_cargo",
         label_visibility="collapsed"
     )
