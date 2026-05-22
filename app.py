@@ -845,19 +845,19 @@ with col2:
         label_visibility="collapsed"
     )
 
-st.markdown("### 💸 Freight Pricing")
+st.markdown("### 💰 Budget Shipper")
 
 col_mode, col_value = st.columns([1, 2])
 
 with col_mode:
     freight_mode = st.selectbox(
-        "Type",
-        ["Per MT", "Lump Sum"],
+        "Mode",
+        ["Freight Rate / MT", "Lump Sum"],
         label_visibility="collapsed"
     )
 
 with col_value:
-    if freight_mode == "Per MT":
+    if freight_mode == "Freight Rate / MT":
         freight_price_input = st.number_input(
             "Freight Rate (Rp/MT)",
             min_value=0
@@ -867,6 +867,12 @@ with col_value:
             "Lump Sum Freight (Rp)",
             min_value=0
         )
+
+# NOTE
+if freight_mode == "Freight Rate / MT":
+    st.caption("📌 Freight dihitung berdasarkan quantity cargo × freight rate.")
+else:
+    st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight).")
 
 st.markdown("### 🎯 Target Profit")
 
