@@ -878,12 +878,6 @@ if freight_mode == "Freight Rate":
 else:
     st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight)")
 
-# ===== NOTE =====
-if freight_mode == "Freight Rate":
-    st.caption("📌 Freight dihitung berdasarkan quantity cargo × freight rate per MT")
-else:
-    st.caption("📌 Freight menggunakan total nilai tetap (lump sum freight)")
-
 st.markdown("### 🎯 Target Profit")
 
 col_mode, col_input = st.columns([1, 3])
