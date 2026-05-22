@@ -498,6 +498,53 @@ with st.sidebar.expander("📍 Distance List"):
 
     data = load_distances()
 
+        # ===== EXPORT EXCEL =====
+    excel_rows = []
+
+    for route, dist in data.items():
+
+        try:
+            pol, pod = route.split(" - ")
+
+            excel_rows.append({
+                "POL": pol.strip(),
+                "POD": pod.strip(),
+                "Distance": dist
+            })
+
+        except:
+            continue
+
+    # ===== DATAFRAME =====
+    df_distance = pd.DataFrame(excel_rows)
+
+    # ===== SORT A-Z =====
+    df_distance = df_distance.sort_values(
+        by=["POL", "POD"],
+        ascending=True
+    )
+
+    # ===== EXCEL BUFFER =====
+    excel_buffer = BytesIO()
+
+    with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
+        df_distance.to_excel(
+            writer,
+            sheet_name="Distance List",
+            index=False
+        )
+
+    excel_buffer.seek(0)
+
+    # ===== DOWNLOAD BUTTON =====
+    st.download_button(
+        label="📥 Download Excel",
+        data=excel_buffer,
+        file_name="Distance_List.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        use_container_width=True
+    )
+
     # ===== NOTIF (MUNCUL SETELAH DELETE) =====
     if st.session_state.delete_success:
         st.success("Distance berhasil dihapus 🚀")
