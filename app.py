@@ -1124,8 +1124,9 @@ if calculate:
             ideal_freight = freight_cost_mt + target_margin
 
         # ===== SAVE COST =====
-        save_cost = (
-            certificate_cost
+        save_cost = ( 
+            crew_cost
+            + certificate_cost
             + docking_cost
             + insurance_cost
             + maintenance_cost
@@ -1198,7 +1199,7 @@ if calculate:
         • Sailing POL → POD : {pol_pod_day:.1f} Days<br>
         • Sailing POD → POL : {pod_pol_day:.1f} Days<br>
         • Weather Factor : {weather_factor:.0f}%<br>
-        • Save Cost : Insurance, Docking, Maintenance, Certificate<br>
+        • Save Cost : Gaji Crew, Insurance, Docking, Maintenance, Certificate<br>
         • Freight Cost based on Total Cost Calculation
 
     
