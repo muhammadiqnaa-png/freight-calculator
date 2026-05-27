@@ -26,7 +26,7 @@
   "PUS, Jambi - Labuan": 465,
   "PUS, Jambi - Indramayu": 485,
   "PUS, Jambi - Rembang": 650,
-  "PUS, Jambi - Awar Awar": 685,
+  "PUS, Jambi - Awar-Awar": 685,
   "PUS, Jambi - Pelindo Dumai": 335,
 
   "EWF, Jambi - Ketapang": 425,
@@ -50,7 +50,7 @@
   "Tempirai, Sungai Lilin - Perawang": 425,
   "Tempirai, Sungai Lilin - Pelabuhan Ratu": 485,
   "Tempirai, Sungai Lilin - Rembang": 545,
-  "Tempirai, Sungai Lilin - Awar Awar": 575,
+  "Tempirai, Sungai Lilin - Awar-Awar": 575,
   "Tempirai, Sungai Lalan - BAP, Kendawangan": 445,
 
   "SBL, Palembang - Tanjung Kampeh": 100,
@@ -83,7 +83,7 @@
   "Tarahan, Lampung - Suralaya": 60,
   "Tarahan, Lampung - Cemindo, Bayah": 155,
   "Tarahan, Lampung - Indramayu": 185,
-  "Tarahan, Lampung - Awar Awar": 430,
+  "Tarahan, Lampung - Awar-Awar": 430,
   "Tarahan, Lampung - Pacitan": 480,
 
   "Pelabuhan Panjang, Lampung - Marunda": 120,
@@ -118,7 +118,7 @@
   "Mitra Barito, Kalteng - Taboneo": 240,
 
   "Victor, Kalteng - Taboneo": 155,
-   "Victor, Kalteng - Port Klang, Malaysia": 155,
+  "Victor, Kalteng - Port Klang, Malaysia": 155,
 
   "Hasnur Pendang, Kalteng - Taboneo": 195,
   "Hasnur Pendang, Kalteng - Celukan Bawang": 475,
@@ -207,7 +207,18 @@
   
   "TIA, Bunati - Ciwandan": 610,
   
+  "BIB, Bunati - Pulau Pisau": 170,
+  "BIB, Bunati - Barru": 250,
   "BIB, Bunati - Jawa 7": 605,
+  "BIB, Bunati - Indramayu": 495,
+  "BIB, Bunati - Jeranjang": 300,
+  "BIB, Bunati - Kendari": 545,
+  "BIB, Bunati - Labuan": 655,
+  "BIB, Bunati - Paiton Baru": 275,
+  "BIB, Bunati - Rembang": 305,
+  "BIB, Bunati - Suralaya Baru": 615,
+  "BIB, Bunati - Awar-Awar": 285,
+  "BIB, Bunati - Telug Naga": 590,
 
   "A3M, Asam-Asam - BAI, Bintan": 730,
   "A3M, Asam-Asam - Cilacap": 705,
