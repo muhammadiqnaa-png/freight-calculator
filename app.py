@@ -452,47 +452,88 @@ with st.sidebar.expander("➕ Additional Cost"):
         })
 
     updated_costs = []
-    unit_options = ["Ltr", "Ton", "Month", "Voyage", "MT", "M3", "Day"]
 
+    unit_options = ["Ltr", "Ton", "Month", "Voyage", "MT", "M3", "Day"]
+    
+    remove_index = None
+    
     for i, cost in enumerate(st.session_state.additional_costs):
+    
         st.markdown(f"**Additional Cost {i+1}**")
+    
         col1, col2 = st.columns(2)
+    
         with col1:
-            name = st.text_input(f"Name {i+1}", cost.get("name", ""), key=f"name_{i}")
-            price = st.number_input(f"Price {i+1} (Rp)", cost.get("price", 0), key=f"price_{i}")
+    
+            name = st.text_input(
+                f"Name {i+1}",
+                cost.get("name", ""),
+                key=f"name_{i}"
+            )
+    
+            price = st.number_input(
+                f"Price {i+1} (Rp)",
+                value=cost.get("price", 0),
+                key=f"price_{i}"
+            )
+    
         with col2:
+    
             unit = st.selectbox(
                 f"Unit {i+1}",
                 unit_options,
-                index=unit_options.index(cost.get("unit", "Ltr")) if cost.get("unit", "Ltr") in unit_options else 0,
+                index=unit_options.index(cost.get("unit", "Ltr"))
+                if cost.get("unit", "Ltr") in unit_options else 0,
                 key=f"unit_{i}"
             )
+    
             subtype = "Day"
+    
             if unit in ["Ltr", "Ton"]:
+    
                 subtype = st.selectbox(
                     f"Type {i+1}",
                     ["Day", "Hour"],
-                    index=["Day", "Hour"].index(cost.get("subtype", "Day")),
+                    index=["Day", "Hour"].index(
+                        cost.get("subtype", "Day")
+                    ),
                     key=f"subtype_{i}"
                 )
+    
             additional_consumption = 0
+    
             if unit in ["Ltr", "Ton"]:
+    
                 additional_consumption = st.number_input(
                     f"Consumption {i+1} ({unit}/{subtype})",
-                    cost.get("consumption", 0),
+                    value=cost.get("consumption", 0),
                     key=f"additional_consumption_{i}"
                 )
-
-        remove = st.button(f"❌ Remove {i+1}", key=f"remove_{i}")
-        if not remove:
-            updated_costs.append({
-                "name": name,
-                "price": price,
-                "unit": unit,
-                "subtype": subtype,
-                "consumption": additional_consumption
-            })
-    st.session_state.additional_costs = updated_costs
+    
+        if st.button(f"❌ Remove {i+1}", key=f"remove_{i}"):
+    
+            remove_index = i
+    
+        updated_costs.append({
+            "name": name,
+            "price": price,
+            "unit": unit,
+            "subtype": subtype,
+            "consumption": additional_consumption
+        })
+    
+    # ===== REMOVE PROCESS =====
+    if remove_index is not None:
+    
+        updated_costs.pop(remove_index)
+    
+        st.session_state.additional_costs = updated_costs
+    
+        st.rerun()
+    
+    else:
+    
+        st.session_state.additional_costs = updated_costs
 
 with st.sidebar.expander("📍 Distance List"):
 
