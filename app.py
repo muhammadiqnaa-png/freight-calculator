@@ -1166,6 +1166,11 @@ if calculate:
             + insurance_cost
             + maintenance_cost
         )
+        # ===== SAVE COST PER UNIT =====
+        save_cost_per_unit = (
+            save_cost / qyt_cargo
+            if qyt_cargo > 0 else 0
+        )
 
         # ===== TCE CALCULATION =====
         tce_base_cost = cost_fuel + cost_fw + port_cost + premi_cost
@@ -1230,7 +1235,7 @@ if calculate:
         Rp {freight_cost_mt:,.0f}/{unit}
         </b><br>
         <span style="color:#64748b;">
-        (Save Cost : Rp {save_cost:,.0f})
+        (Save Cost : Rp {save_cost:,.0f} | Rp {save_cost_per_unit:,.0f}/{unit})
         </span><br>
 
         {
