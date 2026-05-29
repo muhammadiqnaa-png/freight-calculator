@@ -1201,6 +1201,7 @@ if calculate:
         • Weather Factor : {weather_factor:.0f}%<br>
         • Save Cost : Gaji Crew, Insurance, Docking, Maintenance, Certificate<br>
         • Freight Cost based on Total Cost Calculation<br>
+        {additional_note_html}
         # ===== AUTO NOTE ADDITIONAL COST =====
         additional_note_html = ""
         
@@ -1213,7 +1214,7 @@ if calculate:
             if name and price > 0:
         
                 additional_note_html += f"""
-                • Include {name}
+                • Include {name} :
                 Rp {price:,.0f}/{unit_cost}<br>
                 """
         </div>
