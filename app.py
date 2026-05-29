@@ -1235,7 +1235,7 @@ if calculate:
         Rp {freight_cost_mt:,.0f}/{unit}
         </b><br>
         <span style="color:#64748b;">
-        (Save Cost : Rp {save_cost:,.0f} // Rp {save_cost_per_unit:,.0f}/{unit})
+        (Save Cost : Rp {save_cost:,.0f} → Rp {save_cost_per_unit:,.0f}/{unit})
         </span><br>
 
         {
