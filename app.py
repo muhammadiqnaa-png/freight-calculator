@@ -1064,95 +1064,47 @@ if calculate:
         # ===== ADDITIONAL COST CALCULATION =====
         additional_total = 0
         additional_breakdown = {}
-        
+
         for cost in st.session_state.get("additional_costs", []):
-        
             name = cost.get("name", "")
             unit = cost.get("unit", "")
             subtype = cost.get("subtype", "Day")
-        
-            # ===== SAFETY FLOAT =====
-            price = float(cost.get("price", 0) or 0)
-            cons = float(cost.get("consumption", 0) or 0)
-        
+            price = cost.get("price", 0)
+            cons = cost.get("consumption", 0)
+
             val = 0
-        
-            # ===== LTR =====
             if unit == "Ltr":
-        
                 if subtype == "Day":
                     val = cons * total_voyage_days * price
-        
                 elif subtype == "Hour":
                     val = cons * (total_voyage_days * 24) * price
-        
-            # ===== TON =====
             elif unit == "Ton":
-        
                 if subtype == "Day":
                     val = cons * total_voyage_days * price
-        
                 elif subtype == "Hour":
                     val = cons * (total_voyage_days * 24) * price
-        
-            # ===== MONTH =====
             elif unit == "Month":
-        
                 val = (price / 30) * total_voyage_days
-        
-            # ===== VOYAGE =====
             elif unit == "Voyage":
-        
                 val = price
-        
-            # ===== MT / M3 =====
             elif unit in ["MT", "M3"]:
-        
                 val = price * qyt_cargo
-        
-            # ===== DAY =====
             elif unit == "Day":
-        
                 val = price * total_voyage_days
-        
-            # ===== FIX FLOAT =====
-            val = float(val)
-        
-            # ===== SAVE =====
-            if val > 0:
-        
+
+            if val and val > 0:
                 key_name = name if name else f"{unit} cost"
-        
                 if key_name in additional_breakdown:
                     additional_breakdown[key_name] += val
                 else:
                     additional_breakdown[key_name] = val
-        
                 additional_total += val
-        
-        # ===== DEBUG =====
-        st.write("DEBUG ADDITIONAL TOTAL :", additional_total)
 
-        # ===== TOTAL COST =====
-        total_cost = (
-            charter_cost
-            + crew_cost
-            + insurance_cost
-            + docking_cost
-            + maintenance_cost
-            + certificate_cost
-            + total_general_overhead
-            + depreciation_cost
-            + premi_cost
-            + port_cost
-            + cost_fuel
-            + cost_fw
-            + other_cost
-            + additional_total
-        )
-        
-        # ===== DEBUG =====
-        st.write("DEBUG TOTAL COST :", total_cost)
+        # ===== TOTAL COST FINAL =====
+        total_cost = sum([
+            charter_cost, crew_cost, insurance_cost, docking_cost, maintenance_cost, certificate_cost,total_general_overhead,depreciation_cost, 
+            premi_cost, port_cost, cost_fuel, cost_fw, other_cost, additional_total
+        ])
 
         freight_cost_mt = total_cost / qyt_cargo if qyt_cargo > 0 else 0
 
@@ -1425,7 +1377,7 @@ if calculate:
 
         variable_total = cost_fuel + cost_fw + premi_cost + port_cost
         opex_total = total_general_overhead + depreciation_cost + other_cost
-        additional_total_display = sum(additional_breakdown.values()) if additional_breakdown else 0
+        additional_total = sum(additional_breakdown.values()) if additional_breakdown else 0
 
         summary_total = total_cost
         
@@ -1444,7 +1396,7 @@ if calculate:
         • Variable Cost : <b>Rp {variable_total:,.0f}</b><br>
         • Owner/Charter : <b>Rp {owner_total:,.0f}</b><br>
         • Opex Cost : <b>Rp {opex_total:,.0f}</b><br>
-        • Additional Cost : <b>Rp {additional_total_display:,.0f}</b><br>
+        • Additional Cost : <b>Rp {additional_total:,.0f}</b><br>
         
         <hr style="margin:2px 0; opacity:0.2;">
         
@@ -1581,4 +1533,3 @@ if calculate:
 
     except Exception as e:
         st.error(f"Error: {e}")
-
