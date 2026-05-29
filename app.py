@@ -527,13 +527,7 @@ with st.sidebar.expander("➕ Additional Cost"):
     
         updated_costs.pop(remove_index)
     
-        st.session_state.additional_costs = updated_costs
-    
-        st.rerun()
-    
-    else:
-    
-        st.session_state.additional_costs = updated_costs
+    st.session_state.additional_costs = updated_costs
 
 with st.sidebar.expander("📍 Distance List"):
 
