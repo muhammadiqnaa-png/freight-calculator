@@ -1200,9 +1200,22 @@ if calculate:
         • Sailing POD → POL : {pod_pol_day:.1f} Days<br>
         • Weather Factor : {weather_factor:.0f}%<br>
         • Save Cost : Gaji Crew, Insurance, Docking, Maintenance, Certificate<br>
-        • Freight Cost based on Total Cost Calculation
-
-    
+        • Freight Cost based on Total Cost Calculation<br>
+        # ===== AUTO NOTE ADDITIONAL COST =====
+        additional_note_html = ""
+        
+        for cost in st.session_state.get("additional_costs", []):
+        
+            name = cost.get("name", "")
+            price = cost.get("price", 0)
+            unit_cost = cost.get("unit", "")
+        
+            if name and price > 0:
+        
+                additional_note_html += f"""
+                • Include {name}
+                Rp {price:,.0f}/{unit_cost}<br>
+                """
         </div>
         """, unsafe_allow_html=True)
             
