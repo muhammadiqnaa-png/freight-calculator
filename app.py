@@ -1155,54 +1155,6 @@ if calculate:
         )
 
         # ===== OUTPUT RINGKAS (MOBILE FRIENDLY) =====
-        
-        st.markdown(f"""
-        <div style="
-            background:linear-gradient(135deg, #f8fafc, #eef5ff);
-            padding:12px;
-            border-radius:12px;
-            margin-bottom:10px;
-            color:#0f172a;
-            border-left:5px solid #93c5fd;
-            box-shadow:0 4px 12px rgba(0,0,0,0.4);
-        ">
-
-        <h4 style="color:#93c5fd;"> 🚢 Voyage Summary </h4>
-
-        • Cargo Type : <b>{type_cargo}</b><br>
-        • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br>
-        • Route : <b>{port_pol} → {port_pod} → {" - " + next_port if next_port else ""}</b><br>
-        • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
-        • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
-        • Freight Cost : 
-        <b style="color:#2563eb;">
-        Rp {freight_cost_mt:,.0f}/{unit}
-        </b><br>
-        <span style="color:#64748b;">
-        (Save Cost : Rp {save_cost:,.0f})
-        </span><br>
-
-        {
-        f'''• Rekomendasi Freight : 
-        <b style="color:#16a34a;">
-        Rp {ideal_freight:,.0f}/{unit}
-        </b><br>'''
-        if float(target_margin or 0) > 0 else ""
-        }
-        
-        <hr style="margin:6px 0; opacity:0.15;">
-        
-        <div style="color:#64748b;">
-        
-        <b>Note :</b><br>
-        • Fuel Price : Rp {price_fuel:,.0f}/Ltr<br>
-        • Sailing POL → POD : {pol_pod_day:.1f} Days<br>
-        • Sailing POD → POL : {pod_pol_day:.1f} Days<br>
-        • Weather Factor : {weather_factor:.0f}%<br>
-        • Save Cost : Gaji Crew, Insurance, Docking, Maintenance, Certificate<br>
-        • Freight Cost based on Total Cost Calculation<br>
-        {additional_note_html}
-        # ===== AUTO NOTE ADDITIONAL COST =====
         additional_note_html = ""
         
         for cost in st.session_state.get("additional_costs", []):
@@ -1214,9 +1166,88 @@ if calculate:
             if name and price > 0:
         
                 additional_note_html += f"""
-                • Include {name} :
-                Rp {price:,.0f}/{unit_cost}<br>
-                """
+        • Include {name} :
+        Rp {price:,.0f}/{unit_cost}<br>
+        """
+        
+        # ===== VOYAGE SUMMARY =====
+        st.markdown(f"""
+        <div style="
+            background:linear-gradient(135deg, #f8fafc, #eef5ff);
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            color:#0f172a;
+            border-left:5px solid #93c5fd;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4);
+        ">
+        
+        <h4 style="color:#93c5fd;"> 🚢 Voyage Summary </h4>
+        
+        • Cargo Type : <b>{type_cargo}</b><br>
+        
+        • Total Cargo :
+        <b>{qyt_cargo:,.0f} {unit}</b><br>
+        
+        • Route :
+        <b>
+        {port_pol} → {port_pod}
+        {"→ " + next_port if next_port else ""}
+        </b><br>
+        
+        • Distance :
+        <b>{distance_pol_pod:,.0f} NM</b><br>
+        
+        • Total Voyage :
+        <b>{total_voyage_days:.1f} Days</b><br>
+        
+        • Freight Cost :
+        <b style="color:#2563eb;">
+        Rp {freight_cost_mt:,.0f}/{unit}
+        </b><br>
+        
+        <span style="color:#64748b;">
+        (Save Cost : Rp {save_cost:,.0f})
+        </span><br>
+        
+        {
+        f'''
+        • Rekomendasi Freight :
+        <b style="color:#16a34a;">
+        Rp {ideal_freight:,.0f}/{unit}
+        </b><br>
+        '''
+        if float(target_margin or 0) > 0 else ""
+        }
+        
+        <hr style="margin:6px 0; opacity:0.15;">
+        
+        <div style="color:#64748b;">
+        
+        <b>Note :</b><br>
+        
+        • Fuel Price : Rp {price_fuel:,.0f}/Ltr<br>
+        
+        • Sailing POL → POD :
+        {pol_pod_day:.1f} Days<br>
+        
+        • Sailing POD → POL :
+        {pod_pol_day:.1f} Days<br>
+        
+        • Weather Factor :
+        {weather_factor:.0f}%<br>
+        
+        • Save Cost :
+        Gaji Crew, Insurance, Docking,
+        Maintenance, Certificate<br>
+        
+        • Freight Cost based on
+        Total Cost Calculation<br><br>
+        
+        {additional_note_html}
+        
+        </div>
+        
         </div>
         """, unsafe_allow_html=True)
             
