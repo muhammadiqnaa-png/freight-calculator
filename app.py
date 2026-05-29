@@ -1286,7 +1286,7 @@ if calculate:
             <b>
             {
                 f"Rp {freight_price_input:,.0f} / {unit}"
-                if freight_mode == "Freight Rate / MT"
+                if freight_mode == "Freight Rate"
                 else f"Rp {freight_price_input:,.0f} (Lump Sum)"
             }
             </b><br>
