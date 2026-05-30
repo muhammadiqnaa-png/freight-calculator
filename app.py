@@ -1211,6 +1211,12 @@ if calculate:
                     f"• Include {name} : "
                     f"Rp {price:,.0f}/{unit_cost}<br>"
                 )
+
+        # ===== ROUTE DISPLAY =====
+        if next_port:
+            route_text = f"{port_pol} → {port_pod} → {next_port}"
+        else:
+            route_text = f"{port_pol} → {port_pod}"
         
         st.markdown(f"""
         <div style="
@@ -1227,7 +1233,7 @@ if calculate:
 
         • Cargo Type : <b>{type_cargo}</b><br>
         • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br>
-        • Route : <b>{port_pol} → {port_pod} → {" - " + next_port if next_port else ""}</b><br>
+        • Route : <b>{route_text}</b><br>
         • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
         • Freight Cost : 
