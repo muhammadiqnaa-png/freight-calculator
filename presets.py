@@ -50,6 +50,7 @@ cargo_qty_default = {
         "Sand (M3)": 3500,
         "Split (M3)": 3500,
         "Palm kernel (MT)": 3500,
+        "precast (MT)": 5000,
         "Cement Bag (MT)": 5000
     },
     "300 ft": {
@@ -59,6 +60,7 @@ cargo_qty_default = {
         "Sand (M3)": 4700,
         "Split (M3)": 5000,
         "Palm kernel (MT)": 5500,
+        "precast (MT)": 7500,
         "Cement Bag (MT)": 6000
     },
     "330 ft": {
@@ -68,6 +70,7 @@ cargo_qty_default = {
         "Sand (M3)": 5500,
         "Split (M3)": 6300,
         "Palm kernel (MT)": 7500,
+        "precast (MT)": 10000,
         "Cement Bag (MT)": 7000
     }
 }
