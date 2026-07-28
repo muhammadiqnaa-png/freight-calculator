@@ -896,7 +896,7 @@ with col1:
         "Split (M3)",
         "precast (MT)",
         "Cement Bag (MT)",
-        "Buton Asphalt (MT)":
+        "Buton Asphalt (MT)"
     ]
     
     type_cargo = st.selectbox(
