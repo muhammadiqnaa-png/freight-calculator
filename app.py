@@ -376,7 +376,7 @@ with st.sidebar.expander("➕ Add Distance"):
             st.error("❌ Semua field wajib diisi!")
 
 # ===== SIDEBAR PARAMETERS =====
-with st.sidebar.expander("⚙️ Operational Input", expanded=False):
+with st.sidebar.expander("🚢 Speed & Navigation", expanded=False):
     
     speed_laden = st.number_input(
         "Speed Laden (knot)",
@@ -395,8 +395,13 @@ with st.sidebar.expander("⚙️ Operational Input", expanded=False):
         value=float(st.session_state.get("weather_factor", 5)),
         step=1.0
     )
+
+with st.sidebar.expander("⛽ Fuel", expanded=False):
+    
     consumption = st.number_input("Fuel Consumption (L/hr)", value=st.session_state.get("consumption", 0))
     price_fuel = st.number_input("Fuel Price (Rp/L)", value=st.session_state.get("price_fuel", 0))
+
+with st.sidebar.expander("💧 Fresh Water", expanded=False):
 
     consumption_fw = st.number_input("FW Consumption (Ton/Day)", value=st.session_state.get("consumption_fw", 0))
     price_fw = st.number_input("FW Price (Rp/Ton)", value=st.session_state.get("price_fw", 0))
