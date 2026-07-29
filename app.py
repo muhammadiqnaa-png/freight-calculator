@@ -1021,6 +1021,11 @@ if calculate:
         else:
             distance_pod_pol = 0
 
+        distance_text = f"{distance_pol_pod:,.0f} NM (POL-POD)"
+
+        if next_port:
+            distance_text += f" → {distance_pod_pol:,.0f} NM (POD-NEXT)"
+
         pol_pod_hour = distance_pol_pod / speed_laden if speed_laden else 0
         pod_pol_hour = distance_pod_pol / speed_ballast if speed_ballast else 0
 
@@ -1236,7 +1241,7 @@ if calculate:
         • Cargo Type : <b>{type_cargo}</b><br>
         • Total Cargo : <b>{qyt_cargo:,.0f} {unit}</b><br>
         • Route : <b>{route_text}</b><br>
-        • Distance : <b>{distance_pol_pod:,.0f} NM</b><br>
+        • Distance : <b>{distance_text}</b><br>
         • Total Voyage : <b>{total_voyage_days:.1f} Days</b><br>
         • Freight Cost : 
         <b style="color:#2563eb;">
