@@ -52,7 +52,8 @@ cargo_qty_default = {
         "Palm kernel (MT)": 3500,
         "precast (MT)": 5000,
         "Cement Bag (MT)": 5000,
-        "Buton Asphalt (MT)": 4000
+        "Buton Asphalt (MT)": 4000,
+        "Acacia (MT)": 5000
     },
     "300 ft": {
         "Coal (MT)": 7500,
@@ -63,7 +64,8 @@ cargo_qty_default = {
         "Palm kernel (MT)": 5500,
         "precast (MT)": 7500,
         "Cement Bag (MT)": 6000,
-        "Buton Asphalt (MT)": 6000
+        "Buton Asphalt (MT)": 6000,
+        "Acacia (MT)": 7500
     },
     "330 ft": {
         "Coal (MT)": 10500,
@@ -74,7 +76,8 @@ cargo_qty_default = {
         "Palm kernel (MT)": 7500,
         "precast (MT)": 10000,
         "Cement Bag (MT)": 7000,
-        "Buton Asphalt (MT)": 7000
+        "Buton Asphalt (MT)": 7000,
+        "Acacia (MT)": 10000
     }
 }
 
