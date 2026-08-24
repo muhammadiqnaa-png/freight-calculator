@@ -5,4 +5,4 @@ pandas
 reportlab
 openpyxl
 numpy
-streamlit-cookies-manager-v2
+streamlit-cookies-manager-v2==0.3.1
