@@ -1,8 +1,8 @@
-streamlit==1.39.0
+streamlit
 firebase-admin
 requests
 pandas
 reportlab
 openpyxl
 numpy
-streamlit-cookies-manager==0.2.0
+streamlit-cookies-manager-v2
