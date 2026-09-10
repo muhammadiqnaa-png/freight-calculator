@@ -898,6 +898,7 @@ with col1:
         "Bauxite (MT)",
         "Palm Kernel (MT)",
         "Sand (M3)",
+        "Silica (M3)",
         "Split (M3)",
         "precast (MT)",
         "Cement Bag (MT)",
