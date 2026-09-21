@@ -347,6 +347,8 @@
   "BMW, Sampit - Semarang": 390,
   "BMW, Sampit - WHW, Kendawangan": 355,
 
+  "WMGK, Sampit - Muara Sampit": 105,
+
   "Pada Idi, Kalteng - Port Klang, Malaysia": 1205,
   
   "Bima, Bintang Ninggi, Kalteng - Taboneo": 250,
@@ -443,6 +445,9 @@
   "BCT, Bontang - Tanjung Kasam, Batam": 1090,
   "BCT, Bontang - Pangkalan Susu": 1490,
   "BCT, Bontang - Jeneponto": 380,
+  "BCT, Bontang - Lontar": 885,
+  "BCT, Bontang - Labuan": 955,
+  "BCT, Bontang - Suralaya": 915,
 
   "Gurimbang, Berau - Tonasa, Makasar": 490,
 
@@ -484,6 +489,9 @@
   "Harlindo, Samarinda - Gresik": 740,
 
   "MCT,Embalut, Samarinda - Morosi": 670,
+  "MCT,Embalut, Samarinda - Timor-1": 825,
+  "MCT,Embalut, Samarinda - Kupang": 835,
+  "MCT,Embalut, Samarinda - Sumbawa": 545,
 
   "MHU, Loa Kulu, Samarinda - Suralaya": 880,
 
@@ -506,8 +514,9 @@
 
   "CPP, Kaltara - Celukan Bawang": 835,
 
-  "RMB, Bukit Jering - Pulau Obi": 860,
-  "RMB, Bukit Jering - Morosi": 725,
+  "ISP RMB, Bukit Jering - Pulau Obi": 860,
+  "ISP RMB, Bukit Jering - Morosi": 725,
+  "ISP RMB, Bukit Jering - RMB, Long Mahli": 95,
 
   "Kideco, Grogot - Tanjung Kasam, Batam": 995,
   "Kideco, Grogot - Cilegon": 825,
@@ -600,8 +609,8 @@
   "IMIP, Morowali - Pulau Pisang": 765,
   "IMIP, Morowali - Kobexindo, sangatta": 780,
 
-  "Morowali - Benete Port": 600,
-  "Morowali - Pulau Obi": 345,
+  "IMIP, Morowali - Benete Port": 600,
+  "IMIP, Morowali - Pulau Obi": 345,
 
   "COR, Kolonodale - Weda": 570,
 
@@ -633,6 +642,8 @@
 
   "Ifishdeco, Konawe - Pulau Obi": 370,
 
+  "Pulau Gag, Papua - Weda": 135,
+
   "SPJ, Suralaya - Lontar": 35,
   "SPJ, Suralaya - Labuan": 40,
   "SPJ, Suralaya - Pelabuhan Ratu": 165,
@@ -652,7 +663,7 @@
 
   "Sluke, Rembang - Marunda": 300,
   "Sluke, Rembang - Oki Baung, Palembang": 500,
-  "Sluke, Rembang - Morowali": 830,
+  "Sluke, Rembang - IMIP, Morowali": 830,
 
   "Lariang - IPIP, Pomala": 450,
   "Lariang - Tanjung Buli": 845,
